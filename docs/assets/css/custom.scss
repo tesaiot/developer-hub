@@ -1,13 +1,15 @@
 ---
 # Custom styles for TESAIoT Developer Hub
+# Matching landing page theme (www.tesaiot.com)
 ---
 
-// TESAIoT brand colors
-$tesaiot-primary: #0ea5e9;      // Sky blue
-$tesaiot-secondary: #8b5cf6;    // Purple
-$tesaiot-accent: #10b981;       // Emerald
-$tesaiot-dark: #1a1a2e;         // Dark blue
-$tesaiot-darker: #0f0f1a;       // Darker blue
+// TESAIoT brand colors - matching landing page
+$tesaiot-primary: #14b8a6;      // Teal (emerald) - main brand color
+$tesaiot-secondary: #3b82f6;    // Blue - secondary accent
+$tesaiot-accent: #34d399;       // Emerald-400 - for buttons/CTAs
+$tesaiot-dark: #0a1328;         // Navy background (landing page)
+$tesaiot-darker: #060b19;       // Darker navy
+$tesaiot-surface: #0c1533;      // Card surface
 
 // Override minimal mistakes variables
 $primary-color: $tesaiot-primary !default;
@@ -17,22 +19,58 @@ $background-color: $tesaiot-dark !default;
 @import "minimal-mistakes/skins/dark";
 @import "minimal-mistakes";
 
-// Custom header
+// Global body styling to match landing page
+body {
+  background: $tesaiot-dark;
+  color: #e5e7eb;
+}
+
+// Custom header with glassmorphism
 .masthead {
-  background-color: $tesaiot-darker;
-  border-bottom: 1px solid rgba($tesaiot-primary, 0.2);
+  background-color: rgba($tesaiot-dark, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-// Splash page styling
+// Site title styling
+.site-title {
+  color: white !important;
+  font-weight: 700;
+}
+
+// Splash page styling with gradient
 .page__hero--overlay {
-  background: linear-gradient(135deg, $tesaiot-dark 0%, $tesaiot-darker 100%);
+  background: linear-gradient(135deg, #0a1931 0%, #060b19 100%);
+
+  // Add subtle grid pattern like landing page
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 255, 178, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 178, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+  }
 }
 
-// Code blocks
+// Hero title styling
+.page__title {
+  color: white;
+  font-weight: 700;
+}
+
+.page__lead {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+// Code blocks with dark surface
 div.highlighter-rouge,
 figure.highlight {
   background: $tesaiot-darker;
-  border: 1px solid rgba($tesaiot-primary, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
 
@@ -52,33 +90,59 @@ figure.highlight {
   padding: 2em 1em;
 }
 
+// Feature cards with glassmorphism effect (matching landing page)
 .feature__item {
-  background: rgba($tesaiot-primary, 0.05);
-  border: 1px solid rgba($tesaiot-primary, 0.2);
-  border-radius: 12px;
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 47, 74, 0.6),
+    rgba(15, 31, 53, 0.6)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   padding: 2em;
   margin-bottom: 1.5em;
   min-height: 280px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+
+  // Subtle glow on hover
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, rgba($tesaiot-primary, 0.2), rgba($tesaiot-secondary, 0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
 
   &:hover {
-    background: rgba($tesaiot-primary, 0.1);
-    border-color: rgba($tesaiot-primary, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-4px);
     transition: all 0.3s ease;
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   .archive__item-title {
     font-size: 1.4em;
     margin-bottom: 0.8em;
+    color: white;
+    font-weight: 600;
   }
 
   .archive__item-excerpt {
     flex-grow: 1;
     font-size: 1em;
     line-height: 1.6;
-    color: #d1d5db;
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .btn {
@@ -100,29 +164,52 @@ figure.highlight {
   }
 }
 
-// Buttons
+// Buttons - matching landing page emerald style
 .btn--primary {
-  background-color: $tesaiot-primary;
+  background-color: $tesaiot-accent;
+  color: #081225 !important;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: darken($tesaiot-primary, 10%);
+    background-color: lighten($tesaiot-accent, 8%);
+    color: #081225 !important;
+    transform: translateY(-1px);
   }
 }
 
-// Tables
+// Secondary/outline buttons
+.btn--inverse {
+  background: transparent;
+  border: 2px solid $tesaiot-primary;
+  color: $tesaiot-primary !important;
+
+  &:hover {
+    background: $tesaiot-primary;
+    color: white !important;
+  }
+}
+
+// Tables with glass effect
 table {
-  background: rgba($tesaiot-dark, 0.5);
-  border: 1px solid rgba($tesaiot-primary, 0.2);
+  background: rgba($tesaiot-surface, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
 
   th {
-    background: rgba($tesaiot-primary, 0.1);
+    background: rgba($tesaiot-primary, 0.15);
     color: $tesaiot-primary;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   td {
-    border-color: rgba($tesaiot-primary, 0.1);
+    border-color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
   }
 
   tr:hover td {
@@ -132,11 +219,12 @@ table {
 
 // Sidebar navigation
 .nav__list .nav__items {
-  background: rgba($tesaiot-dark, 0.5);
+  background: rgba($tesaiot-surface, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 
   a {
-    color: #e5e7eb;
+    color: rgba(255, 255, 255, 0.8);
 
     &:hover {
       color: $tesaiot-primary;
@@ -146,12 +234,12 @@ table {
 
 // TOC styling
 .toc {
-  background: rgba($tesaiot-dark, 0.5);
-  border: 1px solid rgba($tesaiot-primary, 0.2);
+  background: rgba($tesaiot-surface, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 
   .toc__menu a {
-    color: #e5e7eb;
+    color: rgba(255, 255, 255, 0.8);
 
     &:hover {
       color: $tesaiot-primary;
@@ -162,10 +250,25 @@ table {
 // Footer
 .page__footer {
   background: $tesaiot-darker;
-  border-top: 1px solid rgba($tesaiot-primary, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
 }
 
-// Architecture diagrams
+// Links
+a {
+  color: $tesaiot-primary;
+
+  &:hover {
+    color: lighten($tesaiot-primary, 15%);
+  }
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+}
+
+// Architecture diagrams / code blocks
 pre {
   &.language-plaintext,
   &.highlight {
@@ -175,9 +278,58 @@ pre {
   }
 }
 
+// Badges/pills (like the landing page status indicators)
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.25em 0.75em;
+  border-radius: 9999px;
+  font-size: 0.85em;
+  font-weight: 500;
+
+  &--success {
+    background: rgba($tesaiot-accent, 0.15);
+    color: $tesaiot-accent;
+    border: 1px solid rgba($tesaiot-accent, 0.3);
+  }
+
+  &--info {
+    background: rgba($tesaiot-primary, 0.15);
+    color: $tesaiot-primary;
+    border: 1px solid rgba($tesaiot-primary, 0.3);
+  }
+}
+
+// Content styling
+.page__content {
+  p, li {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .feature__item {
-    padding: 1em;
+    padding: 1.5em;
+  }
+}
+
+// Scrollbar styling (matching dark theme)
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $tesaiot-darker;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($tesaiot-primary, 0.3);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba($tesaiot-primary, 0.5);
   }
 }

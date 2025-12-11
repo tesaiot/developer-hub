@@ -3,8 +3,8 @@ layout: home
 title: "TESAIoT Developer Hub"
 classes: wide
 header:
-  overlay_color: "#1a1a2e"
-  overlay_filter: "0.5"
+  overlay_color: "#0a1328"
+  overlay_filter: "0.4"
   actions:
     - label: "Get Started"
       url: "https://github.com/tesaiot/developer-hub/blob/main/docs/getting-started.md"
