@@ -6,7 +6,7 @@ header:
   overlay_filter: "0.5"
   actions:
     - label: "Get Started"
-      url: "/developer-hub/getting-started"
+      url: "/getting-started"
     - label: "View on GitHub"
       url: "https://github.com/tesaiot/developer-hub"
 excerpt: "Open source examples and templates for building secure IoT applications on TESAIoT Platform"
