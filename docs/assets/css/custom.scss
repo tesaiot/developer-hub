@@ -3,78 +3,95 @@
 # Matching landing page theme (www.tesaiot.com)
 ---
 
-// TESAIoT brand colors - matching landing page
-$tesaiot-primary: #14b8a6;      // Teal (emerald) - main brand color
-$tesaiot-secondary: #3b82f6;    // Blue - secondary accent
-$tesaiot-accent: #34d399;       // Emerald-400 - for buttons/CTAs
-$tesaiot-dark: #0a1328;         // Navy background (landing page)
-$tesaiot-darker: #060b19;       // Darker navy
-$tesaiot-surface: #0c1533;      // Card surface
+// TESAIoT brand colors - EXACT match from landing page globals.css
+$bg: #0b1220;               // Navy background (landing page --bg)
+$brand: #14b8a6;            // Teal-500 (landing page --brand)
+$brand-2: #3b82f6;          // Blue-500 (landing page --brand-2)
+$surface: #0c1533;          // Card surface (landing page --surface)
+$text: #e5e7eb;             // Gray-200 text
+$text-muted: rgba(255, 255, 255, 0.7);
+$emerald-400: #34d399;      // Button color
 
 // Override minimal mistakes variables
-$primary-color: $tesaiot-primary !default;
-$link-color: $tesaiot-primary !default;
-$background-color: $tesaiot-dark !default;
+$primary-color: $brand !default;
+$link-color: $brand !default;
+$background-color: $bg !default;
 
 @import "minimal-mistakes/skins/dark";
 @import "minimal-mistakes";
 
-// Global body styling to match landing page
-body {
-  background: $tesaiot-dark;
-  color: #e5e7eb;
+// ============================================
+// GLOBAL STYLES - Match landing page exactly
+// ============================================
+html, body {
+  background: $bg !important;
+  color: $text;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-// Custom header with glassmorphism
+// ============================================
+// HEADER / NAVIGATION - Glassmorphism navbar
+// ============================================
 .masthead {
-  background-color: rgba($tesaiot-dark, 0.7);
+  background-color: rgba(#0a1328, 0.7) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-// Site title styling
 .site-title {
   color: white !important;
   font-weight: 700;
+  font-size: 1.2rem;
 }
 
-// Splash page styling with gradient
-.page__hero--overlay {
-  background: linear-gradient(135deg, #0a1931 0%, #060b19 100%);
+.greedy-nav a {
+  color: rgba(255, 255, 255, 0.7) !important;
 
-  // Add subtle grid pattern like landing page
+  &:hover {
+    color: white !important;
+  }
+}
+
+.greedy-nav__toggle {
+  color: white !important;
+}
+
+// ============================================
+// HERO / SPLASH SECTION
+// ============================================
+.page__hero--overlay {
+  background: linear-gradient(135deg, #0a1931 0%, $bg 100%) !important;
+
+  // Subtle grid pattern like landing page
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0, 255, 178, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 178, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(0, 255, 178, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 178, 0.06) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0.3;
+    opacity: 0.4;
+    pointer-events: none;
   }
 }
 
-// Hero title styling
 .page__title {
-  color: white;
+  color: white !important;
   font-weight: 700;
+  font-size: 2.5rem;
 }
 
 .page__lead {
-  color: rgba(255, 255, 255, 0.7);
+  color: $text-muted !important;
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
 
-// Code blocks with dark surface
-div.highlighter-rouge,
-figure.highlight {
-  background: $tesaiot-darker;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-
-// Wide layout - full width content
+// ============================================
+// WIDE LAYOUT
+// ============================================
 .wide {
   .page {
     max-width: 100%;
@@ -83,80 +100,74 @@ figure.highlight {
   }
 }
 
-// Feature row - wider layout with equal columns
+// ============================================
+// FEATURE ROW - Match "Who Benefits" cards
+// ============================================
 .feature__wrapper {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2em 1em;
+  padding: 3em 1em;
+  background: transparent;
 }
 
-// Feature cards with glassmorphism effect (matching landing page)
+// Feature cards matching landing page exactly
 .feature__item {
   position: relative;
-  background: linear-gradient(
-    to bottom,
-    rgba(26, 47, 74, 0.6),
-    rgba(15, 31, 53, 0.6)
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 16px;
   padding: 2em;
   margin-bottom: 1.5em;
-  min-height: 280px;
+  min-height: 260px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-
-  // Subtle glow on hover
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: 17px;
-    background: linear-gradient(135deg, rgba($tesaiot-primary, 0.2), rgba($tesaiot-secondary, 0.2));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-  }
+  transition: all 0.3s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-4px);
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px);
+  }
 
-    &::before {
-      opacity: 1;
+  // Title styling
+  .archive__item-title {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-bottom: 0.75em;
+    color: white !important;
+
+    a {
+      color: white !important;
+      text-decoration: none;
+
+      &:hover {
+        color: $brand !important;
+      }
     }
   }
 
-  .archive__item-title {
-    font-size: 1.4em;
-    margin-bottom: 0.8em;
-    color: white;
-    font-weight: 600;
-  }
-
+  // Description styling
   .archive__item-excerpt {
     flex-grow: 1;
-    font-size: 1em;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95em;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-bottom: 1em;
   }
 
+  // Button at bottom
   .btn {
     align-self: flex-start;
-    margin-top: 1em;
+    margin-top: auto;
   }
 }
 
-// Three column layout on desktop
+// Three column grid on desktop (like "Who Benefits")
 @media (min-width: 1024px) {
   .feature__wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2em;
+    gap: 1.5em;
   }
 
   .feature__item {
@@ -164,172 +175,306 @@ figure.highlight {
   }
 }
 
-// Buttons - matching landing page emerald style
+// Two column on tablet
+@media (min-width: 768px) and (max-width: 1023px) {
+  .feature__wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5em;
+  }
+}
+
+// ============================================
+// BUTTONS - Match emerald style from landing
+// ============================================
 .btn--primary {
-  background-color: $tesaiot-accent;
+  background-color: $emerald-400 !important;
   color: #081225 !important;
   font-weight: 600;
-  border: none;
+  border: none !important;
   border-radius: 8px;
-  padding: 0.6em 1.2em;
+  padding: 0.6em 1.4em;
+  font-size: 0.9em;
   transition: all 0.2s ease;
+  text-decoration: none !important;
 
   &:hover {
-    background-color: lighten($tesaiot-accent, 8%);
+    background-color: lighten($emerald-400, 5%) !important;
     color: #081225 !important;
     transform: translateY(-1px);
   }
-}
 
-// Secondary/outline buttons
-.btn--inverse {
-  background: transparent;
-  border: 2px solid $tesaiot-primary;
-  color: $tesaiot-primary !important;
-
-  &:hover {
-    background: $tesaiot-primary;
-    color: white !important;
+  &:visited {
+    color: #081225 !important;
   }
 }
 
-// Tables with glass effect
-table {
-  background: rgba($tesaiot-surface, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+// Outline/inverse button
+.btn--inverse {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
   border-radius: 8px;
-  overflow: hidden;
 
-  th {
-    background: rgba($tesaiot-primary, 0.15);
-    color: $tesaiot-primary;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+// ============================================
+// CONTENT AREA
+// ============================================
+.page__content {
+  background: transparent;
+
+  h1, h2, h3, h4, h5, h6 {
+    color: white !important;
     font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin-top: 2em;
+    padding-bottom: 0.5em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  p, li {
+    color: $text-muted;
+    line-height: 1.7;
+  }
+
+  strong {
+    color: white;
+  }
+}
+
+// ============================================
+// LINKS
+// ============================================
+a {
+  color: $brand;
+  text-decoration: none;
+
+  &:hover {
+    color: lighten($brand, 15%);
+  }
+}
+
+// ============================================
+// CODE BLOCKS
+// ============================================
+div.highlighter-rouge,
+figure.highlight {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px;
+}
+
+pre {
+  background: transparent !important;
+  color: $text;
+
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+    font-size: 0.85em;
+  }
+}
+
+code.highlighter-rouge {
+  background: rgba($brand, 0.15);
+  color: $brand;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+// ============================================
+// TABLES - Match dark theme
+// ============================================
+table {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+
+  th {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 0.75em 1em;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
   td {
-    border-color: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75em 1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: $text-muted;
+  }
+
+  tr:last-child td {
+    border-bottom: none !important;
   }
 
   tr:hover td {
-    background: rgba($tesaiot-primary, 0.05);
+    background: rgba(255, 255, 255, 0.02);
   }
 }
 
-// Sidebar navigation
+// ============================================
+// SIDEBAR / NAVIGATION
+// ============================================
 .nav__list .nav__items {
-  background: rgba($tesaiot-surface, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
+  padding: 1em;
 
   a {
-    color: rgba(255, 255, 255, 0.8);
+    color: $text-muted !important;
+    padding: 0.4em 0;
+    display: block;
 
     &:hover {
-      color: $tesaiot-primary;
+      color: $brand !important;
     }
+  }
+
+  .active {
+    color: $brand !important;
   }
 }
 
-// TOC styling
+// ============================================
+// TOC (Table of Contents)
+// ============================================
 .toc {
-  background: rgba($tesaiot-surface, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 8px;
 
-  .toc__menu a {
-    color: rgba(255, 255, 255, 0.8);
+  .toc__menu {
+    a {
+      color: $text-muted !important;
+
+      &:hover {
+        color: $brand !important;
+      }
+    }
+  }
+
+  .nav__title {
+    color: white !important;
+    background: transparent !important;
+  }
+}
+
+// ============================================
+// FOOTER
+// ============================================
+.page__footer {
+  background: darken($bg, 2%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.5);
+
+  a {
+    color: $text-muted;
 
     &:hover {
-      color: $tesaiot-primary;
+      color: $brand;
     }
   }
 }
 
-// Footer
-.page__footer {
-  background: $tesaiot-darker;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
-}
+// ============================================
+// ARCHIVE / LIST PAGES
+// ============================================
+.archive__item-title {
+  color: white !important;
 
-// Links
-a {
-  color: $tesaiot-primary;
+  a {
+    color: white !important;
 
-  &:hover {
-    color: lighten($tesaiot-primary, 15%);
+    &:hover {
+      color: $brand !important;
+    }
   }
 }
 
-// Headings
-h1, h2, h3, h4, h5, h6 {
-  color: white;
+.archive__item-excerpt {
+  color: $text-muted !important;
 }
 
-// Architecture diagrams / code blocks
-pre {
-  &.language-plaintext,
-  &.highlight {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.85em;
-    line-height: 1.4;
+// ============================================
+// PAGINATION
+// ============================================
+.pagination {
+  a {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white !important;
+    border-radius: 6px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .current {
+    background: $brand !important;
+    color: #081225 !important;
   }
 }
 
-// Badges/pills (like the landing page status indicators)
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.25em 0.75em;
-  border-radius: 9999px;
-  font-size: 0.85em;
-  font-weight: 500;
-
-  &--success {
-    background: rgba($tesaiot-accent, 0.15);
-    color: $tesaiot-accent;
-    border: 1px solid rgba($tesaiot-accent, 0.3);
-  }
-
-  &--info {
-    background: rgba($tesaiot-primary, 0.15);
-    color: $tesaiot-primary;
-    border: 1px solid rgba($tesaiot-primary, 0.3);
-  }
-}
-
-// Content styling
-.page__content {
-  p, li {
-    color: rgba(255, 255, 255, 0.8);
-  }
-}
-
-// Responsive adjustments
+// ============================================
+// RESPONSIVE MOBILE
+// ============================================
 @media (max-width: 768px) {
   .feature__item {
     padding: 1.5em;
+    min-height: auto;
+  }
+
+  .page__title {
+    font-size: 1.75rem;
   }
 }
 
-// Scrollbar styling (matching dark theme)
+// ============================================
+// SCROLLBAR - Dark theme
+// ============================================
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: $tesaiot-darker;
+  background: $bg;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba($tesaiot-primary, 0.3);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 
   &:hover {
-    background: rgba($tesaiot-primary, 0.5);
+    background: rgba(255, 255, 255, 0.25);
   }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+.text-muted {
+  color: $text-muted !important;
+}
+
+.text-brand {
+  color: $brand !important;
+}
+
+.bg-surface {
+  background: $surface !important;
 }
