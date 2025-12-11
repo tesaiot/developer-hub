@@ -2,8 +2,6 @@
 
 Real-time MQTT telemetry visualization dashboard for TESAIoT Platform. Stream and visualize IoT device data with WebSocket Secure (WSS) MQTT connections.
 
-![Dashboard Screenshot](docs/screenshot.png)
-
 ## Features
 
 - **Real-time Streaming**: Live telemetry data via WSS MQTT
