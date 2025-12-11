@@ -1,5 +1,5 @@
 ---
-layout: splash
+layout: home
 title: "TESAIoT Developer Hub"
 header:
   overlay_color: "#1a1a2e"
