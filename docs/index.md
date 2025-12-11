@@ -12,7 +12,7 @@ header:
 excerpt: "Open source examples and templates for building secure IoT applications on TESAIoT Platform"
 feature_row:
   - title: "Device Examples"
-    excerpt: "MQTT clients for Infineon PSoC, Arduino, STM32, NXP, Renesas, ESP32, Raspberry Pi, and more with mTLS security"
+    excerpt: "MQTT clients for Infineon PSoC 6/PSoC Edge, Arduino, STM32, NXP, Renesas, ESP32, Raspberry Pi, and more with mTLS security"
     url: "https://github.com/tesaiot/developer-hub/tree/main/examples/device-mtls"
     btn_label: "Learn More"
     btn_class: "btn--primary"
