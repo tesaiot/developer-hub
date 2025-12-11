@@ -1,0 +1,133 @@
+---
+# Custom styles for TESAIoT Developer Hub
+---
+
+// TESAIoT brand colors
+$tesaiot-primary: #0ea5e9;      // Sky blue
+$tesaiot-secondary: #8b5cf6;    // Purple
+$tesaiot-accent: #10b981;       // Emerald
+$tesaiot-dark: #1a1a2e;         // Dark blue
+$tesaiot-darker: #0f0f1a;       // Darker blue
+
+// Override minimal mistakes variables
+$primary-color: $tesaiot-primary !default;
+$link-color: $tesaiot-primary !default;
+$background-color: $tesaiot-dark !default;
+
+@import "minimal-mistakes/skins/dark";
+@import "minimal-mistakes";
+
+// Custom header
+.masthead {
+  background-color: $tesaiot-darker;
+  border-bottom: 1px solid rgba($tesaiot-primary, 0.2);
+}
+
+// Splash page styling
+.page__hero--overlay {
+  background: linear-gradient(135deg, $tesaiot-dark 0%, $tesaiot-darker 100%);
+}
+
+// Code blocks
+div.highlighter-rouge,
+figure.highlight {
+  background: $tesaiot-darker;
+  border: 1px solid rgba($tesaiot-primary, 0.2);
+  border-radius: 8px;
+}
+
+// Feature row cards
+.feature__item {
+  background: rgba($tesaiot-primary, 0.05);
+  border: 1px solid rgba($tesaiot-primary, 0.2);
+  border-radius: 12px;
+  padding: 1.5em;
+  margin-bottom: 1em;
+
+  &:hover {
+    background: rgba($tesaiot-primary, 0.1);
+    border-color: rgba($tesaiot-primary, 0.4);
+  }
+}
+
+// Buttons
+.btn--primary {
+  background-color: $tesaiot-primary;
+
+  &:hover {
+    background-color: darken($tesaiot-primary, 10%);
+  }
+}
+
+// Tables
+table {
+  background: rgba($tesaiot-dark, 0.5);
+  border: 1px solid rgba($tesaiot-primary, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+
+  th {
+    background: rgba($tesaiot-primary, 0.1);
+    color: $tesaiot-primary;
+  }
+
+  td {
+    border-color: rgba($tesaiot-primary, 0.1);
+  }
+
+  tr:hover td {
+    background: rgba($tesaiot-primary, 0.05);
+  }
+}
+
+// Sidebar navigation
+.nav__list .nav__items {
+  background: rgba($tesaiot-dark, 0.5);
+  border-radius: 8px;
+
+  a {
+    color: #e5e7eb;
+
+    &:hover {
+      color: $tesaiot-primary;
+    }
+  }
+}
+
+// TOC styling
+.toc {
+  background: rgba($tesaiot-dark, 0.5);
+  border: 1px solid rgba($tesaiot-primary, 0.2);
+  border-radius: 8px;
+
+  .toc__menu a {
+    color: #e5e7eb;
+
+    &:hover {
+      color: $tesaiot-primary;
+    }
+  }
+}
+
+// Footer
+.page__footer {
+  background: $tesaiot-darker;
+  border-top: 1px solid rgba($tesaiot-primary, 0.2);
+}
+
+// Architecture diagrams
+pre {
+  &.language-plaintext,
+  &.highlight {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    line-height: 1.4;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .feature__item {
+    padding: 1em;
+  }
+}

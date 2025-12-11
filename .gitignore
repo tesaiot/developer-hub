@@ -1,0 +1,273 @@
+# ============================================================================
+# TESAIoT Open Source Examples - Strict .gitignore
+# ============================================================================
+# This .gitignore is intentionally strict to prevent accidental exposure of
+# credentials, certificates, and sensitive data in the public repository.
+# ============================================================================
+
+# ============================================================================
+# CREDENTIALS - NEVER COMMIT THESE
+# ============================================================================
+
+# Environment files with real credentials
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+*.env
+
+# Keep only the template
+!.env.example
+
+# API keys and tokens
+**/api_key*
+**/api-key*
+**/apikey*
+**/token*
+**/secret*
+**/*_token*
+**/*_key*
+**/*_secret*
+
+# Exclude example files
+!**/*_example*
+!**/*.example
+
+# ============================================================================
+# CERTIFICATES AND KEYS - NEVER COMMIT THESE
+# ============================================================================
+
+# SSL/TLS certificates
+*.pem
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Private keys
+*.key
+*.priv
+*.private
+
+# Certificate signing requests
+*.csr
+
+# CA bundles
+ca-chain.*
+ca-bundle.*
+ca-cert.*
+
+# Credential bundles from TESAIoT Admin UI
+*-bundle.zip
+*-credentials.zip
+*-certs.zip
+
+# Certificate directories
+certs/
+certificates/
+credentials/
+keys/
+secrets/
+ssl/
+tls/
+
+# Vault tokens
+.vault-token
+vault-token*
+
+# ============================================================================
+# BUILD ARTIFACTS AND DEPENDENCIES
+# ============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# C/C++
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# Rust
+target/
+Cargo.lock
+
+# General build
+build/
+dist/
+out/
+*.min.js
+*.min.css
+*.bundle.js
+
+# ============================================================================
+# IDE AND EDITOR
+# ============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ============================================================================
+# OPERATING SYSTEM
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+
+# ============================================================================
+# LOGS AND TEMPORARY FILES
+# ============================================================================
+
+# Logs
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+tmp/
+temp/
+
+# Cache
+.cache/
+*.cache
+
+# ============================================================================
+# TESTING
+# ============================================================================
+
+# Test output
+coverage/
+.nyc_output/
+test-results/
+*.lcov
+
+# ============================================================================
+# DOCKER
+# ============================================================================
+
+# Docker credentials
+.docker/config.json
+
+# ============================================================================
+# DOCUMENTATION BUILD
+# ============================================================================
+
+# Sphinx
+docs/_build/
+
+# MkDocs
+site/
+
+# ============================================================================
+# MISCELLANEOUS
+# ============================================================================
+
+# Archives (might contain credentials)
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Allow specific archives
+!example-*.zip
+
+# Session files
+*.session
+*.sess
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/

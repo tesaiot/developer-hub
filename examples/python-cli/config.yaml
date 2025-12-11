@@ -1,0 +1,13 @@
+api_gateway:
+  base_url: "https://admin.tesaiot.com/api/v1/external"
+  timeout_seconds: 15
+  verify_tls: true
+  default_schema: "industrial_device"
+telemetry:
+  default_limit: 20
+  sort_order: "desc"
+realtime:
+  ws_url: "wss://admin.tesaiot.com/ws/telemetry"
+  subscribe_ack_timeout_seconds: 5
+logging:
+  level: INFO

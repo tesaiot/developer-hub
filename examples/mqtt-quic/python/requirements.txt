@@ -1,0 +1,14 @@
+# TESA IoT Platform - MQTT over QUIC Client Requirements
+# Python dependencies for MQTT-QUIC connectivity
+
+# Option 1: NanoSDK Python bindings (Recommended for QUIC)
+# Note: NanoSDK with QUIC support may require building from source
+# https://github.com/nanomq/NanoSDK
+nng>=1.5.0
+
+# Option 2: Paho MQTT (fallback, limited QUIC support)
+# Note: Standard paho-mqtt uses TCP+TLS, not UDP+QUIC
+paho-mqtt>=1.6.1
+
+# Additional dependencies
+pyOpenSSL>=23.0.0  # For advanced SSL/TLS features
