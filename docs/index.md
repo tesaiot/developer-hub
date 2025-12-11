@@ -1,6 +1,7 @@
 ---
 layout: home
 title: "TESAIoT Developer Hub"
+classes: wide
 header:
   overlay_color: "#1a1a2e"
   overlay_filter: "0.5"

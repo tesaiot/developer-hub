@@ -36,17 +36,67 @@ figure.highlight {
   border-radius: 8px;
 }
 
-// Feature row cards
+// Wide layout - full width content
+.wide {
+  .page {
+    max-width: 100%;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+// Feature row - wider layout with equal columns
+.feature__wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2em 1em;
+}
+
 .feature__item {
   background: rgba($tesaiot-primary, 0.05);
   border: 1px solid rgba($tesaiot-primary, 0.2);
   border-radius: 12px;
-  padding: 1.5em;
-  margin-bottom: 1em;
+  padding: 2em;
+  margin-bottom: 1.5em;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     background: rgba($tesaiot-primary, 0.1);
     border-color: rgba($tesaiot-primary, 0.4);
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+  }
+
+  .archive__item-title {
+    font-size: 1.4em;
+    margin-bottom: 0.8em;
+  }
+
+  .archive__item-excerpt {
+    flex-grow: 1;
+    font-size: 1em;
+    line-height: 1.6;
+    color: #d1d5db;
+  }
+
+  .btn {
+    align-self: flex-start;
+    margin-top: 1em;
+  }
+}
+
+// Three column layout on desktop
+@media (min-width: 1024px) {
+  .feature__wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2em;
+  }
+
+  .feature__item {
+    margin-bottom: 0;
   }
 }
 
