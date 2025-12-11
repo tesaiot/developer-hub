@@ -68,14 +68,6 @@ TESAIoT Platform provides:
 - TLS 1.2+ enforced for all connections
 - Zero-trust architecture
 
-## Documentation
-
-| Resource | Link |
-|----------|------|
-| Platform Documentation | [docs.tesaiot.com](https://docs.tesaiot.com) |
-| API Reference | [admin.tesaiot.com/api/v1/docs](https://admin.tesaiot.com/api/v1/docs) |
-| Developer Portal | [www.tesaiot.com/developers](https://www.tesaiot.com/developers) |
-
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
