@@ -27,7 +27,7 @@ Simple command-line MQTT client for testing and scripting.
 - Scripted data ingestion
 - Development debugging
 
-[View Example →](python-cli/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/python-cli)
 
 ---
 
@@ -43,9 +43,9 @@ Production-ready device client with mutual TLS authentication.
 **Use Cases**:
 - Production IoT devices
 - High-security environments
-- Raspberry Pi deployments
+- Infineon PSoC, STM32, Raspberry Pi deployments
 
-[View Example →](device-mtls/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/device-mtls)
 
 ---
 
@@ -63,7 +63,7 @@ Device client with server TLS and token authentication.
 - Shared test devices
 - Quick prototyping
 
-[View Example →](device-servertls/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/device-servertls)
 
 ---
 
@@ -81,7 +81,7 @@ Experimental MQTT client using QUIC transport protocol.
 - Unreliable networks
 - Edge computing scenarios
 
-[View Example →](mqtt-quic/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/mqtt-quic)
 
 ---
 
@@ -103,7 +103,7 @@ Node-RED flows for TESAIoT Platform integration.
 - Rapid prototyping
 - Non-developer IoT projects
 
-[View Example →](nodered-integration/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/nodered-integration)
 
 ---
 
@@ -121,7 +121,7 @@ React-based IoT monitoring dashboard.
 - White-label dashboards
 - Admin interfaces
 
-[View Example →](react-dashboard/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/react-dashboard)
 
 ---
 
@@ -139,7 +139,7 @@ WebSocket MQTT streaming for browser applications.
 - Single-page applications
 - Real-time visualizations
 
-[View Example →](wss-mqtt-streaming/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/wss-mqtt-streaming)
 
 ---
 
@@ -162,7 +162,7 @@ FastAPI-based AI inference service template.
 - Anomaly detection services
 - Custom ML model hosting
 
-[View Example →](ai-service-template/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/ai-service-template)
 
 ---
 
@@ -181,7 +181,34 @@ Real-time telemetry visualization dashboard with MQTT WebSocket.
 - Telemetry debugging
 - Demo dashboards
 
-[View Example →](live-streaming-dashboard/)
+[View Example →](https://github.com/tesaiot/developer-hub/tree/main/examples/live-streaming-dashboard)
+
+---
+
+## Supported Platforms
+
+### MCU & Edge Devices
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| **Infineon PSoC 6** | ✅ Supported | Cortex-M4/M0+ with OPTIGA Trust M |
+| **Infineon PSoC Edge (E84)** | ✅ Supported | Cortex-M55/M33 with Trust M |
+| **Arduino** | ✅ Supported | ESP32, MKR WiFi 1010, Portenta |
+| **STM32** | ✅ Supported | STM32F4, STM32L4, STM32H7 series |
+| **NXP** | ✅ Supported | i.MX RT, LPC, Kinetis series |
+| **Renesas** | ✅ Supported | RA, RX, Synergy series |
+| **ESP32** | ✅ Supported | ESP32, ESP32-S2, ESP32-C3 |
+| **Raspberry Pi** | ✅ Supported | Pi 3/4/5, Pi Pico W |
+| **FPGA** | 🔶 Planned | Xilinx, Intel/Altera |
+
+### Security Hardware
+
+| Module | Integration |
+|--------|-------------|
+| **Infineon OPTIGA Trust M** | Certificate storage, crypto acceleration |
+| **Microchip ATECC608** | Secure key storage |
+| **NXP EdgeLock SE050** | Secure element integration |
+| **TPM 2.0** | Platform attestation |
 
 ---
 
@@ -190,10 +217,10 @@ Real-time telemetry visualization dashboard with MQTT WebSocket.
 | Example | Language | Auth Method | Docker | Complexity |
 |---------|----------|-------------|--------|------------|
 | python-cli | Python | mTLS/Token | ✅ | ⭐ Easy |
-| device-mtls | Python | mTLS | ✅ | ⭐⭐ Medium |
-| device-servertls | Python | Token | ✅ | ⭐ Easy |
+| device-mtls | C/Python | mTLS | ✅ | ⭐⭐ Medium |
+| device-servertls | C/Python | Token | ✅ | ⭐ Easy |
 | react-dashboard | TypeScript | Token | ✅ | ⭐⭐ Medium |
-| mqtt-quic | Python | mTLS | ✅ | ⭐⭐⭐ Advanced |
+| mqtt-quic | C/Python | mTLS | ✅ | ⭐⭐⭐ Advanced |
 | nodered-integration | Node-RED | Token | ✅ | ⭐ Easy |
 | wss-mqtt-streaming | JavaScript | Token | ✅ | ⭐ Easy |
 | ai-service-template | Python | - | ✅ | ⭐⭐ Medium |
@@ -210,4 +237,4 @@ Want to add your own example? We welcome contributions!
 3. Include README.md, Dockerfile, and example code
 4. Submit a pull request
 
-See our [Contributing Guide](../CONTRIBUTING.md) for details.
+See our [Contributing Guide](https://github.com/tesaiot/developer-hub/blob/main/CONTRIBUTING.md) for details.
