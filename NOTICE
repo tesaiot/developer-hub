@@ -1,5 +1,5 @@
 TESAIoT Platform - Open Source Examples
-Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
+Copyright 2025 TESAIoT Platform by TESA
 
 ================================================================================
                               ATTRIBUTION NOTICE
@@ -8,7 +8,7 @@ Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
 This product includes software developed by:
 
   TESAIoT Platform (https://www.tesaiot.com)
-  Created and maintained by Wiroon Sriborrirux
+  Created and maintained by TESA
 
 ================================================================================
                             REQUIRED ATTRIBUTION
@@ -18,13 +18,13 @@ If you use, modify, or distribute this software, you MUST include the following
 attribution in your documentation, README, or application about page:
 
   "Built with TESAIoT Platform Examples"
-  https://github.com/tesaiot/examples
+  https://github.com/tesaiot/developer-hub
 
 Or in a more detailed form:
 
   "This project uses code from TESAIoT Platform Examples,
    an open-source IoT integration toolkit.
-   Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux.
+   Copyright 2025 TESAIoT Platform by TESA.
    Licensed under the Apache License, Version 2.0.
    https://www.tesaiot.com"
 
@@ -48,8 +48,8 @@ For README.md:
 ```markdown
 ## Credits
 
-This project uses [TESAIoT Platform Examples](https://github.com/tesaiot/examples),
-licensed under Apache 2.0. Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux.
+This project uses [TESAIoT Platform Examples](https://github.com/tesaiot/developer-hub),
+licensed under Apache 2.0. Copyright 2025 TESAIoT Platform by TESA.
 ```
 
 For package.json:
@@ -58,7 +58,7 @@ For package.json:
   "credits": [
     {
       "name": "TESAIoT Platform Examples",
-      "url": "https://github.com/tesaiot/examples",
+      "url": "https://github.com/tesaiot/developer-hub",
       "license": "Apache-2.0"
     }
   ]
@@ -68,8 +68,8 @@ For package.json:
 For Python (setup.py or pyproject.toml):
 ```python
 # Based on TESAIoT Platform Examples
-# https://github.com/tesaiot/examples
-# Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
+# https://github.com/tesaiot/developer-hub
+# Copyright 2025 TESAIoT Platform by TESA
 # Licensed under Apache License 2.0
 ```
 
@@ -77,7 +77,7 @@ For Python (setup.py or pyproject.toml):
                            TRADEMARK NOTICE
 ================================================================================
 
-"TESAIoT" and the TESAIoT logo are trademarks of Wiroon Sriborrirux.
+"TESAIoT" and the TESAIoT logo are trademarks of TESA.
 
 Use of these trademarks is permitted only for:
 - Accurate attribution as required by this license

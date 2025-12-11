@@ -10,7 +10,7 @@ By participating in this project, you agree to maintain a respectful and inclusi
 
 ### Reporting Issues
 
-1. Check if the issue already exists in [GitHub Issues](https://github.com/tesaiot/examples/issues)
+1. Check if the issue already exists in [GitHub Issues](https://github.com/tesaiot/developer-hub/issues)
 2. Create a new issue with:
    - Clear, descriptive title
    - Steps to reproduce (if bug)
@@ -212,8 +212,8 @@ make test
 
 ## Getting Help
 
-- **Questions**: Open a [Discussion](https://github.com/tesaiot/examples/discussions)
-- **Bugs**: Open an [Issue](https://github.com/tesaiot/examples/issues)
+- **Questions**: Open a [Discussion](https://github.com/tesaiot/developer-hub/discussions)
+- **Bugs**: Open an [Issue](https://github.com/tesaiot/developer-hub/issues)
 - **Security**: Email security@tesaiot.com (do not open public issue)
 
 ## License

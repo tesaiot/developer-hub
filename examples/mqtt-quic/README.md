@@ -178,7 +178,7 @@ Client Certificate: Not required (Server-TLS mode)
 ## Support
 
 - **Documentation:** https://docs.tesaiot.com/mqtt-quic
-- **Example Issues:** https://github.com/tesaiot/examples/issues
+- **Example Issues:** https://github.com/tesaiot/developer-hub/issues
 - **Contact:** support@tesaiot.com
 
 ---

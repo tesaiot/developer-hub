@@ -32,8 +32,8 @@ Official integration examples for TESAIoT Platform - a secure, enterprise-grade 
 
 ```bash
 # Clone the repository
-git clone https://github.com/tesaiot/examples.git
-cd examples
+git clone https://github.com/tesaiot/developer-hub.git
+cd developer-hub/examples
 
 # Navigate to your chosen example
 cd python-cli
@@ -89,14 +89,14 @@ If you use this code, please include attribution to TESAIoT Platform. See [NOTIC
 
 **Example attribution:**
 ```markdown
-Built with [TESAIoT Platform Examples](https://github.com/tesaiot/examples)
-Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
+Built with [TESAIoT Platform Examples](https://github.com/tesaiot/developer-hub/tree/main/examples)
+Copyright 2025 TESAIoT Platform by TESA
 ```
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/tesaiot/examples/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/tesaiot/examples/discussions)
+- **Issues**: [GitHub Issues](https://github.com/tesaiot/developer-hub/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/tesaiot/developer-hub/discussions)
 - **Email**: support@tesaiot.com
 
 ## Acknowledgments
@@ -110,4 +110,4 @@ Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
 
 **Built with security in mind for the IoT future.**
 
-Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
+Copyright 2025 TESAIoT Platform by TESA

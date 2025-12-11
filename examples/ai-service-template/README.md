@@ -213,4 +213,4 @@ Apache 2.0 - See [LICENSE](../../LICENSE)
 ## Attribution
 
 Built with [TESAIoT Developer Hub](https://github.com/tesaiot/developer-hub)
-Copyright 2025 TESAIoT Platform by Wiroon Sriborrirux
+Copyright 2025 TESAIoT Platform by TESA
