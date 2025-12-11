@@ -1,92 +1,141 @@
 ---
-# Custom styles for TESAIoT Developer Hub
-# Matching landing page theme (www.tesaiot.com)
+# TESAIoT Developer Hub - 100% Landing Page Theme Clone
+# Copied from src/tesaiot-landing/out/_next/static/css/
 ---
 
-// TESAIoT brand colors - EXACT match from landing page globals.css
-$bg: #0b1220;               // Navy background (landing page --bg)
-$brand: #14b8a6;            // Teal-500 (landing page --brand)
-$brand-2: #3b82f6;          // Blue-500 (landing page --brand-2)
-$surface: #0c1533;          // Card surface (landing page --surface)
-$text: #e5e7eb;             // Gray-200 text
-$text-muted: rgba(255, 255, 255, 0.7);
-$emerald-400: #34d399;      // Button color
+// ============================================
+// CSS VARIABLES - EXACT from landing page globals.css
+// ============================================
+:root {
+  --bg: #0b1220;
+  --brand: #14b8a6;
+  --brand-2: #3b82f6;
+  --surface: #0c1533;
+  --text: #e5e7eb;
+}
 
-// Override minimal mistakes variables
-$primary-color: $brand !default;
-$link-color: $brand !default;
-$background-color: $bg !default;
+// Override minimal mistakes to prevent conflicts
+$primary-color: #14b8a6 !default;
+$link-color: #14b8a6 !default;
+$background-color: #0b1220 !default;
 
 @import "minimal-mistakes/skins/dark";
 @import "minimal-mistakes";
 
 // ============================================
-// GLOBAL STYLES - Match landing page exactly
+// GLOBAL RESET - Match Tailwind base
 // ============================================
+*, *:before, *:after {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+}
+
 html, body {
-  background: $bg !important;
-  color: $text;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  height: 100%;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+body {
+  margin: 0;
+  background: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 // ============================================
-// HEADER / NAVIGATION - Glassmorphism navbar
+// NAVIGATION - bg-[#0a1328]/70 backdrop-blur
 // ============================================
 .masthead {
-  background-color: rgba(#0a1328, 0.7) !important;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  background-color: rgba(10, 19, 40, 0.7) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+.masthead__inner-wrap {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 .site-title {
   color: white !important;
   font-weight: 700;
-  font-size: 1.2rem;
+  white-space: nowrap;
 }
 
-.greedy-nav a {
-  color: rgba(255, 255, 255, 0.7) !important;
+.greedy-nav {
+  background: transparent !important;
 
-  &:hover {
+  a {
+    color: rgba(255, 255, 255, 0.7) !important;
+
+    &:hover {
+      color: white !important;
+    }
+  }
+
+  .visible-links a {
+    color: rgba(255, 255, 255, 0.7) !important;
+
+    &:before {
+      background: transparent !important;
+    }
+
+    &:hover {
+      color: white !important;
+    }
+  }
+
+  button {
     color: white !important;
   }
 }
 
-.greedy-nav__toggle {
-  color: white !important;
-}
-
 // ============================================
-// HERO / SPLASH SECTION
+// HERO SECTION - gradient background
 // ============================================
 .page__hero--overlay {
-  background: linear-gradient(135deg, #0a1931 0%, $bg 100%) !important;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a1931 0%, #0b1220 100%) !important;
 
-  // Subtle grid pattern like landing page
+  // Grid pattern overlay
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0, 255, 178, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 178, 0.06) 1px, transparent 1px);
+      linear-gradient(rgba(0, 255, 178, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 178, 0.08) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0.4;
+    opacity: 0.3;
     pointer-events: none;
   }
-}
 
-.page__title {
-  color: white !important;
-  font-weight: 700;
-  font-size: 2.5rem;
-}
+  .page__title {
+    color: white !important;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    letter-spacing: -0.025em;
 
-.page__lead {
-  color: $text-muted !important;
-  font-size: 1.1rem;
-  line-height: 1.7;
+    @media (min-width: 768px) {
+      font-size: 3.75rem;
+      line-height: 1;
+    }
+  }
+
+  .page__lead {
+    color: rgba(255, 255, 255, 0.7) !important;
+    max-width: 36rem;
+    margin-top: 1.25rem;
+  }
 }
 
 // ============================================
@@ -95,45 +144,48 @@ html, body {
 .wide {
   .page {
     max-width: 100%;
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
 // ============================================
-// FEATURE ROW - Match "Who Benefits" cards
+// FEATURE ROW - "Who Benefits" cards style
 // ============================================
 .feature__wrapper {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
-  padding: 3em 1em;
-  background: transparent;
+  padding: 4rem 1rem;
+  background: transparent !important;
 }
 
-// Feature cards matching landing page exactly
+// Card styling - EXACT match to landing page
 .feature__item {
   position: relative;
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 16px;
-  padding: 2em;
-  margin-bottom: 1.5em;
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1rem; // rounded-2xl
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.15s;
 
   &:hover {
     background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2) !important;
   }
 
-  // Title styling
+  // Remove any default image styling
+  .archive__item-teaser {
+    display: none;
+  }
+
   .archive__item-title {
-    font-size: 1.25em;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
     font-weight: 600;
-    margin-bottom: 0.75em;
+    margin-bottom: 0.5rem;
     color: white !important;
 
     a {
@@ -141,33 +193,33 @@ html, body {
       text-decoration: none;
 
       &:hover {
-        color: $brand !important;
+        color: #14b8a6 !important;
       }
     }
   }
 
-  // Description styling
   .archive__item-excerpt {
-    flex-grow: 1;
-    font-size: 0.95em;
-    line-height: 1.65;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: rgba(255, 255, 255, 0.6) !important;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
+
+    p {
+      margin: 0;
+    }
   }
 
-  // Button at bottom
   .btn {
-    align-self: flex-start;
     margin-top: auto;
   }
 }
 
-// Three column grid on desktop (like "Who Benefits")
-@media (min-width: 1024px) {
+// 3-column grid on desktop
+@media (min-width: 768px) {
   .feature__wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5em;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 
   .feature__item {
@@ -175,33 +227,34 @@ html, body {
   }
 }
 
-// Two column on tablet
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 1024px) {
   .feature__wrapper {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5em;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 // ============================================
-// BUTTONS - Match emerald style from landing
+// BUTTONS - emerald-400 style
 // ============================================
 .btn--primary {
-  background-color: $emerald-400 !important;
+  display: inline-flex;
+  align-items: center;
+  background-color: #34d399 !important; // emerald-400
   color: #081225 !important;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem; // rounded-lg
   border: none !important;
-  border-radius: 8px;
-  padding: 0.6em 1.4em;
-  font-size: 0.9em;
-  transition: all 0.2s ease;
   text-decoration: none !important;
+  transition-property: color, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.15s;
 
   &:hover {
-    background-color: lighten($emerald-400, 5%) !important;
+    background-color: #6ee7b7 !important; // emerald-300
     color: #081225 !important;
-    transform: translateY(-1px);
   }
 
   &:visited {
@@ -209,16 +262,34 @@ html, body {
   }
 }
 
-// Outline/inverse button
-.btn--inverse {
-  background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: white !important;
-  border-radius: 8px;
+// Header buttons (Get Started, View on GitHub)
+.page__hero--overlay .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.15s;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
+  &.btn--primary {
+    background-color: #34d399 !important;
+    color: #081225 !important;
+
+    &:hover {
+      background-color: #6ee7b7 !important;
+    }
+  }
+
+  &.btn--inverse {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
   }
 }
 
@@ -226,39 +297,47 @@ html, body {
 // CONTENT AREA
 // ============================================
 .page__content {
-  background: transparent;
+  background: transparent !important;
 
   h1, h2, h3, h4, h5, h6 {
     color: white !important;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
   h2 {
-    font-size: 1.75em;
-    margin-top: 2em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.5rem;
+    line-height: 2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
   }
 
-  p, li {
-    color: $text-muted;
+  p {
+    color: rgba(255, 255, 255, 0.7);
     line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  li {
+    color: rgba(255, 255, 255, 0.7);
   }
 
   strong {
     color: white;
+    font-weight: 600;
   }
-}
 
-// ============================================
-// LINKS
-// ============================================
-a {
-  color: $brand;
-  text-decoration: none;
+  a {
+    color: #14b8a6;
 
-  &:hover {
-    color: lighten($brand, 15%);
+    &:hover {
+      color: #5eead4;
+    }
   }
 }
 
@@ -267,52 +346,64 @@ a {
 // ============================================
 div.highlighter-rouge,
 figure.highlight {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px;
+  background: #0c1533 !important; // --surface
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
 }
 
 pre {
   background: transparent !important;
-  color: $text;
+  color: var(--text);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0;
 
   code {
-    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
-    font-size: 0.85em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    background: transparent !important;
   }
 }
 
 code.highlighter-rouge {
-  background: rgba($brand, 0.15);
-  color: $brand;
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
+  background: rgba(20, 184, 166, 0.1);
+  color: #14b8a6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 // ============================================
-// TABLES - Match dark theme
+// TABLES
 // ============================================
 table {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px;
-  overflow: hidden;
   width: 100%;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  margin: 1.5rem 0;
 
   th {
     background: rgba(255, 255, 255, 0.05) !important;
     color: white !important;
     font-weight: 600;
-    padding: 0.75em 1em;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 
   td {
-    padding: 0.75em 1em;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: $text-muted;
   }
 
   tr:last-child td {
@@ -327,48 +418,52 @@ table {
 // ============================================
 // SIDEBAR / NAVIGATION
 // ============================================
+.sidebar {
+  background: transparent !important;
+}
+
 .nav__list .nav__items {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 1em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
 
   a {
-    color: $text-muted !important;
-    padding: 0.4em 0;
-    display: block;
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.875rem;
 
     &:hover {
-      color: $brand !important;
+      color: #14b8a6 !important;
     }
   }
 
   .active {
-    color: $brand !important;
+    color: #14b8a6 !important;
+    font-weight: 600;
   }
 }
 
 // ============================================
-// TOC (Table of Contents)
+// TOC
 // ============================================
 .toc {
   background: rgba(255, 255, 255, 0.02) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px;
-
-  .toc__menu {
-    a {
-      color: $text-muted !important;
-
-      &:hover {
-        color: $brand !important;
-      }
-    }
-  }
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem;
 
   .nav__title {
     color: white !important;
     background: transparent !important;
+    font-weight: 600;
+  }
+
+  .toc__menu a {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.875rem;
+
+    &:hover {
+      color: #14b8a6 !important;
+    }
   }
 }
 
@@ -376,21 +471,27 @@ table {
 // FOOTER
 // ============================================
 .page__footer {
-  background: darken($bg, 2%) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #060b19 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: rgba(255, 255, 255, 0.5);
+  padding: 2rem 0;
 
   a {
-    color: $text-muted;
+    color: rgba(255, 255, 255, 0.6);
 
     &:hover {
-      color: $brand;
+      color: #14b8a6;
     }
   }
 }
 
+.page__footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+}
+
 // ============================================
-// ARCHIVE / LIST PAGES
+// ARCHIVE PAGES
 // ============================================
 .archive__item-title {
   color: white !important;
@@ -399,52 +500,48 @@ table {
     color: white !important;
 
     &:hover {
-      color: $brand !important;
+      color: #14b8a6 !important;
     }
   }
 }
 
 .archive__item-excerpt {
-  color: $text-muted !important;
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
 // ============================================
 // PAGINATION
 // ============================================
 .pagination {
-  a {
+  a, span {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white !important;
-    border-radius: 6px;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
+  a:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .current {
-    background: $brand !important;
+    background: #14b8a6 !important;
     color: #081225 !important;
+    border-color: #14b8a6 !important;
   }
 }
 
 // ============================================
-// RESPONSIVE MOBILE
+// SEARCH
 // ============================================
-@media (max-width: 768px) {
-  .feature__item {
-    padding: 1.5em;
-    min-height: auto;
-  }
-
-  .page__title {
-    font-size: 1.75rem;
-  }
+.search__toggle {
+  color: white !important;
 }
 
 // ============================================
-// SCROLLBAR - Dark theme
+// SCROLLBAR
 // ============================================
 ::-webkit-scrollbar {
   width: 8px;
@@ -452,7 +549,7 @@ table {
 }
 
 ::-webkit-scrollbar-track {
-  background: $bg;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -465,16 +562,26 @@ table {
 }
 
 // ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+  .feature__item {
+    padding: 1rem;
+  }
+
+  .page__hero--overlay {
+    .page__title {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
+}
+
+// ============================================
 // UTILITY CLASSES
 // ============================================
-.text-muted {
-  color: $text-muted !important;
-}
-
-.text-brand {
-  color: $brand !important;
-}
-
-.bg-surface {
-  background: $surface !important;
-}
+.text-white { color: white !important; }
+.text-white\/70 { color: rgba(255, 255, 255, 0.7) !important; }
+.text-white\/60 { color: rgba(255, 255, 255, 0.6) !important; }
+.text-brand { color: #14b8a6 !important; }
+.bg-surface { background: #0c1533 !important; }
