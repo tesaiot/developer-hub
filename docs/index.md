@@ -97,9 +97,10 @@ body{padding-top:4rem}
 .arch-stack__icons{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem;font-size:1.25rem;margin-bottom:0.375rem}
 
 /* Table - Fix overflow and symmetry */
-.page__content{max-width:80rem!important;margin:0 auto!important;padding:0 1.5rem!important;box-sizing:border-box}
-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;overflow-wrap:break-word;word-wrap:break-word;box-sizing:border-box}
-table th,table td{padding:0.5rem 0.75rem!important;font-size:0.875rem}
+.page__content{max-width:76rem!important;margin:0 auto!important;padding:0 2rem!important;box-sizing:border-box}
+table{width:calc(100% - 2rem)!important;max-width:calc(100% - 2rem)!important;margin-left:1rem!important;margin-right:1rem!important;table-layout:auto!important;box-sizing:border-box}
+table th,table td{padding:0.5rem 0.75rem!important;font-size:0.875rem;white-space:normal}
+pre,div.highlighter-rouge{max-width:calc(100% - 2rem)!important;margin-left:1rem!important;margin-right:1rem!important}
 </style>
 
 <!-- Custom Header with Logo -->
