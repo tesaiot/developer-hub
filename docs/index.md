@@ -30,7 +30,7 @@ excerpt: "Open source examples and templates for building secure IoT application
 .custom-header__inner{max-width:80rem;margin:0 auto;display:flex;align-items:center;gap:0.75rem}
 .custom-header__logo{width:2.75rem;height:2.75rem;border-radius:0.5rem;background:white;padding:0.25rem}
 .custom-header__title{color:white;font-size:1.375rem;font-weight:700;margin:0;white-space:nowrap;display:flex;align-items:center}
-.custom-header__title span{color:#ef4444;font-size:1.75rem;line-height:1;margin:0 2px;position:relative;top:-1px}
+.custom-header__title span{color:#ef4444;font-size:2rem;line-height:1;margin:0 2px;position:relative;top:0.1em}
 body{padding-top:4rem}
 
 /* Feature Cards - Landing Page Use Cases Style */
@@ -217,9 +217,6 @@ Each example includes:
 | Module | Integration |
 |--------|-------------|
 | **Infineon OPTIGA Trust M** | Certificate storage, crypto acceleration |
-| **Microchip ATECC608** | Secure key storage |
-| **NXP EdgeLock SE050** | Secure element integration |
-| **TPM 2.0** | Platform attestation |
 
 ## Platform Features
 
@@ -228,7 +225,7 @@ Each example includes:
 - **mTLS Authentication**: Certificate-based device authentication
 - **Vault PKI Integration**: Automatic certificate management
 - **RBAC**: Role-based access control for users and devices
-- **Hardware Security**: OPTIGA Trust M, TPM 2.0 support
+- **Hardware Security**: OPTIGA Trust M support
 
 ### Edge AI Ready
 
