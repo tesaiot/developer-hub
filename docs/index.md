@@ -25,9 +25,9 @@ excerpt: "Open source examples and templates for building secure IoT application
 /* Custom Header - Landing Page Style */
 .custom-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,19,40,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.1);padding:0.75rem 1.5rem}
 .custom-header__inner{max-width:80rem;margin:0 auto;display:flex;align-items:center;gap:0.75rem}
-.custom-header__logo{width:2.5rem;height:2.5rem;border-radius:0.5rem}
-.custom-header__title{color:white;font-size:1.25rem;font-weight:700;margin:0;white-space:nowrap}
-.custom-header__title span{color:#ef4444;font-size:1.5rem;vertical-align:middle}
+.custom-header__logo{width:2.75rem;height:2.75rem;border-radius:0.5rem;background:white;padding:0.25rem}
+.custom-header__title{color:white;font-size:1.375rem;font-weight:700;margin:0;white-space:nowrap;display:flex;align-items:center}
+.custom-header__title span{color:#ef4444;font-size:1.375rem;line-height:1;margin:0 1px}
 body{padding-top:4rem}
 
 /* Feature Cards - Landing Page Use Cases Style */
@@ -94,8 +94,9 @@ body{padding-top:4rem}
 .arch-stack__icons{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem;font-size:1.25rem;margin-bottom:0.375rem}
 
 /* Table - Fix overflow */
-.page__content table{width:100%;max-width:100%;table-layout:auto;display:block;overflow-x:auto}
-@media(min-width:768px){.page__content table{display:table}}
+table{width:100%!important;max-width:100%!important;table-layout:fixed!important;overflow-wrap:break-word;word-wrap:break-word}
+.page__content{overflow-x:hidden}
+table th,table td{padding:0.5rem 0.75rem!important;font-size:0.875rem}
 </style>
 
 <!-- Custom Header with Logo -->
