@@ -92,6 +92,10 @@ body{padding-top:4rem}
 .arch-stack__item--arrow{background:transparent;border:none;color:rgba(255,255,255,0.3);padding:0.125rem}
 .arch-stack__item--highlight{background:rgba(20,184,166,0.15);border-color:rgba(20,184,166,0.3);color:#14b8a6}
 .arch-stack__icons{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem;font-size:1.25rem;margin-bottom:0.375rem}
+
+/* Table - Fix overflow */
+.page__content table{width:100%;max-width:100%;table-layout:auto;display:block;overflow-x:auto}
+@media(min-width:768px){.page__content table{display:table}}
 </style>
 
 <!-- Custom Header with Logo -->
