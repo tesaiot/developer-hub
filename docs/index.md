@@ -13,6 +13,71 @@ header:
 excerpt: "Open source examples and templates for building secure IoT applications on TESAIoT Platform"
 ---
 
+<style>
+/* Feature Cards - Landing Page Use Cases Style */
+.feature-cards{display:grid;grid-template-columns:1fr;gap:1rem;max-width:80rem;margin:2rem auto;padding:0 1rem}
+@media(min-width:768px){.feature-cards{grid-template-columns:repeat(3,1fr);gap:1.5rem}}
+.feature-card{display:flex;flex-direction:column;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:0.75rem;padding:1.25rem;text-decoration:none!important;transition:all 0.2s ease}
+.feature-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+.feature-card--red{border-color:rgba(239,68,68,0.3)}
+.feature-card--red .feature-card__icon{background:rgba(239,68,68,0.1);color:#ef4444}
+.feature-card--red .feature-card__list li::before{color:#ef4444}
+.feature-card--blue{border-color:rgba(59,130,246,0.3)}
+.feature-card--blue .feature-card__icon{background:rgba(59,130,246,0.1);color:#3b82f6}
+.feature-card--blue .feature-card__list li::before{color:#3b82f6}
+.feature-card--green{border-color:rgba(16,185,129,0.3)}
+.feature-card--green .feature-card__icon{background:rgba(16,185,129,0.1);color:#10b981}
+.feature-card--green .feature-card__list li::before{color:#10b981}
+.feature-card__icon{display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;border-radius:0.75rem;margin-bottom:0.75rem}
+.feature-card__icon svg{width:1.5rem;height:1.5rem}
+.feature-card__content{margin-bottom:0.75rem}
+.feature-card__title{font-size:1.125rem;font-weight:600;color:white!important;margin:0 0 0.25rem 0}
+.feature-card__subtitle{font-size:0.75rem;color:rgba(255,255,255,0.5);margin:0}
+.feature-card__list{list-style:none;padding:0;margin:0 0 1rem 0;flex-grow:1}
+.feature-card__list li{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.875rem;color:rgba(255,255,255,0.7);margin-bottom:0.5rem}
+.feature-card__list li::before{content:"✓";flex-shrink:0;font-weight:bold}
+.feature-card__btn{display:inline-flex;align-items:center;justify-content:center;padding:0.5rem 1rem;background:#14b8a6;color:#081225!important;font-size:0.875rem;font-weight:500;border-radius:0.5rem;transition:background 0.2s;margin-top:auto}
+.feature-card__btn:hover{background:#0d9488}
+
+/* Layered Architecture */
+.layered-architecture{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:1rem;padding:1.5rem;margin:2rem 0}
+.arch-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.1)}
+.arch-header__icon{display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;background:linear-gradient(135deg,#14b8a6 0%,#0d9488 100%);border-radius:0.75rem;color:white}
+.arch-header__title{font-size:1.25rem;font-weight:600;color:white!important;margin:0}
+.arch-services{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:0.75rem}
+@media(min-width:768px){.arch-services{grid-template-columns:repeat(4,1fr)}}
+.arch-service{display:flex;align-items:flex-start;gap:0.75rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:0.5rem;padding:0.875rem}
+.arch-service svg{flex-shrink:0;margin-top:0.125rem}
+.arch-service--teal svg{color:#14b8a6}
+.arch-service--yellow svg{color:#f59e0b}
+.arch-service--blue svg{color:#3b82f6}
+.arch-service--purple svg{color:#8b5cf6}
+.arch-service--red svg{color:#ef4444}
+.arch-service--orange svg{color:#f97316}
+.arch-service__title{display:block;font-size:0.875rem;font-weight:500;color:white}
+.arch-service__desc{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5)}
+.arch-device-mgmt{display:flex;align-items:center;gap:0.75rem;background:linear-gradient(135deg,rgba(139,92,246,0.1) 0%,rgba(59,130,246,0.1) 100%);border:1px solid rgba(139,92,246,0.3);border-radius:0.5rem;padding:1rem;margin:0.75rem 0}
+.arch-device-mgmt svg{flex-shrink:0;color:#a78bfa}
+.arch-device-mgmt__title{display:block;font-size:0.875rem;font-weight:500;color:white}
+.arch-device-mgmt__desc{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5)}
+.arch-bottom{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1rem}
+@media(min-width:768px){.arch-bottom{grid-template-columns:repeat(3,1fr)}}
+.arch-stack{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:0.5rem;overflow:hidden}
+.arch-stack__header{display:flex;align-items:center;gap:0.5rem;padding:0.625rem 0.875rem;font-size:0.8rem;font-weight:500;color:white;border-bottom:1px solid rgba(255,255,255,0.1)}
+.arch-stack__header svg{flex-shrink:0}
+.arch-stack__header--purple{background:rgba(139,92,246,0.15)}
+.arch-stack__header--purple svg{color:#a78bfa}
+.arch-stack__header--gray{background:rgba(255,255,255,0.05)}
+.arch-stack__header--teal{background:rgba(20,184,166,0.15)}
+.arch-stack__header--teal svg{color:#14b8a6}
+.arch-stack__items{padding:0.5rem}
+.arch-stack__item{padding:0.5rem 0.75rem;font-size:0.8rem;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:0.375rem;margin-bottom:0.375rem;text-align:center}
+.arch-stack__item:last-child{margin-bottom:0}
+.arch-stack__item--arrow{background:transparent;border:none;color:rgba(255,255,255,0.3);padding:0.125rem}
+.arch-stack__item--highlight{background:rgba(20,184,166,0.15);border-color:rgba(20,184,166,0.3);color:#14b8a6}
+.arch-stack__icons{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem;font-size:1.25rem;margin-bottom:0.375rem}
+</style>
+
 <!-- Custom Feature Cards - Matching Landing Page Use Cases Style -->
 <div class="feature-cards">
   <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/device-mtls" class="feature-card feature-card--red">
