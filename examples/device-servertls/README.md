@@ -1,8 +1,10 @@
-# TESA IoT Device → Platform (Server‑TLS) — HTTPS or MQTTS via Mongoose
+# TESA IoT Device → Platform (Server-TLS) — HTTPS or MQTTS via Mongoose
+
+> **English version** - For Thai version, see [README-TH.md](README-TH.md)
 
 Unified, beginner-friendly C example that can send telemetry over either:
-- HTTPS Server‑TLS (API key + CA)
-- MQTTS Server‑TLS (username/password + CA)
+- HTTPS Server-TLS (API key + CA)
+- MQTTS Server-TLS (username/password + CA)
 
 Uses Cesanta Mongoose single-file library, TLS backends: OpenSSL, mbedTLS, or wolfSSL.
 
@@ -11,19 +13,16 @@ Uses Cesanta Mongoose single-file library, TLS backends: OpenSSL, mbedTLS, or wo
 > reuse inside your own lab repos.
 
 ---
-TL;DR Quick Start (EN)
-- Download Server‑TLS bundles in Admin UI → Credentials (include_password / include_api_key if needed)
+
+## Quick Start
+
+- Download Server-TLS bundles in Admin UI → Credentials (include_password / include_api_key if needed)
 - `make prepare` to sync into `./certs_credentials`
 - Run for 2 minutes (every 10s):
   - HTTPS: `COMM_MODE=HTTPS API_BASE_URL=https://tesaiot.com CERTS_DIR=./certs_credentials ./device_client --period 2 --interval 10`
   - MQTTS: `COMM_MODE=MQTTS MQTT_HOST=mqtt.tesaiot.com MQTT_PORT=8884 CERTS_DIR=./certs_credentials ./device_client --period 2 --interval 10`
 
-สรุปเริ่มต้นเร็ว (TH)
-- ดาวน์โหลด Server‑TLS bundles จาก Admin UI (เลือก include_password/include_api_key เมื่อจำเป็น)
-- รัน `make prepare` เพื่อซิงค์ให้ตรงกับฐานข้อมูล
-- รันทดสอบ 2 นาที (ส่งทุก 10 วินาที): HTTPS และ MQTTS ตามคำสั่งด้านบน
-
-Directory Structure
+## Directory Structure
 
 ```text
 .
@@ -35,22 +34,22 @@ Directory Structure
 ├── main.c                   # selects HTTPS or MQTTS via env COMM_MODE
 ├── Makefile                 # portable, fetches Mongoose on demand
 ├── README.md
+├── README-TH.md
 ├── certs_credentials/       # place downloaded bundle here
 └── ../common-c/             # shared Mongoose client (auto-downloaded)
 ```
 
-Credentials
+## Credentials
 
-- Get Device02 Server‑TLS bundle from Admin UI → Credentials → “Download Server‑TLS bundle”.
+- Get Device02 Server-TLS bundle from Admin UI → Credentials → "Download Server-TLS bundle".
 - Then:
 
 ```bash
 make prepare
 ```
 
-Build / ติดตั้งไลบรารี
+## Build
 
-English
 - The Makefile auto-fetches Mongoose into `../common-c/` on first build.
 - TLS backends supported: OpenSSL (default), mbedTLS, wolfSSL. Pick via `TLS_BACKEND=...`.
 - Install system deps per OS:
@@ -73,18 +72,7 @@ make TLS_BACKEND=wolfssl
 make deps
 ```
 
-ภาษาไทย
-- Makefile จะดาวน์โหลด Mongoose ไปไว้ที่ `../common-c/` ให้อัตโนมัติเมื่อ build ครั้งแรก
-- รองรับ TLS backend: OpenSSL (ค่าเริ่มต้น), mbedTLS, wolfSSL กำหนดด้วย `TLS_BACKEND=...`
-- ติดตั้งแพ็กเกจตามระบบปฏิบัติการ:
-  - Debian/Ubuntu (รวมถึง Raspberry Pi):
-    - OpenSSL: `sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev`
-    - mbedTLS: `sudo apt-get install -y build-essential pkg-config libmbedtls-dev`
-    - wolfSSL: `sudo apt-get install -y build-essential pkg-config libwolfssl-dev`
-  - macOS (Homebrew): `brew install openssl@3` และตั้งค่า `CPPFLAGS/LDFLAGS` หากระบบหาไม่เจออัตโนมัติ
-- คำสั่ง build และตรวจสอบ dependencies: ดูตัวอย่างด้านบน (make, make TLS_BACKEND=..., make deps)
-
-Install prerequisites
+## Install Prerequisites
 
 - Linux (Ubuntu/Debian):
   - OpenSSL: `sudo apt-get install -y build-essential libssl-dev`
@@ -96,7 +84,7 @@ Install prerequisites
 - Raspberry Pi OS: same as Ubuntu/Debian instructions.
 - RTOS: use this code as reference; integrate per RTOS Mongoose porting guide.
 
-Run — HTTPS (Server‑TLS)
+## Run — HTTPS (Server-TLS)
 
 ```bash
 COMM_MODE=HTTPS \
@@ -105,7 +93,7 @@ CERTS_DIR=./certs_credentials \
 ./device_client
 ```
 
-Run — MQTTS (Server‑TLS)
+## Run — MQTTS (Server-TLS)
 
 ```bash
 COMM_MODE=MQTTS \
@@ -114,43 +102,47 @@ CERTS_DIR=./certs_credentials \
 ./device_client
 ```
 
-Behavior
+## Behavior
 
-- Builds JSON `{device_id, timestamp, data}` โดยอ่านโครงสร้างฟิลด์จากไฟล์ schema หากมี
-  - ค้นหาอัตโนมัติที่ `../download/data_schema.txt` (หรือกำหนดด้วย `SCHEMA_PATH`)
-  - รองรับชนิด `integer/number/string/boolean` พร้อม minimum/maximum และ `enum` (เลือกค่าตัวแรก)
-  - หากไม่พบไฟล์ schema จะ fallback เป็นฟิลด์ตัวอย่างเดิม
-- HTTPS ใช้เฉพาะ `X-API-KEY: <api_key.txt>` (ไม่ต้องส่ง Bearer)
+- Builds JSON `{device_id, timestamp, data}` by reading field structure from schema file if available
+  - Auto-searches at `../download/data_schema.txt` (or set via `SCHEMA_PATH`)
+  - Supports types `integer/number/string/boolean` with minimum/maximum and `enum` (picks first value)
+  - Falls back to sample fields if no schema file found
+- HTTPS uses only `X-API-KEY: <api_key.txt>` (no Bearer token needed)
 - TLS verification is enforced. Do not disable SSL. Paths are read from `CERTS_DIR/`.
 - Reads `endpoints.json` if present and uses `api_base_url` or `ingest_base_url`; also reads `mqtt_host` and `mqtt_tls_port` if present.
 - Device ID is read from `device_id.txt` or overridden by `DEVICE_ID` env var.
 
-องค์ความรู้ (Knowledge)
-- โครงสร้าง payload แบบ schema‑driven: โปรแกรมอ่านสคีมาจาก `../download/data_schema.txt` (หรือ `SCHEMA_PATH`) และสุ่มค่าให้สอดคล้องกับ type/min-max/enum ช่วยให้ทดสอบกับข้อมูลจริงได้รวดเร็ว
-- การเลือกพอร์ต: serverTLS (user/pass) → MQTT ใช้ 8884, HTTPS ใช้ 443; mTLS แยกไป 8883/9444 ตามนโยบาย แยกเส้นทางชัดเจนลดความสับสน
-- การยืนยันสิทธิ์: HTTPS ใช้เฉพาะ `X-API-KEY`, MQTTS ใช้ `username=device_id` และ `password` จาก bundle ที่ include_password=true เท่านั้น และ backend จะตรวจ hash ในฐานข้อมูล
-- ACL โทปิค: อนุญาตเฉพาะ `device/<device_id>/telemetry` สำหรับ publish (subscribe ใช้ `device/<device_id>/commands|config|firmware`)
+## Knowledge
 
-Troubleshooting (ข้อผิดพลาดพบบ่อย)
-- HTTPS 401: API key ไม่อัปเดต → ดาวน์โหลด HTTPS bundle ใหม่แบบ include_api_key=true แล้วรัน `./scripts/sync_credentials.sh --device-dir ../download`
-- MQTTS Code 5 (Not authorized): username ไม่ตรงกับ device_id หรือ password หมดอายุ/ยังไม่ได้รีเซ็ต → ดาวน์โหลด MQTT Server‑TLS bundle แบบ include_password=true แล้วซิงค์ใหม่
-- พอร์ตสลับกับ mTLS: ถ้าไป 8883 จะเจอ TLS ปิด connection หลัง CONNECT เพราะโหมดไม่ตรง → ใช้ 8884 สำหรับ serverTLS
-- ACL deny: ตรวจว่า topic เป็น `device/<device_id>/telemetry` และ client_id ตรงกับ `<device_id>`
+- Schema-driven payload structure: The program reads schema from `../download/data_schema.txt` (or `SCHEMA_PATH`) and generates random values conforming to type/min-max/enum, enabling rapid testing with real data patterns.
+- Port selection: serverTLS (user/pass) → MQTT uses 8884, HTTPS uses 443; mTLS is separate at 8883/9444 per policy. Clear path separation reduces confusion.
+- Authentication: HTTPS uses only `X-API-KEY`, MQTTS uses `username=device_id` and `password` from bundle (with include_password=true), and backend validates hash in database.
+- Topic ACL: Only `device/<device_id>/telemetry` is allowed for publish (subscribe uses `device/<device_id>/commands|config|firmware`).
 
-Legacy Clients (optional)
+## Troubleshooting
+
+- HTTPS 401: API key not updated → Download new HTTPS bundle with include_api_key=true then run `./scripts/sync_credentials.sh --device-dir ../download`
+- MQTTS Code 5 (Not authorized): username doesn't match device_id or password expired/not reset → Download MQTT Server-TLS bundle with include_password=true then sync again
+- Port mixed with mTLS: Going to 8883 will cause TLS to close connection after CONNECT because mode doesn't match → Use 8884 for serverTLS
+- ACL deny: Verify topic is `device/<device_id>/telemetry` and client_id matches `<device_id>`
+
+## Legacy Clients (optional)
 
 - See `./c/` for simple libmosquitto/libcurl senders (kept for comparison). The default build uses Mongoose.
-Test Results (2025‑09‑15) — 2‑minute run
 
-- HTTPS Server‑TLS: OK. ส่งสำเร็จทุก 10 วินาทีในช่วง 2 นาที (ต้องแน่ใจว่า `api_key.txt` เป็นชุดล่าสุดจาก HTTPS bundle)
-- MQTTS Server‑TLS (port 8884): OK. ส่งสำเร็จทุก 10 วินาทีในช่วง 2 นาที (หลังซิงค์รหัสผ่านใหม่จาก bundle)
+## Test Results (2025-09-15) — 2-minute run
 
-Notes
+- HTTPS Server-TLS: OK. Sent successfully every 10 seconds for 2 minutes (ensure `api_key.txt` is the latest from HTTPS bundle)
+- MQTTS Server-TLS (port 8884): OK. Sent successfully every 10 seconds for 2 minutes (after syncing new password from bundle)
 
-- To enable MQTTS in Server‑TLS mode, ensure `mqtt_username.txt` and `mqtt_password.txt` are valid for this device, and that ACL permits publishing to `device/<device_id>/telemetry` on port 8884.
+## Notes
+
+- To enable MQTTS in Server-TLS mode, ensure `mqtt_username.txt` and `mqtt_password.txt` are valid for this device, and that ACL permits publishing to `device/<device_id>/telemetry` on port 8884.
 - TLS verification remained enabled at all times; no SSL weakening.
 
-Schema Tips
-- วาง `download/data_schema.txt` ไว้ที่โฟลเดอร์ตัวอย่าง หรือกำหนด `SCHEMA_PATH` ให้โปรแกรมอ่าน
-- หาก HTTPS 401 ให้กดดาวน์โหลด HTTPS Server‑TLS bundle ใหม่โดยเลือก include_api_key=true แล้วรันสคริปต์ซิงค์อีกครั้ง:
+## Schema Tips
+
+- Place `download/data_schema.txt` in the example folder, or set `SCHEMA_PATH` for the program to read
+- If HTTPS 401, download new HTTPS Server-TLS bundle with include_api_key=true then run the sync script again:
   - `./scripts/sync_credentials.sh --device-dir ../download`

@@ -12,6 +12,7 @@ export interface TelemetryMessage {
   sensorType: string;
   data: Record<string, number | string | boolean>;
   timestamp: Date;
+  topic?: string;
   raw?: string;
 }
 

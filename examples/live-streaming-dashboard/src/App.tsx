@@ -95,7 +95,7 @@ function App() {
               token={token}
               onTokenChange={setToken}
               status={status}
-              error={error}
+              error={error?.message ?? null}
               onConnect={handleConnect}
             />
 

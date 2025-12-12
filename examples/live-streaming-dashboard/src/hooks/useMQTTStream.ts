@@ -23,7 +23,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
-import type { TelemetryMessage, ConnectionStatus, MQTTConfig } from '../types';
+import type { TelemetryMessage, ConnectionStatus } from '../types';
 
 interface UseMQTTStreamOptions {
   token: string;
