@@ -100,7 +100,7 @@ body{padding-top:4rem}
 .page__content{max-width:76rem!important;margin:0 auto!important;padding:0 2rem!important;box-sizing:border-box}
 table{width:calc(50% - 2rem)!important;max-width:calc(50% - 2rem)!important;margin-left:auto!important;margin-right:auto!important;table-layout:auto!important;box-sizing:border-box}
 table th,table td{padding:0.5rem 0.75rem!important;font-size:0.875rem;white-space:normal}
-pre,div.highlighter-rouge{max-width:calc(100% - 2rem)!important;margin-left:1rem!important;margin-right:1rem!important}
+pre,div.highlighter-rouge{width:calc(50% - 2rem)!important;max-width:calc(50% - 2rem)!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box}
 </style>
 
 <!-- Custom Header with Logo -->
