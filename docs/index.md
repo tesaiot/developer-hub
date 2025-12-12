@@ -22,12 +22,15 @@ excerpt: "Open source examples and templates for building secure IoT application
 #main{max-width:100%!important;padding:0!important}
 .initial-content,.inner-wrap{max-width:100%!important}
 
+/* Hide default masthead */
+.masthead{display:none!important}
+
 /* Custom Header - Landing Page Style */
 .custom-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,19,40,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.1);padding:0.75rem 1.5rem}
 .custom-header__inner{max-width:80rem;margin:0 auto;display:flex;align-items:center;gap:0.75rem}
 .custom-header__logo{width:2.75rem;height:2.75rem;border-radius:0.5rem;background:white;padding:0.25rem}
 .custom-header__title{color:white;font-size:1.375rem;font-weight:700;margin:0;white-space:nowrap;display:flex;align-items:center}
-.custom-header__title span{color:#ef4444;font-size:1.375rem;line-height:1;margin:0 1px}
+.custom-header__title span{color:#ef4444;font-size:1.75rem;line-height:1;margin:0 2px;position:relative;top:-1px}
 body{padding-top:4rem}
 
 /* Feature Cards - Landing Page Use Cases Style */
