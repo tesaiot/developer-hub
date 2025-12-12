@@ -14,6 +14,22 @@ excerpt: "Open source examples and templates for building secure IoT application
 ---
 
 <style>
+/* Wide Layout Override - Match Landing Page */
+.page{max-width:100%!important;padding:0!important}
+.page__content{max-width:80rem;margin:0 auto;padding:0 1.5rem}
+.page__hero--overlay{padding:3rem 1.5rem}
+.page__hero--overlay .page__title,.page__hero--overlay .page__lead,.page__hero--overlay .page__hero-caption{max-width:80rem;margin-left:auto;margin-right:auto}
+#main{max-width:100%!important;padding:0!important}
+.initial-content,.inner-wrap{max-width:100%!important}
+
+/* Custom Header - Landing Page Style */
+.custom-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,19,40,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.1);padding:0.75rem 1.5rem}
+.custom-header__inner{max-width:80rem;margin:0 auto;display:flex;align-items:center;gap:0.75rem}
+.custom-header__logo{width:2.5rem;height:2.5rem;border-radius:0.5rem}
+.custom-header__title{color:white;font-size:1.25rem;font-weight:700;margin:0;white-space:nowrap}
+.custom-header__title span{color:#ef4444;font-size:1.5rem;vertical-align:middle}
+body{padding-top:4rem}
+
 /* Feature Cards - Landing Page Use Cases Style */
 .feature-cards{display:grid;grid-template-columns:1fr;gap:1rem;max-width:80rem;margin:2rem auto;padding:0 1rem}
 @media(min-width:768px){.feature-cards{grid-template-columns:repeat(3,1fr);gap:1.5rem}}
@@ -77,6 +93,14 @@ excerpt: "Open source examples and templates for building secure IoT application
 .arch-stack__item--highlight{background:rgba(20,184,166,0.15);border-color:rgba(20,184,166,0.3);color:#14b8a6}
 .arch-stack__icons{display:flex;justify-content:center;gap:0.5rem;padding:0.5rem;font-size:1.25rem;margin-bottom:0.375rem}
 </style>
+
+<!-- Custom Header with Logo -->
+<div class="custom-header">
+  <div class="custom-header__inner">
+    <img src="{{ '/assets/images/TESA_logo.png' | relative_url }}" alt="TESA" class="custom-header__logo">
+    <h1 class="custom-header__title">TES<span>⩓</span>IoT Developer Hub</h1>
+  </div>
+</div>
 
 <!-- Custom Feature Cards - Matching Landing Page Use Cases Style -->
 <div class="feature-cards">
