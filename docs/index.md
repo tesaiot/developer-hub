@@ -119,13 +119,13 @@ pre,div.highlighter-rouge{max-width:100%!important;margin-left:auto!important;ma
     </div>
     <div class="feature-card__content">
       <h3 class="feature-card__title">Device Examples</h3>
-      <p class="feature-card__subtitle">mTLS Security</p>
+      <p class="feature-card__subtitle">serverTLS/mTLS Security</p>
     </div>
     <ul class="feature-card__list">
       <li>Infineon PSoC 6/PSoC Edge</li>
-      <li>Arduino, STM32, NXP, Renesas</li>
-      <li>ESP32, Raspberry Pi</li>
-      <li>Hardware security modules</li>
+      <li>Arduino, ESP32, STM32, NXP, Renesas</li>
+      <li>Raspberry Pi, Nvidia Jetson (Embedded Linux)</li>
+      <li>MiniPC (NUC/MSI/Advantech) </li>
     </ul>
     <span class="feature-card__btn">Learn More</span>
   </a>
