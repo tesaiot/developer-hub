@@ -10,26 +10,26 @@ Official integration examples for TESAIoT Platform - a secure, enterprise-grade 
 
 All examples connect to TESAIoT Platform's 14 core services. Here's a simplified view:
 
-```
+```ini
                               ┌─────────────────────────────────────┐
                               │       TESAIoT Platform              │
 ┌─────────────┐               │                                     │
-│   Device    │──MQTTS/QUIC──►│  TESA MQTT Broker ──► TESA Bridge     │
+│   Device    │──MQTTS/QUIC──►│  TESA MQTT Broker ──► TESA Bridge   │
 │  Examples   │               │       │              │              │
 │  #4-9,21-22 │               │       ▼              ▼              │
-└─────────────┘               │  TimescaleDB    TESA Core API            │
+└─────────────┘               │  TimescaleDB    TESA Core API       │
                               │  (telemetry)    (FastAPI)           │
 ┌─────────────┐               │                     │               │
-│   REST API  │───HTTPS──────►│  TESA Proxy Server ───► TESA Core API           │
-│  Examples   │               │       │              │              │
-│  #1-3,10-14 │               │       ▼              ▼              │
-└─────────────┘               │   TESA API Gateway   MongoDB             │
+│   REST API  │───HTTPS──────►│ TESA Proxy Server ──► TESA Core API │
+│  Examples   │               │       │             │               │
+│  #1-3,10-14 │               │       ▼             ▼               │
+└─────────────┘               │   TESA API Gateway   MongoDB        │
                               │   (gateway)     (metadata)          │
 ┌─────────────┐               │                                     │
-│  Real-time  │────WSS───────►│  TESA Proxy Server ──► WebSocket B2B       │
+│  Real-time  │────WSS───────►│ TESA Proxy Server ──► WebSocket B2B │
 │  Examples   │               │                     │               │
 │  #15-17     │               │                     ▼               │
-└─────────────┘               │               TESA MQTT Broker (sub)       │
+└─────────────┘               │            TESA MQTT Broker (sub)   │
                               └─────────────────────────────────────┘
 ```
 
@@ -169,6 +169,7 @@ cat README.md
 ### 3. Configure and Run
 
 Each example includes:
+
 - `.env.example` - Configuration template
 - `README.md` - Quick start guide
 - `HOWTO.md` - Detailed tutorial
@@ -228,6 +229,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICE
 If you use this code, please include attribution to TESAIoT Platform. See [NOTICE](./NOTICE) for details.
 
 **Example attribution:**
+
 ```markdown
 Built with [TESAIoT Platform Examples](https://github.com/tesaiot/developer-hub/tree/main/examples)
 Copyright 2025 TESAIoT Platform by TESA
@@ -237,7 +239,6 @@ Copyright 2025 TESAIoT Platform by TESA
 
 - **Issues**: [GitHub Issues](https://github.com/tesaiot/developer-hub/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/tesaiot/developer-hub/discussions)
-
 
 ---
 

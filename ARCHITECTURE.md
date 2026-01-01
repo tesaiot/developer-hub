@@ -12,10 +12,10 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  ┌──────────────────────────────────────────────────────────────────────────────────┐   │
 │  │                           EXTERNAL ACCESS LAYER                                  │   │
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────────────────────┐  │   │
-│  │  │ TESA Proxy     │  │ TESA API        │  │     TESA MQTT Broker             │  │   │
-│  │  │   Server       │  │   Gateway       │  │   (MQTT Broker + QUIC)           │  │   │
-│  │  │   (Reverse     │  │   (Rate Limit)  │  │   (Secure Protocols)             │  │   │
-│  │  │    Proxy)      │  │   (Auth Plugin) │  │   (MQTTS/WSS/QUIC)               │  │   │
+│  │  │ TESA Proxy      │  │ TESA API        │  │     TESA MQTT Broker             │  │   │
+│  │  │   Server        │  │   Gateway       │  │   (MQTT Broker + QUIC)           │  │   │
+│  │  │   (Reverse      │  │   (Rate Limit)  │  │   (Secure Protocols)             │  │   │
+│  │  │    Proxy)       │  │   (Auth Plugin) │  │   (MQTTS/WSS/QUIC)               │  │   │
 │  │  │                 │  │                 │  │                                  │  │   │
 │  │  └────────┬────────┘  └────────┬────────┘  └────────────────┬─────────────────┘  │   │
 │  └───────────┼────────────────────┼────────────────────────────┼────────────────────┘   │
@@ -104,77 +104,77 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 ### 1. Device Telemetry Flow (MQTT Path)
 
 ```ini
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                         MQTT TELEMETRY DATA FLOW                                    │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  ┌─────────────┐     MQTTS/QUIC      ┌─────────────┐     Internal    ┌───────────┐  │
-│  │   Device    │────────────────────►│  TESA MQTT Broker  │────────────────►│  Bridge   │  │
-│  │ (IoT/MCU)   │   Secure Protocol   │             │   MQTT Sub      │  (Python) │  │
-│  └─────────────┘                     └─────────────┘                 └─────┬─────┘  │
-│                                                                            │        │
-│  Topic: device/{device_id}/telemetry                                       │        │
-│  Payload: {"device_id":"...","timestamp":"...","data":{...}}               │        │
-│                                                                            ▼        │
-│                                                                     ┌───────────┐   │
-│                                                                     │ TESA Core API  │   │
-│                                                                     │ (FastAPI) │   │
-│                                                                     └─────┬─────┘   │
-│                                                                           │         │
-│                    ┌──────────────────────────────────────────────────────┤         │
-│                    ▼                                                      ▼         │
-│             ┌─────────────┐                                        ┌───────────┐    │
-│             │ TimescaleDB │  Time-series storage                   │  MongoDB  │    │
-│             │ (telemetry) │  for analytics                         │ (devices) │    │
-│             └─────────────┘                                        └───────────┘    │
-│                                                                                     │
-│  Examples using this flow:                                                          │
-│  • #4 rpi-servertls       - MQTT + Server TLS                                       │
-│  • #5 mqtt-quic-python    - MQTT over QUIC                                          │
-│  • #6 device-mtls         - MQTT + Mutual TLS                                       │
-│  • #7 device-mtls/CLI     - MQTT + mTLS (mosquitto_pub)                             │
-│  • #9 mqtt-quic-c         - MQTT over QUIC (C)                                      │
-│  • #21 mqtt-quic/c_cpp    - Advanced QUIC                                           │
-│  • #22 mqtt-quic/python   - Advanced QUIC                                           │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────────────────┐
+│                              MQTT TELEMETRY DATA FLOW                                     │
+├───────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                           │
+│  ┌─────────────┐     MQTTS/QUIC      ┌──────────────────┐     Internal    ┌───────────┐   │
+│  │   Device    │────────────────────►│ TESA MQTT Broker │────────────────►│  Bridge   │   │
+│  │ (IoT/MCU)   │   Secure Protocol   │                  │   MQTT Sub      │  (Python) │   │
+│  └─────────────┘                     └──────────────────┘                 └─────┬─────┘   │
+│                                                                                 │         │
+│  Topic: device/{device_id}/telemetry                                            │         │
+│  Payload: {"device_id":"...","timestamp":"...","data":{...}}                    │         │
+│                                                                                 ▼         │
+│                                                                          ┌──────────────┐ │
+│                                                                          │ TESA Core API│ │
+│                                                                          │ (FastAPI)    │ │
+│                                                                          └─────┬────────┘ │
+│                                                                                │          │
+│                    ┌───────────────────────────────────────────────────────────┤          │
+│                    ▼                                                           ▼          │
+│             ┌─────────────┐                                              ┌───────────┐    │
+│             │ TimescaleDB │  Time-series storage                         │  MongoDB  │    │
+│             │ (telemetry) │  for analytics                               │ (devices) │    │
+│             └─────────────┘                                              └───────────┘    │
+│                                                                                           │
+│  Examples using this flow:                                                                │
+│  • #4 rpi-servertls       - MQTT + Server TLS                                             │
+│  • #5 mqtt-quic-python    - MQTT over QUIC                                                │
+│  • #6 device-mtls         - MQTT + Mutual TLS                                             │
+│  • #7 device-mtls/CLI     - MQTT + mTLS (mosquitto_pub)                                   │
+│  • #9 mqtt-quic-c         - MQTT over QUIC (C)                                            │
+│  • #21 mqtt-quic/c_cpp    - Advanced QUIC                                                 │
+│  • #22 mqtt-quic/python   - Advanced QUIC                                                 │
+│                                                                                           │
+└───────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 2. REST API Flow (HTTPS Path)
 
 ```ini
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                           REST API DATA FLOW                                        │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  ┌─────────────┐      HTTPS        ┌─────────────┐    Route     ┌───────────────┐   │
-│  │   Client    │──────────────────►│ TESA Proxy Server  │─────────────►│  TESA API Gateway  │   │
-│  │ (Python/JS) │   Secure HTTPS    │ (SSL Term)  │  /api/v1/*   │  (Gateway)    │   │
-│  └─────────────┘                   └─────────────┘              └───────┬───────┘   │
-│                                                                         │           │
-│  Headers:                                                               │           │
-│  • X-API-Key: <device_api_key>                                          │           │
-│  • Authorization: Bearer <jwt_token>                                    ▼           │
-│                                                                  ┌───────────┐      │
-│                                                                  │ TESA Core API  │      │
-│                                                                  │ (FastAPI) │      │
-│                                                                  └─────┬─────┘      │
-│                                                                        │            │
-│                    ┌───────────────────────────────────────────────────┤            │
-│                    ▼                          ▼                        ▼            │
-│             ┌───────────┐              ┌───────────┐            ┌───────────┐       │
-│             │  MongoDB  │              │   Redis   │            │TimescaleDB│       │
-│             │(metadata) │              │ (cache)   │            │(telemetry)│       │
-│             └───────────┘              └───────────┘            └───────────┘       │
-│                                                                                     │
-│  Examples using this flow:                                                          │
-│  • #1 python-cli          - REST API client                                         │
-│  • #2 device-servertls    - HTTPS + API Key (C)                                     │
-│  • #3 device-servertls/CLI- HTTPS + API Key (Python)                                │
-│  • #10 ai-service-template- Third-party AI service                                  │
-│  • #12-14 analytics-api/* - Python/JS/Rust API clients                              │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                           REST API DATA FLOW                                           │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│  ┌─────────────┐     HTTPS      ┌────────────────────┐    Route     ┌────────────────┐ │
+│  │   Client    │───────────────►│ TESA Proxy Server  │─────────────►│TESA API Gateway│ │
+│  │ (Python/JS) │  Secure HTTPS  │ (SSL Term)         │  /api/v1/*   │  (Gateway)     │ │
+│  └─────────────┘                └────────────────────┘              └───────┬────────┘ │
+│                                                                             │          │
+│  Headers:                                                                   │          │
+│  • X-API-Key: <device_api_key>                                              │          │
+│  • Authorization: Bearer <jwt_token>                                        ▼          │
+│                                                                      ┌──────────────┐  │
+│                                                                      │ TESA Core API│  │
+│                                                                      │ (FastAPI)    │  │
+│                                                                      └──────┬───────┘  │
+│                                                                             │          │
+│                         ┌───────────────────────────────────────────────────┤          │
+│                         ▼                          ▼                        ▼          │
+│                   ┌───────────┐              ┌───────────┐            ┌───────────┐    │
+│                   │  MongoDB  │              │   Redis   │            │TimescaleDB│    │
+│                   │(metadata) │              │ (cache)   │            │(telemetry)│    │
+│                   └───────────┘              └───────────┘            └───────────┘    │
+│                                                                                        │
+│  Examples using this flow:                                                             │
+│  • #1 python-cli          - REST API client                                            │
+│  • #2 device-servertls    - HTTPS + API Key (C)                                        │
+│  • #3 device-servertls/CLI- HTTPS + API Key (Python)                                   │
+│  • #10 ai-service-template- Third-party AI service                                     │
+│  • #12-14 analytics-api/* - Python/JS/Rust API clients                                 │
+│                                                                                        │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 3. Real-time WebSocket Flow
@@ -184,18 +184,18 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │                        WEBSOCKET STREAMING DATA FLOW                                │
 ├─────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                     │
-│  ┌─────────────┐        WSS         ┌─────────────┐   Upgrade   ┌───────────────┐   │
-│  │  Browser/   │───────────────────►│ TESA Proxy Server  │────────────►│   WebSocket   │   │
-│  │   Client    │   wss://...        │             │   /ws/*     │   B2B Server  │   │
-│  └─────────────┘                    └─────────────┘             └───────┬───────┘   │
-│                                                                         │           │
-│  URL: wss://admin.tesaiot.com/ws/v1/stream/mqtt?api_token=...           │           │
-│                                                                         │           │
-│                                                                         ▼           │
-│                                                               ┌─────────────────┐   │
-│                                                               │    TESA MQTT Broker    │   │
-│                                                               │  (MQTT Sub)     │   │
-│                                                               └────────┬────────┘   │
+│  ┌─────────────┐      WSS    ┌──────────────────┐   Upgrade   ┌───────────────┐     │
+│  │  Browser/   │────────────►│ TESA Proxy Server│────────────►│   WebSocket   │     │
+│  │   Client    │  wss://...  │                  │   /ws/*     │   B2B Server  │     │
+│  └─────────────┘             └──────────────────┘             └────────┬──────┘     │
+│                                                                        │            │
+│  URL: wss://admin.tesaiot.com/ws/v1/stream/mqtt?api_token=...          │            │
+│                                                                        │            │
+│                                                                        ▼            │
+│                                                               ┌───────────────────┐ │
+│                                                               │  TESA MQTT Broker │ │
+│                                                               │  (MQTT Sub)       │ │
+│                                                               └────────┬──────────┘ │
 │                                                                        │            │
 │                                                                        ▼            │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐    │
@@ -232,7 +232,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ─────────────────────────────────────────────────────────────────────────── │ │
 │  │                                                                              │ │
 │  │  ┌─────────────┐                              ┌─────────────────────────────┐│ │
-│  │  │   Device    │                              │      TESA MQTT Broker              ││ │
+│  │  │   Device    │                              │      TESA MQTT Broker       ││ │
 │  │  │             │     1. TLS ClientHello       │                             ││ │
 │  │  │ client_cert │─────────────────────────────►│  CA Chain validates         ││ │
 │  │  │ client_key  │◄─────────────────────────────│  client certificate         ││ │
@@ -252,7 +252,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ─────────────────────────────────────────────────────────────────────────── │ │
 │  │                                                                              │ │
 │  │  ┌─────────────┐                              ┌─────────────────────────────┐│ │
-│  │  │   Device    │     TLS Handshake            │      TESA Proxy Server             ││ │
+│  │  │   Device    │     TLS Handshake            │      TESA Proxy Server      ││ │
 │  │  │             │─────────────────────────────►│                             ││ │
 │  │  │ ca-chain    │     (Server cert only)       │  Server presents cert       ││ │
 │  │  │ api_key     │                              │  Client verifies            ││ │
@@ -271,7 +271,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ─────────────────────────────────────────────────────────────────────────── │ │
 │  │                                                                              │ │
 │  │  ┌─────────────┐     Login                    ┌─────────────────────────────┐│ │
-│  │  │   User/App  │─────────────────────────────►│      TESA Core API               ││ │
+│  │  │   User/App  │─────────────────────────────►│      TESA Core API          ││ │
 │  │  │             │     POST /api/v1/auth/login  │                             ││ │
 │  │  │             │◄─────────────────────────────│  Returns JWT token          ││ │
 │  │  │             │     {access_token: "..."}    │  (exp: 24h)                 ││ │
@@ -292,15 +292,15 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 
 ```ini
 ┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                          PKI CERTIFICATE HIERARCHY                                  │
+│                           PKI CERTIFICATE HIERARCHY                                 │
 ├─────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                     │
-│                         ┌─────────────────────────────┐                             │
-│                         │     TESAIoT Root CA         │                             │
-│                         │     (Self-signed)           │                             │
-│                         │     Validity: 10 years      │                             │
-│                         │     Stored in: TESA Vault PKI   │                             │
-│                         └──────────────┬──────────────┘                             │
+│                         ┌─────────────────────────────────┐                         │
+│                         │       TESAIoT Root CA           │                         │
+│                         │        (Self-signed)            │                         │
+│                         │       Validity: 10 years        │                         │
+│                         │    Stored in: TESA Vault PKI    │                         │
+│                         └──────────────┬──────────────────┘                         │
 │                                        │                                            │
 │                    ┌───────────────────┼───────────────────┐                        │
 │                    ▼                   ▼                   ▼                        │
@@ -344,7 +344,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 ├────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │  MQTT Protocols (TESA MQTT Broker)                                                 │   │
+│  │  MQTT Protocols (TESA MQTT Broker)                                          │   │
 │  │  ─────────────────────────────────────────────────────────────────────────  │   │
 │  │                                                                             │   │
 │  │  MQTTS        │  TLS 1.2+         │  Server-TLS or mTLS authentication      │   │
@@ -359,7 +359,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  └─────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │  HTTP/HTTPS Protocols (TESA Proxy Server + TESA API Gateway)                            │   │
+│  │  HTTP/HTTPS Protocols (TESA Proxy Server + TESA API Gateway)                │   │
 │  │  ─────────────────────────────────────────────────────────────────────────  │   │
 │  │                                                                             │   │
 │  │  HTTPS        │  TLS 1.2+         │  All API and UI access                  │   │
@@ -401,114 +401,114 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 ### Which Examples Connect to Which Services
 
 ```ini
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                        EXAMPLE → SERVICE DEPENDENCY MATRIX                         │
-├────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  EMBEDDED DEVICES - Entry Level (#1-5)                                        │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #1 python-cli              → TESA Proxy Server → TESA Core API → MongoDB                 │ │
-│  │  #2 device-servertls (C)    → TESA Proxy Server → TESA Core API → MongoDB                 │ │
-│  │  #3 device-servertls/CLI    → TESA Proxy Server → TESA Core API → MongoDB                 │ │
-│  │  #4 rpi-servertls           → TESA MQTT Broker (MQTTS) → Bridge → TimescaleDB        │ │
-│  │  #5 mqtt-quic-python        → TESA MQTT Broker (QUIC) → Bridge → TimescaleDB         │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  EMBEDDED DEVICES - Intermediate (#6-8)                                       │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #6 device-mtls (C)         → TESA MQTT Broker (mTLS) → Bridge → TimescaleDB         │ │
-│  │  #7 device-mtls/CLI         → TESA MQTT Broker (mTLS) → Bridge → TimescaleDB         │ │
-│  │  #8 esp32-servertls         → TESA MQTT Broker (MQTTS) → Bridge → TimescaleDB        │ │
-│  │                                                                               │ │
-│  │  Security: Requires client certificate from Vault PKI                         │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  INTEGRATIONS (#9-11)                                                         │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #9 mqtt-quic-c             → TESA MQTT Broker (QUIC) → Bridge → TimescaleDB         │ │
-│  │  #10 ai-service-template    → TESA Proxy Server → TESA Core API → MongoDB/TimescaleDB     │ │
-│  │  #11 n8n-automation         → TESA Proxy Server → TESA Core API (webhook triggers)        │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  ANALYTICS API (#12-14)                                                       │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #12 analytics-api/python   → TESA Proxy Server → TESA Core API → TimescaleDB (analytics) │ │
-│  │  #13 analytics-api/js       → TESA Proxy Server → TESA Core API → TimescaleDB (analytics) │ │
-│  │  #14 analytics-api/rust     → TESA Proxy Server → TESA Core API → TimescaleDB (analytics) │ │
-│  │                                                                               │ │
-│  │  Endpoints used:                                                              │ │
-│  │  • GET /api/v1/analytics/devices/{id}/summary                                 │ │
-│  │  • GET /api/v1/analytics/devices/{id}/time-series                             │ │
-│  │  • GET /api/v1/analytics/devices/{id}/aggregates                              │ │
-│  │  • GET /api/v1/analytics/devices/{id}/export                                  │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  APPLICATIONS - Real-time (#15-17)                                            │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #15 wss-mqtt-streaming/py  → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)   │ │
-│  │  #16 wss-mqtt-streaming/js  → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)   │ │
-│  │  #17 live-streaming-dash    → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)   │ │
-│  │                                                                               │ │
-│  │  WebSocket URL: wss://admin.tesaiot.com/ws/v1/stream/mqtt?api_token=...       │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  APPLICATIONS - Visualization (#18-19)                                        │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #18 react-dashboard        → TESA Proxy Server → TESA Core API → TimescaleDB/MongoDB     │ │
-│  │  #19 grafana-dashboard      → TESA Dashboards → TESA Metrics/TimescaleDB      │ │
-│  │                                                                               │ │
-│  │  Grafana Data Sources:                                                        │ │
-│  │  • Prometheus: http://TESA Metrics:9090                                    │ │
-│  │  • TimescaleDB: postgresql://TESA TimeDB:5432/tesaiot                    │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  APPLICATIONS - Automation (#20)                                              │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #20 nodered-integration    → TESA MQTT Broker (subscribe) + TESA Core API (HTTP)         │ │
-│  │                                                                               │ │
-│  │  Node-RED can:                                                                │ │
-│  │  • Subscribe to MQTT topics from EMQX                                         │ │
-│  │  • Call REST API endpoints                                                    │ │
-│  │  • Trigger webhooks and automations                                           │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
-│  │  ADVANCED (#21-22)                                                            │ │
-│  │  ──────────────────────────────────────────────────────────────────────────── │ │
-│  │                                                                               │ │
-│  │  #21 mqtt-quic/c_cpp        → TESA MQTT Broker (14567 QUIC + 8884 TCP fallback)      │ │
-│  │  #22 mqtt-quic/python       → TESA MQTT Broker (14567 QUIC + 8884 TCP fallback)      │ │
-│  │                                                                               │ │
-│  │  Advanced Features:                                                           │ │
-│  │  • 0-RTT session resumption (90% faster reconnect)                            │ │
-│  │  • Multi-stream parallel publishing                                           │ │
-│  │  • Automatic TCP fallback when QUIC unavailable                               │ │
-│  │  • Connection health monitoring                                               │ │
-│  │                                                                               │ │
-│  └───────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                    │
-└────────────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────────────────────┐
+│                        EXAMPLE → SERVICE DEPENDENCY MATRIX                                    │
+├───────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  EMBEDDED DEVICES - Entry Level (#1-5)                                                   │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #1 python-cli              → TESA Proxy Server → TESA Core API → MongoDB                │ │
+│  │  #2 device-servertls (C)    → TESA Proxy Server → TESA Core API → MongoDB                │ │
+│  │  #3 device-servertls/CLI    → TESA Proxy Server → TESA Core API → MongoDB                │ │
+│  │  #4 rpi-servertls           → TESA MQTT Broker (MQTTS) → Bridge → TimescaleDB            │ │
+│  │  #5 mqtt-quic-python        → TESA MQTT Broker (QUIC) → Bridge → TimescaleDB             │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  EMBEDDED DEVICES - Intermediate (#6-8)                                                  │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #6 device-mtls (C)         → TESA MQTT Broker (mTLS) → Bridge → TimescaleDB             │ │
+│  │  #7 device-mtls/CLI         → TESA MQTT Broker (mTLS) → Bridge → TimescaleDB             │ │
+│  │  #8 esp32-servertls         → TESA MQTT Broker (MQTTS) → Bridge → TimescaleDB            │ │
+│  │                                                                                          │ │
+│  │  Security: Requires client certificate from Vault PKI                                    │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  INTEGRATIONS (#9-11)                                                                    │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #9 mqtt-quic-c             → TESA MQTT Broker (QUIC) → Bridge → TimescaleDB             │ │
+│  │  #10 ai-service-template    → TESA Proxy Server → TESA Core API → MongoDB/TimescaleDB    │ │
+│  │  #11 n8n-automation         → TESA Proxy Server → TESA Core API (webhook triggers)       │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  ANALYTICS API (#12-14)                                                                  │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #12 analytics-api/python   → TESA Proxy Server → TESA Core API → TimescaleDB (analytics)│ │
+│  │  #13 analytics-api/js       → TESA Proxy Server → TESA Core API → TimescaleDB (analytics)│ │
+│  │  #14 analytics-api/rust     → TESA Proxy Server → TESA Core API → TimescaleDB (analytics)│ │
+│  │                                                                                          │ │
+│  │  Endpoints used:                                                                         │ │
+│  │  • GET /api/v1/analytics/devices/{id}/summary                                            │ │
+│  │  • GET /api/v1/analytics/devices/{id}/time-series                                        │ │
+│  │  • GET /api/v1/analytics/devices/{id}/aggregates                                         │ │
+│  │  • GET /api/v1/analytics/devices/{id}/export                                             │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  APPLICATIONS - Real-time (#15-17)                                                       │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #15 wss-mqtt-streaming/py  → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)       │ │
+│  │  #16 wss-mqtt-streaming/js  → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)       │ │
+│  │  #17 live-streaming-dash    → TESA Proxy Server → WebSocket B2B → EMQX (subscribe)       │ │
+│  │                                                                                          │ │
+│  │  WebSocket URL: wss://admin.tesaiot.com/ws/v1/stream/mqtt?api_token=...                  │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  APPLICATIONS - Visualization (#18-19)                                                   │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #18 react-dashboard        → TESA Proxy Server → TESA Core API → TimescaleDB/MongoDB    │ │
+│  │  #19 grafana-dashboard      → TESA Dashboards → TESA Metrics/TimescaleDB                 │ │
+│  │                                                                                          │ │
+│  │  Grafana Data Sources:                                                                   │ │
+│  │  • Prometheus: http://TESA Metrics:9090                                                  │ │
+│  │  • TimescaleDB: postgresql://TESA TimeDB:5432/tesaiot                                    │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  APPLICATIONS - Automation (#20)                                                         │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #20 nodered-integration → TESA MQTT Broker (subscribe) + TESA Core API (HTTP)           │ │
+│  │                                                                                          │ │
+│  │  Node-RED can:                                                                           │ │
+│  │  • Subscribe to MQTT topics from EMQX                                                    │ │
+│  │  • Call REST API endpoints                                                               │ │
+│  │  • Trigger webhooks and automations                                                      │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  ADVANCED (#21-22)                                                                       │ │
+│  │  ─────────────────────────────────────────────────────────────────────────────────────── │ │
+│  │                                                                                          │ │
+│  │  #21 mqtt-quic/c_cpp  → TESA MQTT Broker (14567 QUIC + 8884 TCP fallback)                │ │
+│  │  #22 mqtt-quic/python → TESA MQTT Broker (14567 QUIC + 8884 TCP fallback)                │ │
+│  │                                                                                          │ │
+│  │  Advanced Features:                                                                      │ │
+│  │  • 0-RTT session resumption (90% faster reconnect)                                       │ │
+│  │  • Multi-stream parallel publishing                                                      │ │
+│  │  • Automatic TCP fallback when QUIC unavailable                                          │ │
+│  │  • Connection health monitoring                                                          │ │
+│  │                                                                                          │ │
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                               │
+└───────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
