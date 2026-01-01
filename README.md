@@ -225,7 +225,7 @@ git config core.hooksPath .githooks
 ls -la .githooks/
 ```
 
-This ensures commit messages follow our standards and prevents accidental inclusion of AI tool attributions.
+This ensures commit messages follow our project standards.
 
 ### Contribution Areas
 
