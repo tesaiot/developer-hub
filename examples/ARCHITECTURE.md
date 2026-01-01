@@ -14,9 +14,9 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────────────────────┐  │   │
 │  │  │   tesa-nginx    │  │   tesa-apisix   │  │         tesa-emqx                │  │   │
 │  │  │   (Reverse      │  │   (API Gateway) │  │   (MQTT Broker + QUIC)           │  │   │
-│  │  │    Proxy)       │  │                 │  │                                  │  │   │
-│  │  │   Port 443      │  │   Port 9180     │  │   Ports: 1883, 8883, 8084,       │  │   │
-│  │  │   (HTTPS)       │  │   (Admin API)   │  │          14567 (QUIC)            │  │   │
+│  │  │    Proxy)       │  │   (Rate Limit)  │  │   (Secure Protocols)             │  │   │
+│  │  │   (HTTPS/WSS)   │  │   (Auth Plugin) │  │   (MQTTS/WSS/QUIC)               │  │   │
+│  │  │                 │  │                 │  │                                  │  │   │
 │  │  └────────┬────────┘  └────────┬────────┘  └────────────────┬─────────────────┘  │   │
 │  └───────────┼────────────────────┼────────────────────────────┼────────────────────┘   │
 │              │                    │                            │                        │
@@ -28,7 +28,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────┐   ││   │
 │  │  │  │    tesa-api     │  │  tesa-admin-ui  │  │    tesa-mqtt-bridge         │   ││   │
 │  │  │  │  (FastAPI)      │  │  (React + Vite) │  │  (Python MQTT ↔ API)        │   ││   │
-│  │  │  │  Port 8000      │  │  Port 3000      │  │  Internal Only              │   ││   │
+│  │  │  │  (REST API)     │  │  (Admin UI)     │  │  (Internal Service)         │   ││   │
 │  │  │  └────────┬────────┘  └─────────────────┘  └──────────────┬──────────────┘   ││   │
 │  │  │           │                                               │                  ││   │
 │  │  │  ┌────────┴───────────────────────────────────────────────┴────────────────┐ ││   │
@@ -44,7 +44,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────────────────────┐  │   │
 │  │  │  tesa-mongodb   │  │ tesa-timescaledb│  │        tesa-redis                │  │   │
 │  │  │  (Document DB)  │  │ (Time-Series)   │  │        (Cache/Session)           │  │   │
-│  │  │  Port 27017     │  │  Port 5432      │  │        Port 6379                 │  │   │
+│  │  │  (Metadata)     │  │  (Telemetry)    │  │        (Rate Limiting)           │  │   │
 │  │  │                 │  │                 │  │                                  │  │   │
 │  │  │  - Devices      │  │  - Telemetry    │  │  - API Key validation            │  │   │
 │  │  │  - Users        │  │  - Analytics    │  │  - Session tokens                │  │   │
@@ -58,7 +58,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────────────────────┐  │   │
 │  │  │   tesa-vault    │  │    tesa-etcd    │  │      tesa-prometheus             │  │   │
 │  │  │  (PKI/Secrets)  │  │   (Config KV)   │  │      (Metrics)                   │  │   │
-│  │  │   Port 8200     │  │   Port 2379     │  │      Port 9090                   │  │   │
+│  │  │  (Certificates) │  │   (APISIX Cfg)  │  │      (Monitoring)                │  │   │
 │  │  │                 │  │                 │  │                                  │  │   │
 │  │  │  - CA certs     │  │  - APISIX conf  │  │  - Service metrics               │  │   │
 │  │  │  - Device certs │  │  - Routes       │  │  - Health checks                 │  │   │
@@ -69,7 +69,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │                                            ┌──────────────────────────────────┐  │   │
 │  │                                            │       tesa-grafana               │  │   │
 │  │                                            │       (Dashboards)               │  │   │
-│  │                                            │       Port 3001                  │  │   │
+│  │                                            │       (Visualization)            │  │   │
 │  │                                            └──────────────────────────────────┘  │   │
 │  └──────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                         │
@@ -78,22 +78,24 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 
 ## Service Summary Table
 
-| Service | Container | Port(s) | Protocol | Description |
-|---------|-----------|---------|----------|-------------|
-| **tesa-nginx** | Reverse Proxy | 80, 443 | HTTP/HTTPS | SSL termination, routing |
-| **tesa-apisix** | API Gateway | 9080, 9180, 9443 | HTTP/HTTPS | Rate limiting, auth plugins |
-| **tesa-emqx** | MQTT Broker | 1883, 8883, 8084, 14567 | MQTT/MQTTS/WSS/QUIC | Real-time messaging |
-| **tesa-api** | REST API | 8000 | HTTP | Device/User/Telemetry API |
-| **tesa-admin-ui** | Web UI | 3000 | HTTP | Admin dashboard |
-| **tesa-mqtt-bridge** | Bridge | Internal | - | MQTT ↔ API integration |
-| **tesa-python-websocket-b2b** | WebSocket | 8765 | WSS | Real-time streaming |
-| **tesa-mongodb** | Document DB | 27017 | MongoDB | Devices, users, orgs |
-| **tesa-timescaledb** | Time-Series | 5432 | PostgreSQL | Telemetry, analytics |
-| **tesa-redis** | Cache | 6379 | Redis | Sessions, rate limiting |
-| **tesa-vault** | Secrets | 8200 | HTTP | PKI, certificates |
-| **tesa-etcd** | Config | 2379 | gRPC | APISIX configuration |
-| **tesa-prometheus** | Metrics | 9090 | HTTP | Service monitoring |
-| **tesa-grafana** | Dashboards | 3001 | HTTP | Visualization |
+| Service | Role | Protocol | Description |
+|---------|------|----------|-------------|
+| **tesa-nginx** | Reverse Proxy | HTTPS/WSS | SSL termination, secure routing |
+| **tesa-apisix** | API Gateway | HTTPS | Rate limiting, auth plugins |
+| **tesa-emqx** | MQTT Broker | MQTTS/WSS/QUIC | Secure real-time messaging |
+| **tesa-api** | REST API | HTTP (internal) | Device/User/Telemetry API |
+| **tesa-admin-ui** | Web UI | HTTP (internal) | Admin dashboard |
+| **tesa-mqtt-bridge** | Bridge | Internal | MQTT ↔ API integration |
+| **tesa-python-websocket-b2b** | WebSocket | WSS | Real-time streaming |
+| **tesa-mongodb** | Document DB | MongoDB | Devices, users, organizations |
+| **tesa-timescaledb** | Time-Series DB | PostgreSQL | Telemetry, analytics |
+| **tesa-redis** | Cache | Redis | Sessions, rate limiting |
+| **tesa-vault** | Secrets | HTTPS | PKI, certificates |
+| **tesa-etcd** | Config Store | gRPC | APISIX configuration |
+| **tesa-prometheus** | Metrics | HTTP (internal) | Service monitoring |
+| **tesa-grafana** | Dashboards | HTTP (internal) | Visualization |
+
+> **Note:** All external-facing services use TLS encryption. Internal services are not exposed publicly.
 
 ---
 
@@ -108,7 +110,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │                                                                                     │
 │  ┌─────────────┐     MQTTS/QUIC      ┌─────────────┐     Internal    ┌───────────┐  │
 │  │   Device    │────────────────────►│  tesa-emqx  │────────────────►│  Bridge   │  │
-│  │ (IoT/MCU)   │   Port 8883/14567   │             │   MQTT Sub      │  (Python) │  │
+│  │ (IoT/MCU)   │   Secure Protocol   │             │   MQTT Sub      │  (Python) │  │
 │  └─────────────┘                     └─────────────┘                 └─────┬─────┘  │
 │                                                                            │        │
 │  Topic: device/{device_id}/telemetry                                       │        │
@@ -147,7 +149,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │                                                                                     │
 │  ┌─────────────┐      HTTPS        ┌─────────────┐    Route     ┌───────────────┐   │
 │  │   Client    │──────────────────►│ tesa-nginx  │─────────────►│  tesa-apisix  │   │
-│  │ (Python/JS) │   Port 443        │ (SSL Term)  │  /api/v1/*   │  (Gateway)    │   │
+│  │ (Python/JS) │   Secure HTTPS    │ (SSL Term)  │  /api/v1/*   │  (Gateway)    │   │
 │  └─────────────┘                   └─────────────┘              └───────┬───────┘   │
 │                                                                         │           │
 │  Headers:                                                               │           │
@@ -240,7 +242,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  │             │     3. Client Cert + Key     │                             ││ │
 │  │  └─────────────┘                              └─────────────────────────────┘│ │
 │  │                                                                              │ │
-│  │  Port: 8883 (MQTTS)                                                          │ │
+│  │  Protocol: MQTTS (Mutual TLS)                                                │ │
 │  │  Examples: #6 device-mtls, #7 device-mtls/CLI_Python                         │ │
 │  │  Security Level: ★★★★★ (Zero-Trust)                                          │ │
 │  └──────────────────────────────────────────────────────────────────────────────┘ │
@@ -259,7 +261,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  │             │     X-API-Key header         │  API key (hashed in Redis)  ││ │
 │  │  └─────────────┘                              └─────────────────────────────┘│ │
 │  │                                                                              │ │
-│  │  Port: 443 (HTTPS) or 8884 (MQTT with password)                              │ │
+│  │  Protocol: HTTPS or MQTTS (Server TLS)                                       │ │
 │  │  Examples: #1-3 python-cli, device-servertls, #4 rpi-servertls               │ │
 │  │  Security Level: ★★★★☆ (Enterprise)                                          │ │
 │  └──────────────────────────────────────────────────────────────────────────────┘ │
@@ -334,24 +336,25 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 
 ## Protocol Support
 
-### Port Mapping
+### Secure Protocols
 
 ```ini
 ┌────────────────────────────────────────────────────────────────────────────────────┐
-│                            PROTOCOL & PORT MAPPING                                 │
+│                           SECURE PROTOCOL SUPPORT                                  │
 ├────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐   │
 │  │  MQTT Protocols (tesa-emqx)                                                 │   │
 │  │  ─────────────────────────────────────────────────────────────────────────  │   │
 │  │                                                                             │   │
-│  │  Port 1883   │  MQTT (Plain)      │  Development only - NOT for production  │   │
-│  │  Port 8883   │  MQTTS (TLS 1.2+)  │  Server-TLS or mTLS authentication      │   │
-│  │  Port 8084   │  MQTT over WSS     │  Browser WebSocket connections          │   │
-│  │  Port 14567  │  MQTT over QUIC    │  UDP-based, 0-RTT, multi-stream         │   │
+│  │  MQTTS        │  TLS 1.2+         │  Server-TLS or mTLS authentication      │   │
+│  │  MQTT-WSS     │  WebSocket Secure │  Browser WebSocket connections          │   │
+│  │  MQTT-QUIC    │  UDP + TLS 1.3    │  0-RTT, multi-stream, low latency       │   │
 │  │                                                                             │   │
 │  │  Topic Format: device/{device_id}/telemetry[/subtopic]                      │   │
 │  │  QoS Levels: 0 (at-most-once), 1 (at-least-once), 2 (exactly-once)          │   │
+│  │                                                                             │   │
+│  │  Note: Only TLS-encrypted protocols are supported in production.            │   │
 │  │                                                                             │   │
 │  └─────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                    │
@@ -359,18 +362,20 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  HTTP/HTTPS Protocols (tesa-nginx + tesa-apisix)                            │   │
 │  │  ─────────────────────────────────────────────────────────────────────────  │   │
 │  │                                                                             │   │
-│  │  Port 80    │  HTTP              │  Redirect to HTTPS only                  │   │
-│  │  Port 443   │  HTTPS (TLS 1.2+)  │  All API and UI access                   │   │
+│  │  HTTPS        │  TLS 1.2+         │  All API and UI access                  │   │
+│  │  WSS          │  WebSocket Secure │  Real-time streaming                    │   │
 │  │                                                                             │   │
 │  │  Endpoints:                                                                 │   │
 │  │  • https://admin.tesaiot.com/api/v1/*         REST API                      │   │
 │  │  • https://admin.tesaiot.com/                 Admin UI                      │   │
 │  │  • wss://admin.tesaiot.com/ws/v1/*            WebSocket                     │   │
 │  │                                                                             │   │
+│  │  Note: HTTP requests are automatically redirected to HTTPS.                 │   │
+│  │                                                                             │   │
 │  └─────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                    │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │  QUIC Protocol Benefits (Port 14567)                                        │   │
+│  │  QUIC Protocol Benefits                                                     │   │
 │  │  ─────────────────────────────────────────────────────────────────────────  │   │
 │  │                                                                             │   │
 │  │  Feature              │  TCP+TLS        │  QUIC                             │   │
@@ -407,8 +412,8 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  #1 python-cli              → tesa-nginx → tesa-api → MongoDB                 │ │
 │  │  #2 device-servertls (C)    → tesa-nginx → tesa-api → MongoDB                 │ │
 │  │  #3 device-servertls/CLI    → tesa-nginx → tesa-api → MongoDB                 │ │
-│  │  #4 rpi-servertls           → tesa-emqx (8884) → Bridge → TimescaleDB         │ │
-│  │  #5 mqtt-quic-python        → tesa-emqx (14567 QUIC) → Bridge → TimescaleDB   │ │
+│  │  #4 rpi-servertls           → tesa-emqx (MQTTS) → Bridge → TimescaleDB        │ │
+│  │  #5 mqtt-quic-python        → tesa-emqx (QUIC) → Bridge → TimescaleDB         │ │
 │  │                                                                               │ │
 │  └───────────────────────────────────────────────────────────────────────────────┘ │
 │                                                                                    │
@@ -416,9 +421,9 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  EMBEDDED DEVICES - Intermediate (#6-8)                                       │ │
 │  │  ──────────────────────────────────────────────────────────────────────────── │ │
 │  │                                                                               │ │
-│  │  #6 device-mtls (C)         → tesa-emqx (8883 mTLS) → Bridge → TimescaleDB    │ │
-│  │  #7 device-mtls/CLI         → tesa-emqx (8883 mTLS) → Bridge → TimescaleDB    │ │
-│  │  #8 esp32-servertls         → tesa-emqx (8884) → Bridge → TimescaleDB         │ │
+│  │  #6 device-mtls (C)         → tesa-emqx (mTLS) → Bridge → TimescaleDB         │ │
+│  │  #7 device-mtls/CLI         → tesa-emqx (mTLS) → Bridge → TimescaleDB         │ │
+│  │  #8 esp32-servertls         → tesa-emqx (MQTTS) → Bridge → TimescaleDB        │ │
 │  │                                                                               │ │
 │  │  Security: Requires client certificate from Vault PKI                         │ │
 │  │                                                                               │ │
@@ -428,7 +433,7 @@ This document provides a comprehensive overview of how all 22 Open Source Exampl
 │  │  INTEGRATIONS (#9-11)                                                         │ │
 │  │  ──────────────────────────────────────────────────────────────────────────── │ │
 │  │                                                                               │ │
-│  │  #9 mqtt-quic-c             → tesa-emqx (14567 QUIC) → Bridge → TimescaleDB   │ │
+│  │  #9 mqtt-quic-c             → tesa-emqx (QUIC) → Bridge → TimescaleDB         │ │
 │  │  #10 ai-service-template    → tesa-nginx → tesa-api → MongoDB/TimescaleDB     │ │
 │  │  #11 n8n-automation         → tesa-nginx → tesa-api (webhook triggers)        │ │
 │  │                                                                               │ │
