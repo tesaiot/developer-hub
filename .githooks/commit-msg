@@ -1,0 +1,48 @@
+#!/bin/bash
+# commit-msg hook: Prevent Claude attribution in commit messages
+# This hook rejects commits containing Claude Code attribution
+#
+# Installation:
+#   git config core.hooksPath .githooks
+#
+# Or manually:
+#   cp .githooks/commit-msg .git/hooks/commit-msg
+#   chmod +x .git/hooks/commit-msg
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Patterns to detect Claude attribution
+PATTERNS=(
+    "Co-Authored-By:.*[Cc]laude"
+    "Generated with.*[Cc]laude"
+    "Claude Code"
+    "claude.ai"
+    "anthropic.com"
+    "🤖"
+)
+
+# Check each pattern
+for pattern in "${PATTERNS[@]}"; do
+    if echo "$COMMIT_MSG" | grep -qiE "$pattern"; then
+        echo ""
+        echo "╔══════════════════════════════════════════════════════════════════╗"
+        echo "║  ❌ COMMIT REJECTED: Claude attribution detected!                ║"
+        echo "╠══════════════════════════════════════════════════════════════════╣"
+        echo "║  This repository does not allow Claude Code attribution in      ║"
+        echo "║  commit messages to keep the contributor list clean.            ║"
+        echo "║                                                                  ║"
+        echo "║  Detected pattern: $pattern"
+        echo "║                                                                  ║"
+        echo "║  Please remove the following from your commit message:          ║"
+        echo "║  - 'Co-Authored-By: Claude...'                                   ║"
+        echo "║  - 'Generated with [Claude Code]...'                             ║"
+        echo "║  - Any 🤖 emoji                                                  ║"
+        echo "║  - Any anthropic.com links                                       ║"
+        echo "╚══════════════════════════════════════════════════════════════════╝"
+        echo ""
+        exit 1
+    fi
+done
+
+exit 0

@@ -213,6 +213,20 @@ TESAIoT Platform provides:
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
+### Setup Git Hooks (Required for Contributors)
+
+After cloning, enable the commit validation hooks:
+
+```bash
+# Enable repository hooks
+git config core.hooksPath .githooks
+
+# Verify hooks are active
+ls -la .githooks/
+```
+
+This ensures commit messages follow our standards and prevents accidental inclusion of AI tool attributions.
+
 ### Contribution Areas
 
 - Bug fixes and improvements
