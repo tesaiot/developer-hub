@@ -1,0 +1,13 @@
+# TESAIoT WSS MQTT Third-Party Integration - Python Dependencies
+
+# MQTT client library with WebSocket support
+paho-mqtt>=2.0.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# Optional: JSON schema validation
+# jsonschema>=4.19.0
+
+# Optional: Async MQTT client
+# asyncio-mqtt>=0.16.0

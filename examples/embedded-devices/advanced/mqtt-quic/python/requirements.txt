@@ -1,0 +1,13 @@
+# TESA IoT Platform - Advanced MQTT over QUIC Client Requirements
+# Python 3.8+ required
+
+# Primary: aioquic for true QUIC transport (cross-platform)
+# Based on entry-level Example #6 (mqtt-quic-python)
+aioquic>=0.9.25
+
+# Fallback: paho-mqtt for TCP+TLS when QUIC unavailable
+# Provides automatic fallback when UDP/QUIC is blocked
+paho-mqtt>=1.6.1
+
+# Optional: for advanced SSL/TLS features
+pyOpenSSL>=23.0.0

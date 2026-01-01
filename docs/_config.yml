@@ -1,0 +1,117 @@
+# TESAIoT Developer Hub - Jekyll Configuration
+# GitHub Pages documentation site
+
+# Site settings
+title: TESAIoT Developer Hub
+description: Open source examples and templates for building on TESAIoT Platform
+url: "https://tesaiot.github.io"
+baseurl: "/developer-hub"
+repository: tesaiot/developer-hub
+
+# Theme - using minimal mistakes for professional look
+remote_theme: mmistakes/minimal-mistakes@4.24.0
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-include-cache
+
+# Minimal Mistakes theme settings
+minimal_mistakes_skin: "dark" # dark theme to match TESAIoT brand
+
+# Site author
+author:
+  name: "TESAIoT Platform"
+  avatar: "/assets/images/tesaiot-logo.png"
+  bio: "Secure IoT Platform with Edge AI"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/tesaiot"
+    - label: "Platform"
+      icon: "fas fa-globe"
+      url: "https://www.tesaiot.com"
+
+# Footer
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/tesaiot/developer-hub"
+    - label: "License"
+      icon: "fas fa-file-alt"
+      url: "/developer-hub/license"
+
+# Reading files
+include:
+  - _pages
+  - LICENSE
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Collections for examples
+collections:
+  examples:
+    output: true
+    permalink: /examples/:name/
+
+# Defaults
+defaults:
+  # _pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+  # _examples
+  - scope:
+      path: ""
+      type: examples
+    values:
+      layout: single
+      author_profile: false
+      sidebar:
+        nav: "examples"
+  # all posts/pages
+  - scope:
+      path: ""
+    values:
+      layout: single
+      toc: true
+      toc_sticky: true
+
+# Navigation
+navigation:
+  - title: "Getting Started"
+    url: /developer-hub/getting-started/
+  - title: "Examples"
+    url: /developer-hub/examples/
+  - title: "API Reference"
+    url: /developer-hub/api/
+  - title: "Contributing"
+    url: /developer-hub/contributing/
+
+# Markdown processing
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# Analytics (optional)
+# analytics:
+#   provider: "google-gtag"
+#   google:
+#     tracking_id: "G-XXXXXXXXXX"

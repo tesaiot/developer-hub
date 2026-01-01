@@ -1,0 +1,37 @@
+{
+  "name": "@tesaiot/analytics-client",
+  "version": "1.0.0",
+  "description": "TESAIoT BDH AI Analytics API Client",
+  "type": "module",
+  "main": "analytics-client.js",
+  "types": "analytics-client.d.ts",
+  "exports": {
+    ".": {
+      "import": "./analytics-client.js",
+      "types": "./analytics-client.d.ts"
+    }
+  },
+  "scripts": {
+    "example:basic": "node example-basic.js",
+    "example:anomalies": "node example-anomalies.js",
+    "example:patterns": "node example-patterns.js",
+    "example:insights": "node example-insights.js",
+    "example:connectivity": "node example-connectivity.js",
+    "example:dashboard": "node example-dashboard.js"
+  },
+  "keywords": [
+    "tesaiot",
+    "iot",
+    "analytics",
+    "anomaly-detection",
+    "machine-learning"
+  ],
+  "author": "TESAIoT Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

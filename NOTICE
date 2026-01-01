@@ -1,0 +1,126 @@
+TESAIoT Platform - Open Source Examples
+Copyright 2025 TESAIoT Platform by TESA
+
+================================================================================
+                              ATTRIBUTION NOTICE
+================================================================================
+
+This product includes software developed by:
+
+  TESAIoT Platform (https://www.tesaiot.com)
+  Created and maintained by TESA
+
+================================================================================
+                            REQUIRED ATTRIBUTION
+================================================================================
+
+If you use, modify, or distribute this software, you MUST include the following
+attribution in your documentation, README, or application about page:
+
+  "Built with TESAIoT Platform Examples"
+  https://github.com/tesaiot/developer-hub
+
+Or in a more detailed form:
+
+  "This project uses code from TESAIoT Platform Examples,
+   an open-source IoT integration toolkit.
+   Copyright 2025 TESAIoT Platform by TESA.
+   Licensed under the Apache License, Version 2.0.
+   https://www.tesaiot.com"
+
+================================================================================
+                          ATTRIBUTION PLACEMENT
+================================================================================
+
+The attribution notice should be placed in at least ONE of the following:
+
+1. README.md or README file in your project root
+2. NOTICE or ATTRIBUTION file in your project
+3. "About" or "Credits" page in your application UI
+4. Documentation website credits section
+5. Package manifest (package.json, setup.py, Cargo.toml) in "credits" field
+
+================================================================================
+                            EXAMPLE ATTRIBUTIONS
+================================================================================
+
+For README.md:
+```markdown
+## Credits
+
+This project uses [TESAIoT Platform Examples](https://github.com/tesaiot/developer-hub),
+licensed under Apache 2.0. Copyright 2025 TESAIoT Platform by TESA.
+```
+
+For package.json:
+```json
+{
+  "credits": [
+    {
+      "name": "TESAIoT Platform Examples",
+      "url": "https://github.com/tesaiot/developer-hub",
+      "license": "Apache-2.0"
+    }
+  ]
+}
+```
+
+For Python (setup.py or pyproject.toml):
+```python
+# Based on TESAIoT Platform Examples
+# https://github.com/tesaiot/developer-hub
+# Copyright 2025 TESAIoT Platform by TESA
+# Licensed under Apache License 2.0
+```
+
+================================================================================
+                           TRADEMARK NOTICE
+================================================================================
+
+"TESAIoT" and the TESAIoT logo are trademarks of TESA.
+
+Use of these trademarks is permitted only for:
+- Accurate attribution as required by this license
+- Describing the origin of this software
+- Linking to official TESAIoT resources
+
+Use of these trademarks is NOT permitted for:
+- Implying endorsement without written permission
+- Creating confusion about the source of derivative works
+- Commercial use beyond attribution requirements
+
+================================================================================
+                         THIRD-PARTY COMPONENTS
+================================================================================
+
+This software includes the following third-party components:
+
+Component: Mongoose (Embedded Web Server Library)
+License: GPLv2 or Commercial
+Website: https://mongoose.ws/
+
+Component: Paho MQTT
+License: Eclipse Public License 2.0
+Website: https://eclipse.dev/paho/
+
+Component: React
+License: MIT
+Website: https://reactjs.org/
+
+Component: FastAPI
+License: MIT
+Website: https://fastapi.tiangolo.com/
+
+(Additional third-party licenses are listed in each example's directory)
+
+================================================================================
+                              CONTACT
+================================================================================
+
+For licensing questions, commercial use inquiries, or partnership opportunities:
+
+  Website: https://www.tesaiot.com
+  Email: contact@tesaiot.com
+  GitHub: https://github.com/tesaiot
+
+================================================================================

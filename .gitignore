@@ -1,0 +1,329 @@
+# ============================================================================
+# TESAIoT Open Source Examples - Strict .gitignore
+# ============================================================================
+# This .gitignore is intentionally strict to prevent accidental exposure of
+# credentials, certificates, and sensitive data in the public repository.
+# ============================================================================
+
+# ============================================================================
+# CREDENTIALS - NEVER COMMIT THESE
+# ============================================================================
+
+# Environment files with real credentials
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+*.env
+
+# Keep only the template
+!.env.example
+
+# API keys and tokens
+**/api_key*
+**/api-key*
+**/apikey*
+**/token*
+**/secret*
+**/*_token*
+**/*_key*
+**/*_secret*
+
+# Exclude example files
+!**/*_example*
+!**/*.example
+!**/*.example.json
+
+# MQTT-QUIC config files with credentials
+**/mqtt-quic-config.json
+!**/mqtt-quic-config.example.json
+
+# ============================================================================
+# CERTIFICATES AND KEYS - NEVER COMMIT THESE
+# ============================================================================
+
+# SSL/TLS certificates
+*.pem
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Private keys
+*.key
+*.priv
+*.private
+
+# Certificate signing requests
+*.csr
+
+# CA bundles
+ca-chain.*
+ca-bundle.*
+ca-cert.*
+
+# Credential bundles from TESAIoT Admin UI
+*-bundle.zip
+*-credentials.zip
+*-certs.zip
+
+# Certificate directories
+certs/
+certificates/
+credentials/
+keys/
+secrets/
+ssl/
+tls/
+
+# Vault tokens
+.vault-token
+vault-token*
+
+# ============================================================================
+# BUILD ARTIFACTS AND DEPENDENCIES
+# ============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# C/C++
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# Rust
+target/
+Cargo.lock
+
+# General build
+build/
+dist/
+out/
+*.min.js
+*.min.css
+*.bundle.js
+
+# ============================================================================
+# IDE AND EDITOR
+# ============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ============================================================================
+# OPERATING SYSTEM
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+
+# ============================================================================
+# LOGS AND TEMPORARY FILES
+# ============================================================================
+
+# Logs
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+tmp/
+temp/
+
+# Cache
+.cache/
+*.cache
+
+# ============================================================================
+# TESTING
+# ============================================================================
+
+# Test output
+coverage/
+.nyc_output/
+test-results/
+*.lcov
+
+# ============================================================================
+# DOCKER
+# ============================================================================
+
+# Docker credentials
+.docker/config.json
+
+# ============================================================================
+# DOCUMENTATION BUILD
+# ============================================================================
+
+# Sphinx
+docs/_build/
+
+# MkDocs
+site/
+
+# ============================================================================
+# MISCELLANEOUS
+# ============================================================================
+
+# Archives (might contain credentials)
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Allow specific archives
+!example-*.zip
+
+# Session files
+*.session
+*.sess
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# ===========================================
+# Device Credentials (NEVER commit real ones!)
+# ===========================================
+
+# Device credential folders (real bundles with UUIDs)
+**/devices_credentials/*-serverTLS/
+**/devices_credentials/*-mTLS/
+!**/devices_credentials/YOUR_DEVICE_NAME-serverTLS/
+!**/devices_credentials/YOUR_DEVICE_NAME-mTLS/
+
+# Specific credential files
+**/mqtt_password.txt
+**/mqtt_username.txt
+**/device_id.txt
+**/mqtt-credentials.txt
+**/https-api-credentials.txt
+**/wss_API_KEY.txt
+**/*-credentials.json
+
+# Config files with credentials
+**/mqtt-quic-config.json
+**/mqtt_client_config.h
+
+# Allow example/placeholder files
+!**/*.example.txt
+!**/*.example.json
+!**/mqtt-quic-config.example.json
+!**/credentials.example.json
+
+# Download folders with real credentials
+**/device-mtls/download/*-mtls-bundle*/
+**/device-mtls/download/*-credentials.json
+!**/device-mtls/download/README.md
+!**/device-mtls/download/.gitkeep
+!**/device-mtls/download/*.example.*
+
+# certs_credentials real files
+**/certs_credentials/*.txt
+**/certs_credentials/*.json
+!**/certs_credentials/README.md
+!**/certs_credentials/.gitkeep
+!**/certs_credentials/*.example.*
+
+# device-servertls download folders with real credentials
+**/device-servertls/download/*-servertls-*-bundle*/
+**/device-servertls/download/*-credentials.json
+**/device-servertls/download/data_schema.txt
+!**/device-servertls/download/README.md
+!**/device-servertls/download/.gitkeep
+!**/device-servertls/download/*.example.*

@@ -1,0 +1,6 @@
+{
+  "mqtt_broker": "mqtts://mqtt.tesaiot.com:8884",
+  "https_api": "https://api.tesaiot.com/api/v1",
+  "websocket": "wss://ws.tesaiot.com",
+  "auth_mode": "server-tls"
+}

@@ -1,0 +1,30 @@
+[package]
+name = "tesaiot-analytics"
+version = "1.0.0"
+edition = "2021"
+authors = ["TESAIoT Team"]
+description = "TESAIoT BDH AI Analytics API Client"
+license = "Apache-2.0"
+repository = "https://github.com/tesaiot/analytics-client-rust"
+keywords = ["tesaiot", "iot", "analytics", "anomaly-detection"]
+categories = ["api-bindings", "web-programming"]
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1"
+async-trait = "0.1"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[[example]]
+name = "basic"
+path = "examples/basic.rs"
+
+[[example]]
+name = "dashboard"
+path = "examples/dashboard.rs"

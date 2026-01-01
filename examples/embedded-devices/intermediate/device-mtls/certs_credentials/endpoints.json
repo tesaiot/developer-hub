@@ -1,0 +1,11 @@
+{
+  "ingest_base_url": "https://tesaiot.com:9444",
+  "api_base_url": "https://tesaiot.com",
+  "tls": {
+    "require_mtls": true,
+    "alpn": [
+      "h2",
+      "http/1.1"
+    ]
+  }
+}

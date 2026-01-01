@@ -1,0 +1,7 @@
+tesa_mqtt_YOURORG_XXXXXXXX_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# WebSocket API Key for real-time data streaming
+# Get this from TESAIoT Admin UI:
+# 1. Go to Settings → API Keys
+# 2. Create a new WebSocket API key
+# 3. Copy the key here

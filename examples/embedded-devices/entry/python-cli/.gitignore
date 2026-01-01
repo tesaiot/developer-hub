@@ -1,0 +1,4 @@
+# Keep the real credentials file local only
+.env
+__pycache__/
+.venv/

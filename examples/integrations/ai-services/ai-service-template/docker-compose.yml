@@ -1,0 +1,50 @@
+# TESAIoT AI Service Template - Docker Compose
+# For local development and testing
+
+version: '3.8'
+
+services:
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tesaiot-ai-service:latest
+    container_name: tesaiot-ai-service
+    ports:
+      - "8000:8000"
+    environment:
+      - SERVICE_NAME=ai-service-template
+      - ENVIRONMENT=development
+      - LOG_LEVEL=debug
+      # Uncomment to load ML model
+      # - MODEL_PATH=/models/model.pkl
+    volumes:
+      # Mount source for hot reload (development only)
+      - ./api:/app/api:ro
+      - ./core:/app/core:ro
+      # Mount models directory (optional)
+      # - ./models:/models:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    restart: unless-stopped
+
+    # Uncomment to connect to TESAIoT internal network
+    # networks:
+    #   - bdh-internal
+
+# Uncomment to use external TESAIoT network
+# networks:
+#   bdh-internal:
+#     external: true
