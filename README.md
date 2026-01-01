@@ -14,22 +14,22 @@ All examples connect to TESAIoT Platform's 14 core services. Here's a simplified
                               ┌─────────────────────────────────────┐
                               │       TESAIoT Platform              │
 ┌─────────────┐               │                                     │
-│   Device    │──MQTTS/QUIC──►│  tesa-emqx ──► tesa-mqtt-bridge     │
+│   Device    │──MQTTS/QUIC──►│  TESA MQTT Broker ──► TESA Bridge     │
 │  Examples   │               │       │              │              │
 │  #4-9,21-22 │               │       ▼              ▼              │
-└─────────────┘               │  TimescaleDB    tesa-api            │
+└─────────────┘               │  TimescaleDB    TESA Core API            │
                               │  (telemetry)    (FastAPI)           │
 ┌─────────────┐               │                     │               │
-│   REST API  │───HTTPS──────►│  tesa-nginx ───► tesa-api           │
+│   REST API  │───HTTPS──────►│  TESA Proxy Server ───► TESA Core API           │
 │  Examples   │               │       │              │              │
 │  #1-3,10-14 │               │       ▼              ▼              │
-└─────────────┘               │   tesa-apisix   MongoDB             │
+└─────────────┘               │   TESA API Gateway   MongoDB             │
                               │   (gateway)     (metadata)          │
 ┌─────────────┐               │                                     │
-│  Real-time  │────WSS───────►│  tesa-nginx ──► WebSocket B2B       │
+│  Real-time  │────WSS───────►│  TESA Proxy Server ──► WebSocket B2B       │
 │  Examples   │               │                     │               │
 │  #15-17     │               │                     ▼               │
-└─────────────┘               │               tesa-emqx (sub)       │
+└─────────────┘               │               TESA MQTT Broker (sub)       │
                               └─────────────────────────────────────┘
 ```
 
@@ -39,11 +39,11 @@ All examples connect to TESAIoT Platform's 14 core services. Here's a simplified
 
 | Service | Port | Protocol | Used By Examples |
 |---------|------|----------|------------------|
-| **tesa-emqx** | 8883, 14567 | MQTTS, QUIC | #4-9, #21-22 (MQTT clients) |
-| **tesa-api** | 443 (via nginx) | HTTPS | #1-3, #10-14 (REST API) |
-| **tesa-nginx** | 443 | HTTPS/WSS | All examples (SSL termination) |
+| **TESA MQTT Broker** | 8883, 14567 | MQTTS, QUIC | #4-9, #21-22 (MQTT clients) |
+| **TESA Core API** | 443 (via nginx) | HTTPS | #1-3, #10-14 (REST API) |
+| **TESA Proxy Server** | 443 | HTTPS/WSS | All examples (SSL termination) |
 | **WebSocket B2B** | 443/ws | WSS | #15-17 (real-time streaming) |
-| **tesa-vault** | 8200 | HTTPS | mTLS examples (#6-7) for PKI |
+| **TESA Vault PKI** | 8200 | HTTPS | mTLS examples (#6-7) for PKI |
 
 ### Security Authentication Methods
 
