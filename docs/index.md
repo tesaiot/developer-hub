@@ -113,24 +113,24 @@ pre,div.highlighter-rouge{max-width:100%!important;margin-left:auto!important;ma
 
 <!-- Custom Feature Cards - Matching Landing Page Use Cases Style -->
 <div class="feature-cards">
-  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/device-mtls" class="feature-card feature-card--red">
+  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices" class="feature-card feature-card--red">
     <div class="feature-card__icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
     </div>
     <div class="feature-card__content">
       <h3 class="feature-card__title">Device Examples</h3>
-      <p class="feature-card__subtitle">mTLS Security</p>
+      <p class="feature-card__subtitle">mTLS & Server-TLS Security</p>
     </div>
     <ul class="feature-card__list">
       <li>Infineon PSoC 6/PSoC Edge</li>
-      <li>Arduino, STM32, NXP, Renesas</li>
       <li>ESP32, Raspberry Pi</li>
+      <li>MQTT over QUIC</li>
       <li>Hardware security modules</li>
     </ul>
     <span class="feature-card__btn">Learn More</span>
   </a>
 
-  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/nodered-integration" class="feature-card feature-card--blue">
+  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/applications/visual-automation/nodered-integration" class="feature-card feature-card--blue">
     <div class="feature-card__icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
     </div>
@@ -142,12 +142,12 @@ pre,div.highlighter-rouge{max-width:100%!important;margin-left:auto!important;ma
       <li>Node-RED flows</li>
       <li>React dashboards</li>
       <li>AI service templates</li>
-      <li>FastAPI backends</li>
+      <li>WebSocket streaming</li>
     </ul>
     <span class="feature-card__btn">Learn More</span>
   </a>
 
-  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/live-streaming-dashboard" class="feature-card feature-card--green">
+  <a href="https://github.com/tesaiot/developer-hub/tree/main/examples/applications/real-time/live-streaming-dashboard" class="feature-card feature-card--green">
     <div class="feature-card__icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
     </div>
@@ -180,51 +180,53 @@ cd developer-hub/examples
 
 **22 Examples, 100% Tested and Working!**
 
-#### Device Examples (1-5)
+#### Entry Level - Device Examples
 
 | # | Example | Description | Language |
 |---|---------|-------------|----------|
-| 1 | [python-cli](https://github.com/tesaiot/developer-hub/tree/main/examples/devices/python-cli) | Command-line MQTT client | Python |
-| 2 | [device-mtls](https://github.com/tesaiot/developer-hub/tree/main/examples/devices/mtls) | Mutual TLS device connection | C/Python |
-| 3 | [device-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/devices/servertls) | Server TLS device connection | C/Python |
-| 4 | [mqtt-quic-python](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/mqtt-quic-python) | MQTT over QUIC (Python) | Python |
-| 5 | [mqtt-quic-c](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/mqtt-quic-c) | MQTT over QUIC (C/C++) | C/C++ |
+| 1 | [python-cli](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry/python-cli) | Command-line MQTT client | Python |
+| 2 | [device-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry/device-servertls) | Server TLS device connection | C/Python |
+| 3 | [mqtt-quic-python](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry/mqtt-quic-python) | MQTT over QUIC (Python) | Python |
+| 4 | [rpi-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry/rpi-servertls) | Raspberry Pi with Server-TLS | Python |
 
-#### Integration Templates (6-12)
-
-| # | Example | Description | Language |
-|---|---------|-------------|----------|
-| 6 | [nodered-integration](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/nodered-integration) | Node-RED integration flows | Node-RED |
-| 7 | [wss-mqtt-streaming](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/wss-mqtt-streaming) | WebSocket MQTT streaming | JavaScript |
-| 8 | [react-dashboard](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/visualization/react-dashboard) | IoT monitoring dashboard | React/TS |
-| 9 | [live-streaming-dashboard](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/real-time/live-streaming-dashboard) | Real-time telemetry dashboard | React/TS |
-| 10 | [ai-service-template](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/ai-integration/ai-service-template) | AI inference service | Python/FastAPI |
-
-#### API Examples (11-14)
+#### Intermediate Level - Secure Devices
 
 | # | Example | Description | Language |
 |---|---------|-------------|----------|
-| 11 | [analytics-api-python](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/python) | Analytics API client | Python |
-| 12 | [analytics-api-javascript](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/javascript) | Analytics API client | JavaScript |
-| 13 | [analytics-api-rust](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/rust) | Analytics API client | Rust |
+| 5 | [device-mtls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/intermediate/device-mtls) | Mutual TLS device connection | C/Python |
+| 6 | [esp32-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/intermediate/esp32-servertls) | ESP32 with Server-TLS | C/Arduino |
 
-#### Embedded Device Examples (15-20)
-
-| # | Example | Description | Platform |
-|---|---------|-------------|----------|
-| 14 | [esp32-mtls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/esp32-mtls) | ESP32 with mTLS | ESP32 |
-| 15 | [esp32-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/esp32-servertls) | ESP32 with Server-TLS | ESP32 |
-| 16 | [rpi-mtls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/rpi-mtls) | Raspberry Pi with mTLS | RPi |
-| 17 | [rpi-servertls](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/rpi-servertls) | Raspberry Pi with Server-TLS | RPi |
-| 18 | [psoc-edge-trustm](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/psoc-edge-trustm) | PSoC Edge with OPTIGA Trust M | PSoC E84 |
-| 19 | [linux-optiga-trustm](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/entry-level/linux-optiga-trustm) | Linux with OPTIGA Trust M | Linux |
-
-#### Advanced Examples (21-22) - Production-Ready Features
+#### Advanced Level - Production Ready
 
 | # | Example | Features | Language |
 |---|---------|----------|----------|
-| 21 | [mqtt-quic-advanced (C/C++)](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/advanced/mqtt-quic/c_cpp) | QUIC/TCP fallback, 0-RTT, multi-stream, health monitoring | C/C++ |
-| 22 | [mqtt-quic-advanced (Python)](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/advanced/mqtt-quic/python) | QUIC/TCP fallback, 0-RTT, asyncio multi-stream | Python |
+| 7 | [mqtt-quic-advanced (C/C++)](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/advanced/mqtt-quic/c_cpp) | QUIC/TCP fallback, 0-RTT, multi-stream | C/C++ |
+| 8 | [mqtt-quic-advanced (Python)](https://github.com/tesaiot/developer-hub/tree/main/examples/embedded-devices/advanced/mqtt-quic/python) | QUIC/TCP fallback, 0-RTT, asyncio | Python |
+
+#### Integration Templates
+
+| # | Example | Description | Language |
+|---|---------|-------------|----------|
+| 9 | [nodered-integration](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/visual-automation/nodered-integration) | Node-RED integration flows | Node-RED |
+| 10 | [wss-mqtt-streaming](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/real-time/wss-mqtt-streaming) | WebSocket MQTT streaming | JS/Python |
+| 11 | [ai-service-template](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/ai-services/ai-service-template) | AI inference service | Python/FastAPI |
+| 12 | [mqtt-quic-c](https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/mqtt-quic-c) | MQTT over QUIC (C) | C |
+
+#### Applications - Dashboards
+
+| # | Example | Description | Language |
+|---|---------|-------------|----------|
+| 13 | [react-dashboard](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/visualization/react-dashboard) | IoT monitoring dashboard | React/TS |
+| 14 | [live-streaming-dashboard](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/real-time/live-streaming-dashboard) | Real-time telemetry dashboard | React/TS |
+| 15 | [grafana-dashboard](https://github.com/tesaiot/developer-hub/tree/main/examples/applications/visualization/grafana-dashboard) | Grafana dashboards | Grafana |
+
+#### Analytics API Examples
+
+| # | Example | Description | Language |
+|---|---------|-------------|----------|
+| 16 | [analytics-api-python](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/python) | Analytics API client | Python |
+| 17 | [analytics-api-javascript](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/javascript) | Analytics API client | JavaScript |
+| 18 | [analytics-api-rust](https://github.com/tesaiot/developer-hub/tree/main/examples/analytics-api/rust) | Analytics API client | Rust |
 
 ### 3. Configure and Run
 
@@ -239,15 +241,12 @@ Each example includes:
 
 | Platform | Status | Notes |
 |----------|--------|-------|
-| **Infineon PSoC 6** | ✅ Supported | Cortex-M4/M0+ with OPTIGA Trust M |
-| **Infineon PSoC Edge (E84)** | ✅ Supported | Cortex-M55/M33 with Trust M |
-| **Arduino** | ✅ Supported | ESP32, MKR WiFi 1010, Portenta |
-| **STM32** | ✅ Supported | STM32F4, STM32L4, STM32H7 series |
-| **NXP** | ✅ Supported | i.MX RT, LPC, Kinetis series |
-| **Renesas** | ✅ Supported | RA, RX, Synergy series |
-| **ESP32** | ✅ Supported | ESP32, ESP32-S2, ESP32-C3 |
-| **Raspberry Pi** | ✅ Supported | Pi 3/4/5, Pi Pico W |
-| **FPGA** | 🔶 Planned | Xilinx, Intel/Altera |
+| **Infineon PSoC 6** | Supported | Cortex-M4/M0+ with OPTIGA Trust M |
+| **Infineon PSoC Edge (E84)** | Supported | Cortex-M55/M33 with Trust M |
+| **ESP32** | Supported | ESP32, ESP32-S2, ESP32-C3 |
+| **Raspberry Pi** | Supported | Pi 3/4/5, Pi Pico W |
+| **Arduino** | Supported | ESP32, MKR WiFi 1010, Portenta |
+| **STM32** | Supported | STM32F4, STM32L4, STM32H7 series |
 
 ### Security Hardware
 
