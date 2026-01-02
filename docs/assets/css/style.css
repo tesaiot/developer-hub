@@ -71,13 +71,16 @@ body {
   text-decoration: none;
   color: white;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
 }
 
 .nav__logo-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background: white;
+  padding: 0.25rem;
 }
 
 .nav__logo-text {
@@ -86,11 +89,10 @@ body {
 
 .nav__logo-symbol {
   color: #ef4444;
-  font-size: 1.5rem;
-  line-height: 1;
-  margin: 0 2px;
+  font-size: 2rem;
+  vertical-align: middle;
   position: relative;
-  top: -0.05em;
+  top: 0.1em;
 }
 
 .nav__links {
