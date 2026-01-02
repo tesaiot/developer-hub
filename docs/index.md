@@ -399,3 +399,4 @@ Apache 2.0 - See [LICENSE](https://github.com/tesaiot/developer-hub/blob/main/LI
 ---
 
 Built with TESAIoT Platform Examples | Copyright 2025 TESAIoT Platform by TESA
+
