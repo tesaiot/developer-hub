@@ -84,6 +84,15 @@ body {
   white-space: nowrap;
 }
 
+.nav__logo-symbol {
+  color: #ef4444;
+  font-size: 1.5rem;
+  line-height: 1;
+  margin: 0 2px;
+  position: relative;
+  top: -0.05em;
+}
+
 .nav__links {
   display: flex;
   align-items: center;

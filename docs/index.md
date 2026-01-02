@@ -25,14 +25,6 @@ excerpt: "Open source examples and templates for building secure IoT application
 /* Hide default masthead */
 .masthead{display:none!important}
 
-/* Custom Header - Landing Page Style */
-.custom-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,19,40,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.1);padding:0.75rem 1.5rem}
-.custom-header__inner{max-width:80rem;margin:0 auto;display:flex;align-items:center;gap:0.75rem}
-.custom-header__logo{width:2.75rem;height:2.75rem;border-radius:0.5rem;background:white;padding:0.25rem}
-.custom-header__title{color:white;font-size:1.375rem;font-weight:700;margin:0;white-space:nowrap;display:flex;align-items:center}
-.custom-header__title span{color:#ef4444;font-size:2rem;line-height:1;margin:0 2px;position:relative;top:-0.1em}
-body{padding-top:4rem}
-
 /* Feature Cards - Landing Page Use Cases Style */
 .feature-cards{display:grid;grid-template-columns:1fr;gap:1rem;max-width:80rem;margin:2rem auto;padding:0 1rem}
 @media(min-width:768px){.feature-cards{grid-template-columns:repeat(3,1fr);gap:1.5rem}}
@@ -103,13 +95,6 @@ table th,table td{padding:0.5rem 0.75rem!important;font-size:0.875rem;white-spac
 pre,div.highlighter-rouge{max-width:100%!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box}
 </style>
 
-<!-- Custom Header with Logo -->
-<div class="custom-header">
-  <div class="custom-header__inner">
-    <img src="{{ '/assets/images/TESA_logo.png' | relative_url }}" alt="TESA" class="custom-header__logo">
-    <h1 class="custom-header__title">TES<span>⩓</span>IoT Developer Hub</h1>
-  </div>
-</div>
 
 <!-- Custom Feature Cards - Matching Landing Page Use Cases Style -->
 <div class="feature-cards">
@@ -397,6 +382,4 @@ Each example includes:
 Apache 2.0 - See [LICENSE](https://github.com/tesaiot/developer-hub/blob/main/LICENSE) for details.
 
 ---
-
-Built with TESAIoT Platform Examples | Copyright 2025 TESAIoT Platform by TESA
 
