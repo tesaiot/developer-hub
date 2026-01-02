@@ -8,8 +8,11 @@ url: "https://tesaiot.github.io"
 baseurl: "/developer-hub"
 repository: tesaiot/developer-hub
 
-# Theme - using no remote theme, custom CSS only
-# remote_theme: disabled - using custom styling
+# Theme - EXPLICITLY disabled to use custom layouts only
+# GitHub Pages defaults to jekyll-theme-primer if not specified
+# Setting theme: null forces Jekyll to use our _layouts/ folder
+theme: null
+remote_theme: null
 
 # Plugins
 plugins:
