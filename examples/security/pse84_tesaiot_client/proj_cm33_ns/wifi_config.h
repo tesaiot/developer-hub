@@ -49,10 +49,10 @@
 * Macros
 ********************************************************************************/
 /* SSID of the Wi-Fi Access Point to which the MQTT client connects. */
-#define WIFI_SSID                        "HomeyPot_5G"
+#define WIFI_SSID                        "<YOUR_SSID>"
 
 /* Passkey of the above mentioned Wi-Fi SSID. */
-#define WIFI_PASSWORD                     "Sweethome"
+#define WIFI_PASSWORD                     "<YOUR_WIFI_PASSWORD>"
 
 /* Security type of the Wi-Fi access point. See 'cy_wcm_security_t' structure
  * in "cy_wcm.h" for more details.

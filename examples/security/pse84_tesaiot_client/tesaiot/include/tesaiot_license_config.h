@@ -15,12 +15,12 @@
 /**
  * Your OPTIGA Trust M UID (27 bytes as 54 hex characters)
  */
-#define TESAIOT_DEVICE_UID      "CD16339301001C000500000A01BB820003004000AE801010712440"
+#define TESAIOT_DEVICE_UID      "<YOUR_TRUST_M_UID>"
 
 /**
  * Your License Key (ECDSA signature as Base64 string)
  */
-#define TESAIOT_LICENSE_KEY     "MEUCIEjUX7JFWXDpOTXbKLxiNpj5X22d+FFhIGqsZe5UMsZ0AiEA2P4pw66q4uOl82+OPLyajkb6AkweJMwNzeCHRMHnjhg="
+#define TESAIOT_LICENSE_KEY     "<YOUR_DEVICE_LICENSE_KEY>"
 
 /*============================================================================
  * END OF CONFIGURATION
