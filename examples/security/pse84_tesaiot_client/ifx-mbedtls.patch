@@ -1,0 +1,88 @@
+diff --git a/include/psa/error.h b/include/psa/error.h
+new file mode 100644
+index 0000000..7634b28
+--- /dev/null
++++ b/include/psa/error.h
+@@ -0,0 +1,2 @@
++#pragma once
++#include "psa/crypto.h"
+diff --git a/include/psa/internal_trusted_storage.h b/include/psa/internal_trusted_storage.h
+new file mode 100644
+index 0000000..674c009
+--- /dev/null
++++ b/include/psa/internal_trusted_storage.h
+@@ -0,0 +1,27 @@
++#pragma once
++#include <stddef.h>
++#include <stdint.h>
++#include "psa/error.h"
++
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++typedef uint64_t psa_storage_uid_t;
++typedef uint32_t psa_storage_create_flags_t;
++
++#define PSA_STORAGE_FLAG_NONE		(0u)
++#define PSA_STORAGE_FLAG_WRITE_ONCE	(1u)
++typedef struct psa_storage_info_t {
++	size_t size;
++	psa_storage_create_flags_t flags;
++}psa_storage_info_t;
++
++//typedef struct psa_storage_info_t data_identifier_info_t;
++psa_status_t psa_its_set(psa_storage_uid_t uid, size_t len, const void *data, psa_storage_create_flags_t flags);
++psa_status_t psa_its_get(psa_storage_uid_t uid, size_t off, size_t size, void *out, size_t *out_len);
++psa_status_t psa_its_get_info(psa_storage_uid_t uid, psa_storage_info_t *info);
++psa_status_t psa_its_remove(psa_storage_uid_t uid);
++#ifdef __cplusplus
++}
++#endif
+diff --git a/library/pk_internal.h b/library/pk_internal.h
+index e86a3a0..351e682 100644
+--- a/library/pk_internal.h
++++ b/library/pk_internal.h
+@@ -93,7 +93,7 @@ static inline mbedtls_ecp_group_id mbedtls_pk_get_ec_group_id(const mbedtls_pk_c
+         psa_key_type_t opaque_key_type;
+         psa_ecc_family_t curve;
+ 
+-        if (psa_get_key_attributes(pk->priv_id, &opaque_attrs) != PSA_SUCCESS) {
++        if (psa_get_key_attributes(pk->MBEDTLS_PRIVATE(priv_id), &opaque_attrs) != PSA_SUCCESS) {
+             return MBEDTLS_ECP_DP_NONE;
+         }
+         opaque_key_type = psa_get_key_type(&opaque_attrs);
+@@ -106,7 +106,7 @@ static inline mbedtls_ecp_group_id mbedtls_pk_get_ec_group_id(const mbedtls_pk_c
+ #if defined(MBEDTLS_PK_USE_PSA_EC_DATA)
+         id = mbedtls_ecc_group_from_psa(pk->ec_family, pk->ec_bits);
+ #else /* MBEDTLS_PK_USE_PSA_EC_DATA */
+-        id = mbedtls_pk_ec_ro(*pk)->grp.id;
++        id = mbedtls_pk_ec_ro(*pk)->MBEDTLS_PRIVATE(grp).id;
+ #endif /* MBEDTLS_PK_USE_PSA_EC_DATA */
+     }
+ 
+diff --git a/library/platform_util.c b/library/platform_util.c
+index 0741bf5..4a13369 100644
+--- a/library/platform_util.c
++++ b/library/platform_util.c
+@@ -32,7 +32,8 @@
+ #define __STDC_WANT_LIB_EXT1__ 1 /* Ask for the C11 gmtime_s() and memset_s() if available */
+ #endif
+ #include <string.h>
+-
++#include "FreeRTOS.h"
++#include "task.h"
+ #if defined(_WIN32)
+ #include <windows.h>
+ #endif
+@@ -258,6 +259,9 @@ mbedtls_ms_time_t mbedtls_ms_time(void)
+     return current_ms;
+ }
+ #else
+-#error "No mbedtls_ms_time available"
++mbedtls_ms_time_t   mbedtls_ms_time (void)
++{
++	return (mbedtls_ms_time_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
++}
+ #endif
+ #endif /* MBEDTLS_HAVE_TIME && !MBEDTLS_PLATFORM_MS_TIME_ALT */

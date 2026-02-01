@@ -1,0 +1,140 @@
+# ==============================================================================
+# secure-sockets v3.12.1 patch for OPTIGA Trust M TLS integration
+# ==============================================================================
+#
+# This patch adds:
+# - OPTIGA key binding for TLS handshake
+# - cy_tls_set_client_cert() function
+# - cy_tls_optiga_key.c/h files
+#
+# Apply with: patch -p1 < secure-sockets_3.12.1.patch
+# ==============================================================================
+
+diff --git a/source/COMPONENT_MBEDTLS/cy_tls.c b/source/COMPONENT_MBEDTLS/cy_tls.c
+index 3ca5b6c..c98875b 100644
+--- a/source/COMPONENT_MBEDTLS/cy_tls.c
++++ b/source/COMPONENT_MBEDTLS/cy_tls.c
+@@ -36,6 +36,8 @@
+  *
+  */
+
++#include "mbedtls/ecp.h"
++#include "mbedtls/oid.h"
+ #include "cy_tls.h"
+ #if defined (COMPONENT_MTB_HAL)
+ #include "mtb_hal.h"
+@@ -63,6 +65,7 @@
+ #if (defined (CY_DEVICE_SECURE) && !defined (CY_SECURE_SOCKETS_PKCS_SUPPORT)) || defined(CYBSP_ETHERNET_CAPABLE)
+ #include "cy_network_mw_core.h"
+ #endif
++#include "cy_tls_optiga_key.h"
+
+ #ifdef COMPONENT_4390X
+ extern cy_rslt_t cy_prng_get_random( void* buffer, uint32_t buffer_length );
+@@ -162,6 +165,40 @@ static int init_ref_count = 0;
+
+ static mbedtls_x509_crt_profile *custom_cert_profile = NULL;
+
++static mbedtls_x509_crt			g_client_cert;
++static mbedtls_pk_context		g_client_pk;
++static int						g_client_cert_ready = 0;
++static int						g_client_key_ready = 0;
++
++static void tls_mod_init_once(void)
++{
++	static int init = 0;
++	if (!init)
++	{
++		mbedtls_x509_crt_init(&g_client_cert);
++		mbedtls_pk_init(&g_client_pk);
++		init = 1;
++	}
++}
++
++int cy_tls_set_client_cert(const uint8_t *buf, size_t len, int is_pem)
++{
++	tls_mod_init_once();
++	mbedtls_x509_crt_free(&g_client_cert);
++	mbedtls_x509_crt_init(&g_client_cert);
++
++	int ret = mbedtls_x509_crt_parse(&g_client_cert, buf, is_pem ? (len) : (len));
++	if (ret == 0)
++	{
++		g_client_cert_ready = 1;
++	}
++	else
++	{
++		printf("Failed mbedtls_parse_cert\n");
++	}
++	return ret;
++}
++
+ #ifdef CY_SECURE_SOCKETS_PKCS_SUPPORT
+ static CK_RV cy_tls_initialize_client_credentials(cy_tls_context_mbedtls_t* context);
+ #endif
+@@ -1692,6 +1729,33 @@ cy_rslt_t cy_tls_connect(void *context, cy_tls_endpoint_type_t endpoint, uint32_
+         }
+     }
+
++    tls_mod_init_once();
++
++    psa_key_id_t optiga_key = cy_tls_get_optiga_key_id();
++    if (optiga_key != 0 && g_client_cert_ready)
++    {
++        /* Revert and init the PK context in the identity */
++        mbedtls_pk_free(&g_client_pk);
++        mbedtls_pk_init(&g_client_pk);
++
++        /* Build a service key-id for Mbed-TLS */
++        mbedtls_svc_key_id_t svc = mbedtls_svc_key_id_make(0, optiga_key);
++
++        int ret_pk = mbedtls_pk_setup_opaque(&g_client_pk, svc);
++        if (ret_pk != 0)
++        {
++            return CY_RSLT_MODULE_TLS_ERROR;
++        }
++        g_client_key_ready = 1;
++        mbedtls_ssl_conf_rng(&ctx->ssl_config, mbedtls_psa_get_random, NULL);
++        ret_pk = mbedtls_ssl_conf_own_cert(&ctx->ssl_config, &g_client_cert, &g_client_pk);
++
++        if (ret_pk != 0)
++        {
++            return CY_RSLT_MODULE_TLS_ERROR;
++        }
++    }
++
+     if((ret = mbedtls_ssl_setup(&ctx->ssl_ctx, &ctx->ssl_config)) != 0)
+     {
+         tls_cy_log_msg(CYLF_MIDDLEWARE, CY_LOG_ERR, "mbedtls_ssl_config_defaults failed 0x%x\r\n", ret);
+diff --git a/source/COMPONENT_MBEDTLS/cy_tls_optiga_key.c b/source/COMPONENT_MBEDTLS/cy_tls_optiga_key.c
+new file mode 100644
+index 0000000..4d0fe2b
+--- /dev/null
++++ b/source/COMPONENT_MBEDTLS/cy_tls_optiga_key.c
+@@ -0,0 +1,13 @@
++#include "cy_tls_optiga_key.h"
++
++static psa_key_id_t g_tls_optiga_key = 0;
++
++void cy_tls_set_optiga_key_id(psa_key_id_t key_id)
++{
++	g_tls_optiga_key = key_id;
++}
++
++psa_key_id_t cy_tls_get_optiga_key_id(void)
++{
++	return g_tls_optiga_key;
++}
+diff --git a/source/COMPONENT_MBEDTLS/include/cy_tls_optiga_key.h b/source/COMPONENT_MBEDTLS/include/cy_tls_optiga_key.h
+new file mode 100644
+index 0000000..9ec3798
+--- /dev/null
++++ b/source/COMPONENT_MBEDTLS/include/cy_tls_optiga_key.h
+@@ -0,0 +1,7 @@
++#include "psa/crypto.h"
++
++/* App calls this once after psa_generate_key() to tell TLS which PSA key to use */
++void cy_tls_set_optiga_key_id(psa_key_id_t key_id);
++
++/* TLS backend reads this during config to bind the opaque key */
++psa_key_id_t cy_tls_get_optiga_key_id(void);

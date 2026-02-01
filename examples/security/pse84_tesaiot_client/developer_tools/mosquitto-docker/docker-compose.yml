@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto-test
+    ports:
+      - "8885:8883"    # mTLS port (remapped to 8885, internal 8883)
+      - "8884:8884"    # Server-TLS port (matching mqtt_client_config.h)
+      - "1884:1883"    # Non-TLS port (mapped to 1884 to avoid conflict)
+      - "9001:9001"    # WebSocket (optional)
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./config/password.txt:/mosquitto/config/password.txt:ro
+      - ./certs:/mosquitto/certs:ro
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
+    restart: unless-stopped
