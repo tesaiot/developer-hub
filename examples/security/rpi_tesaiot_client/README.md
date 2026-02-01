@@ -1,0 +1,588 @@
+# TESAIoT Portable Deployment Package
+
+Self-contained deployment package for TESAIoT CSR and Protected Update workflows.
+
+---
+
+## Contents
+
+```
+Portable_Deployment/
+├── bin/
+│   ├── tesaiot_csr_client      # CSR workflow binary
+│   ├── tesaiot_pu_client       # Protected Update workflow binary
+│   └── trustm/                 # Required OPTIGA Trust M tools
+│       ├── trustm_data
+│       ├── trustm_data.sig         # ECDSA signature (NEW)
+│       ├── trustm_protected_update
+│       ├── trustm_protected_update.sig
+│       ├── trustm_metadata
+│       ├── trustm_metadata.sig
+│       ├── trustm_chipinfo
+│       └── trustm_chipinfo.sig
+├── credentials/                # Device credentials (REQUIRED)
+│   ├── tesaiot-ca-chain.pem    # TESAIoT CA certificate chain
+│   └── infineon-optiga-trust-m-ca.pem
+├── lib/
+│   ├── libtesaiot.a            # Static library for custom builds
+│   ├── libpaho_shim.so         # LD_PRELOAD shim for MQTT TLS
+│   ├── libtrustm.so            # Pre-built OPTIGA Trust M library (v2.x compatible)
+│   └── trustm_provider.so      # Pre-built OpenSSL provider (v2.x compatible)
+├── include/tesaiot/            # Header files
+│   ├── tesaiot.h
+│   ├── tesaiot_config.h        # Device config (DEVICE_ID, LICENSE_KEY)
+│   ├── tesaiot_csr.h
+│   ├── tesaiot_protected_update.h
+│   └── tesaiot_tool_verify.h   # External tool verification (NEW)
+├── scripts/
+│   ├── run_csr_workflow.sh     # CSR runner script
+│   ├── run_pu_workflow.sh      # PU runner script
+│   ├── fix_libgpiod_v2.sh      # Auto-patch for libgpiod v2.x
+│   └── libgpiod_v2.patch       # Patch file for manual apply
+├── config/
+│   └── tesaiot_trustm_openssl.cnf
+├── install.sh                  # System-wide installation
+└── README.md                   # This file
+```
+
+**IMPORTANT**: Binaries are compiled with path `../credentials/` relative to `bin/`.
+Must run from `bin/` directory or use the runner scripts.
+
+## Current Device
+
+This package is pre-configured for device:
+- **Device ID**: `a8a1c4f3-42ae-41e2-b6d3-1f74cc3d5b31`
+- **Device UID**: `CD16339301001C000500000A01BB820003009C002C801010712440`
+
+To use with a different device, you must:
+1. Update `include/tesaiot/tesaiot_config.h` with new DEVICE_ID, DEVICE_UID, LICENSE_KEY
+2. Rebuild binaries from source (see tesaiot_library/)
+
+## Quick Start
+
+### Option 1: Run from Package Directory (Recommended)
+
+```bash
+# Copy to target RPi
+scp -r Portable_Deployment/ pi@raspberrypi:/home/pi/
+
+# On target RPi
+cd /home/pi/Portable_Deployment
+
+# Run CSR workflow (shim is enabled by default for OPTIGA Trust M)
+./scripts/run_csr_workflow.sh
+
+# Run Protected Update workflow
+./scripts/run_pu_workflow.sh
+
+# To run WITHOUT shim (not recommended for OPTIGA):
+./scripts/run_csr_workflow.sh --no-shim
+```
+
+### Option 2: Run Directly from bin/
+
+```bash
+cd /home/pi/Portable_Deployment/bin
+
+# CSR workflow (must be in bin/ for ../credentials path to work)
+sudo ../scripts/run_csr_workflow.sh
+
+# Or manually with shim
+sudo LD_PRELOAD=../lib/libpaho_shim.so ./tesaiot_csr_client
+```
+
+### Option 3: System-wide Installation
+
+```bash
+cd Portable_Deployment
+sudo ./install.sh
+
+# Reload environment
+source /etc/profile.d/tesaiot.sh
+
+# Run workflows (shim is default)
+run_csr
+run_pu
+```
+
+## Prerequisites
+
+### Important: This package requires external dependencies
+
+Simply copying Portable_Deployment to another RPi is **NOT** enough. You must install the dependencies listed below.
+
+### System Dependencies
+
+These must be installed on the target system:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+    libssl3 \
+    libpaho-mqtt3c1 \
+    i2c-tools \
+    libgpiod2
+```
+
+### OPTIGA Trust M Library
+
+This package includes **pre-built libraries** that work with libgpiod v2.x (Debian 12+, Ubuntu 24.04+).
+
+#### Option A: Use Bundled Libraries (Recommended - Easiest)
+
+The runner scripts automatically detect and use bundled libraries in `lib/`:
+- `libtrustm.so` - OPTIGA Trust M library (patched for libgpiod v2.x)
+- `trustm_provider.so` - OpenSSL provider
+
+**No additional installation needed!** Just run:
+```bash
+./scripts/run_csr_workflow.sh    # shim is enabled by default
+```
+
+#### Option B: Use Automatic Patch Script
+
+If you want to build from source with the latest Infineon code:
+```bash
+# Clone upstream repository
+git clone https://github.com/Infineon/linux-optiga-trust-m.git
+cd linux-optiga-trust-m
+
+# Run the automatic patch script
+/path/to/Portable_Deployment/scripts/fix_libgpiod_v2.sh
+
+# Build and install
+./build.sh
+sudo make install
+sudo ldconfig
+```
+
+#### Option C: Apply Patch Manually
+
+```bash
+git clone https://github.com/Infineon/linux-optiga-trust-m.git
+cd linux-optiga-trust-m
+
+# Apply patch
+cd trustm_lib
+patch -p1 < /path/to/Portable_Deployment/scripts/libgpiod_v2.patch
+cd ..
+
+# Build and install
+./build.sh
+sudo make install
+sudo ldconfig
+```
+
+#### Option D: Systems with libgpiod v1.x (Debian 11, Ubuntu 22.04)
+
+If you're using an older OS with libgpiod v1.x, no patch is needed:
+```bash
+git clone https://github.com/Infineon/linux-optiga-trust-m.git
+cd linux-optiga-trust-m
+./build.sh
+sudo make install
+sudo ldconfig
+```
+
+**Quick Check** - Which libgpiod version do you have?
+```bash
+apt-cache policy libgpiod-dev | grep Installed
+# v1.x (1.6.x) = No patch needed
+# v2.x (2.0+)  = Use Option A, B, or C above
+```
+
+#### Verify Installation (if using Options B, C, or D)
+```bash
+# Check libtrustm
+ldconfig -p | grep libtrustm
+# Expected: libtrustm.so -> /lib/aarch64-linux-gnu/libtrustm.so
+
+# Check trustm_provider.so
+find /usr/lib -name "trustm_provider.so"
+# Expected locations:
+# - /usr/lib/aarch64-linux-gnu/ossl-modules/trustm_provider.so (64-bit)
+# - /usr/lib/arm-linux-gnueabihf/ossl-modules/trustm_provider.so (32-bit)
+```
+
+### Hardware Setup
+
+- OPTIGA Trust M Shield connected via I2C (address 0x30)
+- GPIO 17 connected to OPTIGA reset pin
+- I2C and GPIO enabled in Raspberry Pi config
+
+```bash
+# Enable I2C and SPI (if not already done)
+sudo raspi-config nonint do_i2c 0
+sudo raspi-config nonint do_spi 0
+
+# Verify I2C connection
+i2cdetect -y 1
+# Should show 30 at address 0x30
+```
+
+### Quick Dependency Install
+
+Use the included install.sh script which handles dependency installation:
+
+```bash
+cd Portable_Deployment
+sudo ./install.sh
+```
+
+This will:
+1. Install system dependencies (libssl3, libpaho-mqtt3c1, libgpiod2, i2c-tools)
+2. Check for OPTIGA Trust M library (warns if not found)
+3. Install TESAIoT to /opt/tesaiot
+
+## Environment Variables
+
+The scripts automatically set these, but you can override:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TRUSTM_LIB_PATH` | Path to trustm tools directory | Auto-detected |
+| `TRUSTM_DATA_PATH` | Path to trustm_data binary | Auto-detected |
+| `TRUSTM_OPENSSL_CONF` | OpenSSL config with trustm_provider | /tmp/tesaiot_trustm_openssl.cnf |
+
+## Building Custom Applications
+
+Use the static library and headers:
+
+```c
+#include <tesaiot/tesaiot.h>
+#include <tesaiot/tesaiot_csr.h>
+#include <tesaiot/tesaiot_protected_update.h>
+```
+
+```bash
+gcc -o my_app my_app.c \
+    -I/opt/tesaiot/include \
+    -L/opt/tesaiot/lib \
+    -ltesaiot -lssl -lcrypto -lpaho-mqtt3c -lpthread
+```
+
+## Troubleshooting
+
+### OPTIGA Timeout
+
+If you see timeout errors after TLS operations:
+
+```bash
+# Reset OPTIGA via GPIO
+sudo gpioset gpiochip0 17=0
+sleep 0.1
+sudo gpioset gpiochip0 17=1
+```
+
+### Library Not Found
+
+```bash
+# Add library path
+export LD_LIBRARY_PATH=/opt/tesaiot/lib:$LD_LIBRARY_PATH
+```
+
+### Permission Denied
+
+```bash
+# Run with sudo (scripts handle sudo internally)
+./scripts/run_pu_workflow.sh
+```
+
+---
+
+## Security Architecture
+
+### Why Hardware Security Module (HSM)?
+
+TESAIoT uses **OPTIGA Trust M** hardware security module for critical security operations:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Traditional Software Security                    │
+├─────────────────────────────────────────────────────────────────────┤
+│  Private Key stored in:                                             │
+│  - File system (easily extracted)                                   │
+│  - Environment variables (memory dump vulnerable)                   │
+│  - Application memory (side-channel attacks)                        │
+│                                                                     │
+│  Vulnerabilities:                                                   │
+│  ✗ Key extraction via physical access                               │
+│  ✗ Memory dump attacks                                              │
+│  ✗ Firmware reverse engineering                                     │
+│  ✗ No hardware attestation                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│               TESAIoT Hardware Security (OPTIGA Trust M)            │
+├─────────────────────────────────────────────────────────────────────┤
+│  Private Key stored in:                                             │
+│  - Secure Element (tamper-resistant silicon)                        │
+│  - Never leaves the chip                                            │
+│  - Protected by hardware countermeasures                            │
+│                                                                     │
+│  Security Features:                                                 │
+│  ✓ Keys generated inside secure element                             │
+│  ✓ Private keys NEVER exportable                                    │
+│  ✓ Hardware-based cryptographic operations                          │
+│  ✓ Tamper detection and response                                    │
+│  ✓ Side-channel attack protection                                   │
+│  ✓ Secure boot chain attestation                                    │
+│  ✓ Protected Update with integrity verification                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### OID (Object Identifier) Separation
+
+Critical design principle: **Complete service separation** between CSR and Protected Update workflows.
+
+| OID | Name | CSR Workflow | PU Workflow | Purpose |
+|-----|------|:------------:|:-----------:|---------|
+| 0xE0F1 | CSR Private Key | ✅ | ❌ | ECC P-256 keypair for CSR signing |
+| 0xE0E1 | Device Certificate 1 | ✅ Write | ✅ Write | X.509 device certificate slot 1 |
+| **0xE0E2** | **Device Certificate 2** | ✅ Write | ✅ Write | X.509 device certificate (default) |
+| 0xE0E3 | Device Certificate 3 | ✅ Write | ✅ Write | X.509 device certificate slot 3 |
+| 0xE0E9 | CA Chain | ✅ Read | ❌ | TESAIoT CA certificate chain |
+| 0xE0E0 | Factory Certificate | ✅ Read | ❌ | Bootstrap TLS authentication |
+| 0xE0C2 | Trust M UID | ✅ Read | ✅ Read | Unique device identifier |
+| 0xE0E8 | Trust Anchor | ❌ | ✅ | PU manifest signature verification |
+| 0xF1D4 | Secret | ❌ | ✅ | AES-128-CCM decryption key |
+| 0xE0F2 | PU Key Slot | ❌ | ✅ | Protected Update operations |
+
+---
+
+## Workflow Diagrams
+
+### CSR (Certificate Signing Request) Workflow
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         CSR Workflow Sequence                            │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Device (RPi + OPTIGA)                    TESAIoT Platform
+    ─────────────────────                    ─────────────────
+            │                                        │
+            │  1. Generate ECC P-256 Keypair         │
+            │     (Private key at OID 0xE0F1)        │
+            │     ┌─────────────────────────┐        │
+            │     │   OPTIGA Trust M        │        │
+            │     │   optiga_crypt_ecc_     │        │
+            │     │   generate_keypair()    │        │
+            │     └─────────────────────────┘        │
+            │                                        │
+            │  2. Generate CSR (PEM format)          │
+            │     Subject: CN={Device UID}           │
+            │     Public Key: From step 1            │
+            │     Signature: OPTIGA signs with 0xE0F1│
+            │                                        │
+            │  3. Connect MQTT (TLS 1.2)             │
+            │     Client Cert: Factory (0xE0E0)      │
+            │     CA Chain: 0xE0E9                   │
+            │                                        │
+            │              CSR (PEM)                 │
+            │ ─────────────────────────────────────> │
+            │    Topic: device/{id}/commands/csr     │
+            │                                        │
+            │                                        │  4. Validate CSR
+            │                                        │     - Verify signature
+            │                                        │     - Check device ID
+            │                                        │     - Policy evaluation
+            │                                        │
+            │                                        │  5. Sign with Vault
+            │                                        │     (Intermediate CA)
+            │                                        │
+            │          Certificate (RAW PEM)         │
+            │ <───────────────────────────────────── │
+            │ Topic: device/{id}/commands/certificate│
+            │                                        │
+            │  6. Write Certificate to 0xE0E2        │
+            │     ┌─────────────────────────┐        │
+            │     │   OPTIGA Trust M        │        │
+            │     │   optiga_util_write_    │        │
+            │     │   data(0xE0E2, cert)    │        │
+            │     └─────────────────────────┘        │
+            │                                        │
+            │  7. Verify Certificate Chain           │
+            │     Device Cert → Intermediate → Root  │
+            │                                        │
+           ✓ CSR Workflow Complete                   │
+            │                                        │
+```
+
+### Protected Update Workflow
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    Protected Update Workflow Sequence                    │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    Device (RPi + OPTIGA)                    TESAIoT Platform
+    ─────────────────────                    ─────────────────
+            │                                        │
+            │                                        │  1. Create Update Payload
+            │                                        │     - New certificate/config
+            │                                        │     - Target OID: 0xE0E2
+            │                                        │
+            │                                        │  2. Generate CBOR Manifest
+            │                                        │     (COSE_Sign1, RFC 8152)
+            │                                        │     ┌──────────────────┐
+            │                                        │     │ protected_header │
+            │                                        │     │(algorithm: ES256)│
+            │                                        │     ├──────────────────┤
+            │                                        │     │ payload          │
+            │                                        │     │ (target OID,     │
+            │                                        │     │  version, hash)  │
+            │                                        │     ├──────────────────┤
+            │                                        │     │ signature        │
+            │                                        │     │ (Platform key)   │
+            │                                        │     └──────────────────┘
+            │                                        │
+            │     Manifest + Fragments (CBOR)        │
+            │ <───────────────────────────────────── │
+            │  Topic: device/{id}/commands/protected_update
+            │                                        │
+            │  3. Parse CBOR COSE_Sign1              │
+            │     ┌─────────────────────────┐        │
+            │     │   TinyCBOR Parser       │        │
+            │     │   Extract: header,      │        │
+            │     │   payload, signature    │        │
+            │     └─────────────────────────┘        │
+            │                                        │
+            │  4. Verify Signature                   │
+            │     ┌─────────────────────────┐        │
+            │     │   OPTIGA Trust M        │        │
+            │     │   Trust Anchor (0xE0E8) │        │
+            │     │   optiga_crypt_ecdsa_   │        │
+            │     │   verify()              │        │
+            │     └─────────────────────────┘        │
+            │                                        │
+            │  5. Protected Update Sequence          │
+            │     ┌─────────────────────────┐        │
+            │     │ optiga_util_protected_  │        │
+            │     │ update_start()          │        │
+            │     ├─────────────────────────┤        │
+            │     │ optiga_util_protected_  │        │
+            │     │ update_continue() x N   │        │
+            │     ├─────────────────────────┤        │
+            │     │ optiga_util_protected_  │        │
+            │     │ update_final()          │        │
+            │     └─────────────────────────┘        │
+            │                                        │
+            │  6. Verify Integrity                   │
+            │     - Hash verification                │
+            │     - Version check (anti-rollback)    │
+            │                                        │
+           ✓ Protected Update Complete               │
+            │                                        │
+```
+
+---
+
+## Standards Compliance
+
+TESAIoT architecture is designed to comply with international IoT security standards:
+
+### ETSI EN 303 645 (Consumer IoT Security)
+
+| Provision | Requirement | TESAIoT Implementation |
+|-----------|-------------|------------------------|
+| **5.1** | No universal default passwords | ✅ Unique device identity via OPTIGA Trust M UID |
+| **5.2** | Implement vulnerability disclosure | ✅ CSR workflow enables certificate rotation |
+| **5.3** | Keep software updated | ✅ Protected Update workflow with integrity verification |
+| **5.4** | Securely store credentials | ✅ Private keys stored in hardware secure element |
+| **5.5** | Communicate securely | ✅ TLS 1.2 with hardware-backed keys |
+| **5.6** | Minimize attack surfaces | ✅ OID separation, minimal exposed interfaces |
+| **5.7** | Ensure software integrity | ✅ COSE_Sign1 signed manifests, hash verification |
+| **5.8** | Ensure personal data protection | ✅ Hardware encryption, access control via LcsO |
+| **5.11** | Make it easy for users to delete personal data | ✅ Protected Update can reset device certificates |
+
+### IEC 62443 (Industrial Automation Security)
+
+| Security Level | Requirement | TESAIoT Implementation |
+|----------------|-------------|------------------------|
+| **SL 1** | Protection against casual violation | ✅ TLS encryption, authentication |
+| **SL 2** | Protection against intentional violation | ✅ Hardware key storage, signed updates |
+| **SL 3** | Protection using sophisticated means | ✅ OPTIGA tamper resistance, anti-rollback |
+| **SL 4** | Protection with state-sponsored resources | ✅ Side-channel protection, secure boot chain |
+
+### ISO/IEC 27001:2022 (Information Security)
+
+| Control | Requirement | TESAIoT Implementation |
+|---------|-------------|------------------------|
+| **A.8.24** | Use of cryptography | ✅ ECC P-256, AES-128-CCM, SHA-256 |
+| **A.8.25** | Secure development lifecycle | ✅ Hardware Root of Trust from manufacturing |
+| **A.8.26** | Application security requirements | ✅ Certificate-based authentication |
+| **A.8.27** | Secure system architecture | ✅ Separation of concerns (CSR vs PU OIDs) |
+| **A.8.28** | Secure coding | ✅ Stack allocation, memory safety |
+
+### NIST Cybersecurity Framework
+
+| Function | Category | TESAIoT Implementation |
+|----------|----------|------------------------|
+| **Identify** | Asset Management | ✅ Unique device UID (0xE0C2) |
+| **Protect** | Identity Management | ✅ X.509 certificates, hardware keys |
+| **Protect** | Data Security | ✅ Hardware encryption, TLS 1.2 |
+| **Detect** | Anomalies | ✅ Certificate validation, signature verification |
+| **Respond** | Mitigation | ✅ Certificate revocation via CSR workflow |
+| **Recover** | Recovery Planning | ✅ Protected Update for secure recovery |
+
+### OWASP IoT Top 10 (2018)
+
+| Vulnerability | OWASP Description | TESAIoT Mitigation |
+|---------------|-------------------|-------------------|
+| **I1** | Weak/Hardcoded Passwords | ✅ Certificate-based auth, no passwords |
+| **I2** | Insecure Network Services | ✅ TLS 1.2 only, strong cipher suites |
+| **I3** | Insecure Ecosystem Interfaces | ✅ MQTT with mTLS, signed manifests |
+| **I4** | Lack of Secure Update | ✅ Protected Update with COSE_Sign1 |
+| **I5** | Use of Insecure Components | ✅ Certified OPTIGA Trust M (CC EAL6+) |
+| **I6** | Insufficient Privacy Protection | ✅ Hardware key isolation |
+| **I7** | Insecure Data Transfer | ✅ TLS 1.2 with hardware keys |
+| **I8** | Lack of Device Management | ✅ Certificate lifecycle management |
+| **I9** | Insecure Default Settings | ✅ Secure-by-default configuration |
+| **I10** | Lack of Physical Hardening | ✅ Tamper-resistant secure element |
+
+### OPTIGA Trust M Certifications
+
+The OPTIGA Trust M secure element provides:
+
+- **Common Criteria EAL6+ (high)** - Highest security assurance level for smartcard ICs
+- **AIS-31 Class PTG.2** - True random number generator certification
+- **FIPS 140-2 Level 3 equivalent** - Cryptographic module security
+- **EMVCo** - Payment card industry compliance ready
+
+### External Tool Verification (NEW in v2.2)
+
+TESAIoT Library implements ECDSA code signing for bundled external tools:
+
+- **NIST SP 800-193 Compliant** - Verify integrity before execution
+- **IEC 62443-4-2 SL3** - Protection against sophisticated attacks
+- **TOCTOU Prevention** - Minimize time-of-check to time-of-use window
+
+```
+bin/trustm/
+├── trustm_data                  # Binary
+├── trustm_data.sig              # ECDSA P-256 signature
+├── trustm_protected_update
+├── trustm_protected_update.sig
+└── ...
+```
+
+Library automatically verifies signatures before executing tools. If a tool is tampered, verification fails and execution is blocked.
+
+---
+
+## Version
+
+- Package Version: 2.2
+- Build Date: 2026-02-01
+- Platform: Raspberry Pi (aarch64/armhf)
+- Changes (v2.2):
+  - **NEW**: External tool ECDSA signature verification (NIST SP 800-193)
+  - All bundled tools now include `.sig` signature files
+  - Library verifies tool signatures before execution
+- Changes (v2.1):
+  - Added `--target-oid` argument for CSR and PU clients
+  - Shim is now **enabled by default** (use `--no-shim` to disable)
+  - PU request now includes required fields: `target_oid`, `trust_anchor_oid`, `payload_version`
+  - Fixed OPTIGA busy timeout issue after Protected Update write
+  - Default target OID is 0xE0E2 (can be changed with `--target-oid`)
