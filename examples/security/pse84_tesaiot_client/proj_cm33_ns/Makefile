@@ -98,6 +98,15 @@ INCLUDES+=$(CY_GETLIBS_SHARED_PATH)/$(CY_GETLIBS_SHARED_NAME)/ifx-mbedtls/releas
 # Add PSA Crypto SE source file (needed for OPTIGA Trust M PSA driver registration)
 SOURCES+=$(CY_GETLIBS_SHARED_PATH)/$(CY_GETLIBS_SHARED_NAME)/ifx-mbedtls/release-v3.6.400/library/psa_crypto_se.c
 
+# TESAIoT License Data Binding (customer compiles with own UID + License Key)
+# NOTE: tesaiot_license.c is IN library (compiled from official project)
+# NOTE: tesaiot_license_data.c provides extern variable values at link time
+SOURCES+=../tesaiot/src/tesaiot_license_data.c
+
+# MQTT Device Configuration Data Binding (customer compiles with own DEVICE_ID + API_KEY)
+# NOTE: mqtt_device_config_data.c provides extern variable values at link time
+SOURCES+=mqtt_device_config_data.c
+
 # OPTIGA Trust M include directories
 INCLUDES+=$(OPTIGA_LIB_PATH)/include \
           $(OPTIGA_LIB_PATH)/include/common \

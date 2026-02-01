@@ -125,6 +125,7 @@ typedef enum {
 #define TESAIOT_LICENSE_GATE_BOOL() \
     do { \
         if (!tesaiot_is_licensed()) { \
+            printf("[TESAIoT] LICENSE ERROR: %s() - Function disabled (invalid/expired license)\n", __func__); \
             return false; \
         } \
     } while(0)
@@ -135,6 +136,7 @@ typedef enum {
 #define TESAIOT_LICENSE_GATE_INT() \
     do { \
         if (!tesaiot_is_licensed()) { \
+            printf("[TESAIoT] LICENSE ERROR: %s() - Function disabled (invalid/expired license)\n", __func__); \
             return -1; \
         } \
     } while(0)
@@ -145,6 +147,7 @@ typedef enum {
 #define TESAIOT_LICENSE_GATE_PTR() \
     do { \
         if (!tesaiot_is_licensed()) { \
+            printf("[TESAIoT] LICENSE ERROR: %s() - Function disabled (invalid/expired license)\n", __func__); \
             return NULL; \
         } \
     } while(0)
@@ -155,6 +158,7 @@ typedef enum {
 #define TESAIOT_LICENSE_GATE_VOID() \
     do { \
         if (!tesaiot_is_licensed()) { \
+            printf("[TESAIoT] LICENSE ERROR: %s() - Function disabled (invalid/expired license)\n", __func__); \
             return; \
         } \
     } while(0)
@@ -165,6 +169,7 @@ typedef enum {
 #define TESAIOT_LICENSE_GATE(ret_val) \
     do { \
         if (!tesaiot_is_licensed()) { \
+            printf("[TESAIoT] LICENSE ERROR: %s() - Function disabled (invalid/expired license)\n", __func__); \
             return (ret_val); \
         } \
     } while(0)

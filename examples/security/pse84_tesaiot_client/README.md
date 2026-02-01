@@ -3,7 +3,7 @@
 **Firmware Version:** 2026.02 Public Beta
 **TESAIoT Library:** v2.8.0
 **Date:** 2026-02-01
-**Status:** Public Beta
+**Status:** Production Ready
 
 This project demonstrates a **secure IoT device provisioning workflow** using:
 
@@ -34,7 +34,7 @@ This project demonstrates a **secure IoT device provisioning workflow** using:
 [VERSION] PSE84 Trust M + TESAIoT Firmware 2026.02 Public Beta
 [STATUS] Wi-Fi: connected | MQTT: idle
 [LICENSE] Valid - UID: CD16339301001C000500000A01BB820003004000AE801010712440
-[TIME] 2026-02-01 10:00:00 UTC+7 (NTP synced)
+[TIME] 2026-02-01 17:52:29 UTC+7 (NTP synced)
 1) Print factory UID and factory certificate
 2) Test MQTT connection with current certificate
 3) Full CSR workflow with TESAIoT
@@ -50,8 +50,8 @@ Select option (1-5) then press Enter:
 | **1** | Print Factory Info | Displays OPTIGA Trust M UID and reads Factory Certificate from OID 0xE0E0 |
 | **2** | Test MQTT | Tests TLS connection to broker using current certificate (Factory or Device) |
 | **3** | **CSR Workflow** | Full automated workflow: Generate keys, create CSR, publish to TESAIoT, receive signed certificate |
-| **4** | **Protected Update** | Full workflow: Request certificate renewal from TESAIoT Platform via Protected Update |
-| **5** | Metadata Diagnostics | Read OPTIGA metadata, test certificate parsing with DER fallback |
+| **4** | **Protected Update** | Certificate renewal workflow via TESAIoT Platform (manifest + fragment) |
+| **5** | Metadata Diagnostics | Read OPTIGA metadata, display installed certificates, lifecycle state |
 
 ---
 
@@ -61,17 +61,17 @@ Select option (1-5) then press Enter:
 
 | OID | Name | Type | Purpose | Lifecycle |
 |-----|------|------|---------|-----------|
-| **0xE0C2** | Factory UID | Read-Only | Hardware identity (27 bytes) | Permanent |
-| **0xE0E0** | Factory Certificate | Certificate | Pre-provisioned TLS certificate | Read-only after provisioning |
-| **0xE0E1** | Device Certificate | Certificate | Operational certificate from CSR | Writable (up to 1728 bytes) |
-| **0xE0E3** | Trust Anchor (ROOT_CA) | Public Key | Protected Update signature verification | Provisioned |
-| **0xE0F0** | Factory Private Key | ECC P-256 | Paired with Factory Cert (0xE0E0) | Read-only |
-| **0xE0F1** | Device Private Key | ECC P-256 | Paired with Device Cert (0xE0E1) | Generated during CSR |
-| **0xF1D0-0xF1DF** | User Data Objects | Data | Application-specific storage | Read/Write |
+| __0xE0C2__ | Factory UID | Read-Only | Hardware identity (27 bytes) | Permanent |
+| __0xE0E0__ | Factory Certificate | Certificate | Pre-provisioned TLS certificate | Read-only after provisioning |
+| __0xE0E1__ | Device Certificate | Certificate | Operational certificate from CSR | Writable (up to 1728 bytes) |
+| __0xE0E3__ | Trust Anchor (ROOT_CA) | Public Key | Protected Update signature verification | Provisioned |
+| __0xE0F0__ | Factory Private Key | ECC P-256 | Paired with Factory Cert (0xE0E0) | Read-only |
+| __0xE0F1__ | Device Private Key | ECC P-256 | Paired with Device Cert (0xE0E1) | Generated during CSR |
+| __0xF1D0-0xF1DF__ | User Data Objects | Data | Application-specific storage | Read/Write |
 
 ### OID Access Conditions
 
-```
+```sql
 LcsO (Lifecycle State Object) = 0x07 (Operational)
 +------------------------------------------------------------------+
 |  OID   |  Read Access  |  Change Access  |  Execute Access       |
@@ -88,9 +88,9 @@ LcsO (Lifecycle State Object) = 0x07 (Operational)
 
 ## Two-Certificate PKI Model
 
-```
+```yaml
 +========================================================================================+
-|                         TESAIoT Two-Certificate PKI Architecture                        |
+|                         TESAIoT Two-Certificate PKI Architecture                       |
 +========================================================================================+
 
     FACTORY CERTIFICATE (Bootstrap)              DEVICE CERTIFICATE (Operational)
@@ -125,6 +125,7 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 ```
 
 **Why SAFE MODE?**
+
 - Device Certificate (0xE0E1) may not match Device Key (0xE0F1) after reset
 - Key generated during CSR is lost on power cycle (RAM only until cert written)
 - Factory Certificate + Factory Key are always paired correctly
@@ -136,7 +137,7 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 
 ### Official State Machine Diagram
 
-```
+```sh
 +==============================================================================+
 |                    TESAIoT CSR Workflow State Machine                        |
 +==============================================================================+
@@ -243,7 +244,7 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 
 ### Certificate Renewal Flow Diagram
 
-```
+```md
 +==============================================================================+
 |                      Certificate Lifecycle Management                         |
 +==============================================================================+
@@ -294,7 +295,7 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 
 ### Certificate Expiry Scenarios
 
-```
+```md
 Timeline: Certificate Lifecycle
 ============================================================================
 
@@ -405,7 +406,7 @@ make program
 
 ### First Time Setup
 
-```
+```csv
 1. Power on device
 2. Connect serial terminal (115200 baud)
 3. Wait for Wi-Fi connection and NTP sync
@@ -417,7 +418,7 @@ make program
 
 ### After Board Reset
 
-```
+```md
 1. Power on device (or reset)
 2. System automatically uses Factory Certificate (SAFE MODE)
 3. MQTT Connection Test will work immediately (Factory Cert connection)
@@ -427,7 +428,7 @@ make program
 
 ### Certificate Renewal
 
-```
+```sh
 1. Connect to device terminal
 2. If certificate expired: System uses Factory Cert (SAFE MODE)
 3. Run CSR Workflow
@@ -537,32 +538,59 @@ pse84_trustm_tesaiot_mqtt_mTLS/
 
 ---
 
-## TESAIoT Library Headers (v2.8.0)
+## TESAIoT Library Architecture (v2.8.0)
 
-The project uses consolidated TESAIoT headers:
+### Header Files
 
-```
+The project uses 9 consolidated TESAIoT headers (v2.8.0):
+
+```ini
 tesaiot/include/
 ├── tesaiot.h                  # Main umbrella (includes all)
 ├── tesaiot_config.h           # Configuration
 ├── tesaiot_csr.h              # CSR workflow
-├── tesaiot_license_config.h   # Customer editable
+├── tesaiot_license_config.h   # Customer editable (UID + License Key)
+├── tesaiot_license.h          # License API (NEW in v2.8.0)
 ├── tesaiot_optiga.h           # OPTIGA integration
 ├── tesaiot_optiga_core.h      # OPTIGA manager
 ├── tesaiot_platform.h         # MQTT + SNTP
 └── tesaiot_protected_update.h # Protected Update
 ```
 
+### 3-Layer License Architecture (NEW in v2.8.0)
+
+```ini
+Layer 1: Configuration (Customer Edits)
+├── tesaiot/include/tesaiot_license_config.h
+│   └── #define TESAIOT_DEVICE_UID / TESAIOT_LICENSE_KEY
+
+Layer 2: Data Binding (Customer Compiles)
+├── tesaiot/src/tesaiot_license_data.c
+│   └── extern variables (link-time binding)
+
+Layer 3: Verification Logic (IP-Protected)
+├── tesaiot/src/tesaiot_license.c
+    └── Compiled into libtesaiot.a (embedded public key)
+```
+
+**Security Benefits:**
+
+- Public key embedded in `.c` file (customer never sees it)
+- Verification logic compiled into library (IP-protected)
+- Customer provides UID + License Key via link-time binding
+
 ---
 
 ## Authors
 
 **Assoc. Prof. Wiroon Sriborrirux (BDH)**
+
 - Thai Embedded Systems Association (TESA)
 - TESAIoT Platform Creator
 - Email: sriborrirux@gmail.com / wiroon@tesa.or.th
 
 **TESAIoT Platform Developer Team**
+
 - In collaboration with Infineon Technologies AG
 
 ---
@@ -573,4 +601,4 @@ OPTIGA Trust M integration and TESAIoT workflow by Assoc. Prof. Wiroon Sriborrir
 
 ---
 
-**Last Updated:** 2026-02-01
+**Last Updated:** 2026-02-02

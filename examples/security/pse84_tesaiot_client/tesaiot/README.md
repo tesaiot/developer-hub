@@ -49,14 +49,36 @@ The library provides 8 header files:
 
 ---
 
-## License Key Configuration
+## License Key Configuration (v2.8.0)
 
-Edit `tesaiot_license_config.h` in your `proj_cm33_ns/` folder:
+### 3-Layer Architecture
+
+**Layer 1: Configuration (Customer Edits)**
+
+Edit `tesaiot/include/tesaiot_license_config.h`:
 
 ```c
 #define TESAIOT_DEVICE_UID    "your_device_uid_here"
 #define TESAIOT_LICENSE_KEY   "your_license_key_here"
 ```
+
+**Layer 2: Data Binding (Customer Compiles)**
+
+`tesaiot/src/tesaiot_license_data.c` - Link-time binding:
+
+```c
+#include "tesaiot_license_config.h"
+
+const char* tesaiot_device_uid = TESAIOT_DEVICE_UID;
+const char* tesaiot_license_key = TESAIOT_LICENSE_KEY;
+```
+
+**Layer 3: Verification Logic (IP-Protected)**
+
+`tesaiot/src/tesaiot_license.c` - Compiled into `libtesaiot.a`:
+- Embedded public key (customer never sees it)
+- ECDSA signature verification
+- UID verification with OPTIGA
 
 ### How to Get Your License
 
@@ -64,8 +86,18 @@ Edit `tesaiot_license_config.h` in your `proj_cm33_ns/` folder:
 2. Run **Print factory UID** (Menu 1) to get your device's OPTIGA Trust M UID
 3. Register on TESAIoT Server with the UID
 4. Download your `tesaiot_license_config.h`
-5. Place in `proj_cm33_ns/` folder
+5. Place in `tesaiot/include/` folder (moved from `proj_cm33_ns/`)
 6. Rebuild and flash - Licensed!
+
+### Security Benefits (v2.8.0)
+
+| Aspect | Old (v2.6) | New (v2.8) |
+|--------|-----------|-----------|
+| **Config Location** | `proj_cm33_ns/` | `tesaiot/include/` |
+| **Data Binding** | ❌ None | ✅ Link-time binding |
+| **Public Key** | ⚠️ In header? | ✅ Embedded in .c (IP-protected) |
+| **Verification Logic** | ⚠️ Distributed | ✅ Compiled in library only |
+| **IP Protection** | Partial | ✅ Complete |
 
 ---
 
