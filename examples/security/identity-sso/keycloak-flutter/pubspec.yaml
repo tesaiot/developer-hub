@@ -1,0 +1,48 @@
+name: tesaiot_sso_example
+description: TESAIoT SSO Example with Keycloak authentication
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.16.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Authentication
+  flutter_appauth: ^6.0.0
+
+  # Secure Storage
+  flutter_secure_storage: ^9.0.0
+
+  # State Management
+  provider: ^6.1.0
+
+  # HTTP Client
+  http: ^1.1.0
+  dio: ^5.4.0
+
+  # JWT Decoding
+  jwt_decoder: ^2.0.1
+
+  # Utils
+  logger: ^2.0.0
+  equatable: ^2.0.5
+
+  # UI
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  mockito: ^5.4.0
+  build_runner: ^2.4.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
