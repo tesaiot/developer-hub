@@ -17,9 +17,11 @@
  *   ./tesaiot_pu_client help       - Show help
  */
 
+/* IMPORTANT: Include tesaiot_config.h FIRST to set device-specific overrides */
+#include <tesaiot_config.h>
+
 #include <tesaiot.h>
 #include <tesaiot_protected_update.h>
-#include <tesaiot_config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

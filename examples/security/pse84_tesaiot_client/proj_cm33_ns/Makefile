@@ -125,9 +125,9 @@ DEFINES+=$(MBEDTLSFLAGS) $(OPTIGAFLAGS) CYBSP_WIFI_CAPABLE CY_RETARGET_IO_CONVER
 # MQTT configuration (default 5 slots - kept low for RAM constraints)
 
 # Debug level: 0=NONE, 1=ERROR, 2=WARNING, 3=INFO, 4=VERBOSE
-# NOTE: Level 2-3 hides user-facing output. Use VERBOSE (4) for now.
-# TODO: Separate user output from debug output before using lower levels
-DEFINES+=TESAIOT_DEBUG_LEVEL=4
+# NOTE: Level 4 (VERBOSE) requires heap_4/heap_5 for xPortGetFreeHeapSize()
+# Use INFO (3) for compatibility with all FreeRTOS heap implementations
+DEFINES+=TESAIOT_DEBUG_LEVEL=3
 
 # Default configuration of mbedtls library.
 DEFINES+=MBEDTLS_CONFIG_FILE='"mbedtls/mbedtls_config.h"'

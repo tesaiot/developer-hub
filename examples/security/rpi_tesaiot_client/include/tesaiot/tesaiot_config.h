@@ -246,12 +246,27 @@ extern const char *g_tesaiot_license_key;
  */
 #define TESAIOT_OID_TRUSTM_UID          0xE0C2
 #define TESAIOT_OID_FACTORY_CERT        0xE0E0
-#define TESAIOT_OID_DEVICE_CERT         0xE0E2  /* Changed from 0xE0E1 (locked) */
-#define TESAIOT_OID_DEVICE_CERT_LOCKED  0xE0E1  /* DO NOT USE - Change:NEV */
+
+/**
+ * @brief Device Certificate OID - Developer can customize this!
+ * Valid OIDs: 0xE0E1 (default), 0xE0E2, 0xE0E3
+ *
+ * Example: To use OID 0xE0E2 instead of default:
+ *   #define TESAIOT_OID_DEVICE_CERT 0xE0E2
+ */
+#ifndef TESAIOT_OID_DEVICE_CERT
+#define TESAIOT_OID_DEVICE_CERT         0xE0E1  /* Standard default */
+#endif
 #define TESAIOT_OID_FACTORY_CA          0xE0E8
 #define TESAIOT_OID_TESAIOT_CA          0xE0E9
 #define TESAIOT_OID_FACTORY_KEY         0xE0F0
 #define TESAIOT_OID_CSR_KEY             0xE0F1
+
+/**
+ * @brief Factory Certificate path for mTLS
+ * This certificate is extracted from OPTIGA Trust M OID 0xE0E0
+ */
+#define TESAIOT_FACTORY_CERT_OID        "/tmp/tesaiot_factory_cert.pem"
 
 /**
  * @brief Factory Key OID for trustm_provider (mTLS)

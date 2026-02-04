@@ -17,9 +17,11 @@
  *   ./tesaiot_csr_client help      - Show help
  */
 
+/* IMPORTANT: Include tesaiot_config.h FIRST to set device-specific overrides */
+#include <tesaiot_config.h>
+
 #include <tesaiot.h>
 #include <tesaiot_csr.h>
-#include <tesaiot_config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +53,7 @@ static int write_ca_cert_to_file(void)
  *---------------------------------------------------------------------------*/
 
 /* Global target OID (parsed from command line) */
-static uint16_t g_target_oid = 0;  /* 0 = use default (0xE0E2) */
+static uint16_t g_target_oid = 0;  /* 0 = use library default (0xE0E1) */
 
 static void print_usage(const char *prog_name)
 {
@@ -72,11 +74,11 @@ static void print_usage(const char *prog_name)
     printf("  help      Show this help message\n");
     printf("\n");
     printf("Options:\n");
-    printf("  --target-oid 0xE0E2   Target OID for device certificate (default: 0xE0E2)\n");
+    printf("  --target-oid 0xE0E1   Target OID for device certificate (default: 0xE0E1)\n");
     printf("                        Valid OIDs: 0xE0E1, 0xE0E2, 0xE0E3\n");
     printf("\n");
     printf("Examples:\n");
-    printf("  %s                         # Run CSR workflow (default OID 0xE0E2)\n", prog_name);
+    printf("  %s                         # Run CSR workflow (default OID 0xE0E1)\n", prog_name);
     printf("  %s run                     # Run CSR workflow\n", prog_name);
     printf("  %s run --target-oid 0xE0E3 # Write certificate to OID 0xE0E3\n", prog_name);
     printf("  %s identity                # Display Trust M UID and factory cert\n", prog_name);
@@ -218,7 +220,7 @@ static int cmd_run_csr_workflow(void)
              "%s", TESAIOT_FACTORY_CERT_OID);
     snprintf(csr_config.factory_key_path, sizeof(csr_config.factory_key_path),
              "%s", TESAIOT_FACTORY_KEY_OID);
-    /* Target OID from command line (0 = use default 0xE0E2) */
+    /* Target OID from command line (0 = use library default 0xE0E1) */
     csr_config.target_oid = g_target_oid;
 
     /* Run CSR workflow (blocking call) */
@@ -226,7 +228,7 @@ static int cmd_run_csr_workflow(void)
 
     printf("[CSR] -------------------------------------------\n");
     if (ret == 0) {
-        uint16_t oid = g_target_oid ? g_target_oid : 0xE0E2;
+        uint16_t oid = g_target_oid ? g_target_oid : 0xE0E1;
         printf("[CSR] ✓ CSR Workflow completed successfully!\n");
         printf("[CSR] Device certificate enrolled to OID 0x%04X\n", oid);
     } else {

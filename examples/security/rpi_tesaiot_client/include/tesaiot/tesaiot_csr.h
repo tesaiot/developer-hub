@@ -208,11 +208,11 @@ int tesaiot_csr_workflow_notify_certificate(const char *pem_cert, size_t pem_len
 
 /**
  * Device Certificate OID (target for certificate write)
- * @warning OID 0xE0E1 was accidentally locked with Change:NEV on 2026-01-30.
- *          Now using 0xE0E2 for device certificate storage.
+ * Developer can override by defining TESAIOT_OID_DEVICE_CERT before including this header.
+ * Valid OIDs: 0xE0E1 (default), 0xE0E2, 0xE0E3
  */
 #ifndef TESAIOT_OID_DEVICE_CERT
-#define TESAIOT_OID_DEVICE_CERT 0xE0E2  /* Changed from 0xE0E1 (locked) */
+#define TESAIOT_OID_DEVICE_CERT 0xE0E1  /* Standard default */
 #endif
 
 /** TESAIoT CA Chain OID (for certificate verification) */
