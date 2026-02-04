@@ -46,8 +46,8 @@
 *
 * This application has been modified by the TESAIoT Platform Developer Team to add:
 * - Integration with TESAIoT AIoT Foundation Platform
-* - Certificate Lifecycle Management (auto-renewal via CSR workflow)
-* - Protected Update workflow support (manifest + fragments)
+* - Certificate Lifecycle Management (Protected Update workflow)
+* - Protected Update workflow support (manifest + fragments, v3.0.0)
 * - OPTIGA Trust M hardware security integration
 * - Interactive menu for provisioning and testing
 * Security by Design: IoT Cybersecurity compliance (ETSI EN 303 645, NIST IR 8259A, IEC 62443, IEEE 802.1AR)
@@ -83,17 +83,16 @@
 #include "event_groups.h"
 
 /*----------------------------------------------------------------------------
- * TESAIoT Library v2.1 - Umbrella Headers (6 Domain Groups)
+ * TESAIoT Library v3.0.0 - Umbrella Headers (5 Domain Groups)
  *
- * Instead of including 12+ individual headers, use these 7 umbrella headers:
+ * Instead of including 12+ individual headers, use these 6 umbrella headers:
  *---------------------------------------------------------------------------*/
 #include "tesaiot.h"                   // Group 6: License Management
 #include "tesaiot_config.h"            // Configuration (debug, OID settings)
 #include "tesaiot_optiga_core.h"       // Group 1: Core OPTIGA instance
-#include "tesaiot_csr.h"               // Group 2: CSR Workflow
-#include "tesaiot_protected_update.h"  // Group 3: Protected Update Workflow
-#include "tesaiot_optiga.h"            // Group 4: TESAIoT OPTIGA Trust M
-#include "tesaiot_platform.h"          // Group 5: Standard Libs (MQTT, SNTP)
+#include "tesaiot_protected_update.h"  // Group 2: Protected Update Workflow
+#include "tesaiot_optiga.h"            // Group 3: TESAIoT OPTIGA Trust M
+#include "tesaiot_platform.h"          // Group 4: Standard Libs (MQTT, SNTP)
 
 /******************************************************************************
  * Macros
@@ -144,7 +143,7 @@ static void print_menu_prompt(void)
 
     printf("\n================ PSoC Edge-to-TESAIoT Platform Menu ================\n");
     #if TESAIOT_DEBUG_INFO_ENABLED
-    printf("%s PSE84 Trust M + TESAIoT Firmware 2026.02 Public Beta\n", LABEL_VERSION);
+    printf("%s PSE84 Trust M + TESAIoT Firmware v3.0.0 Production\n", LABEL_VERSION);
     printf("%s Wi-Fi: %s | MQTT: %s\n", LABEL_STATUS, wifi_status, mqtt_status);
     /* Display TESAIoT License Status */
     if (tesaiot_is_licensed()) {
@@ -178,15 +177,14 @@ static void print_menu_prompt(void)
 
     printf("1) Print factory UID and factory certificate\n");
     printf("2) Test MQTT connection with current certificate\n");
-    printf("3) Full CSR workflow with TESAIoT\n");
-    printf("4) Full Protected Update workflow with TESAIoT\n");
-    printf("5) Test OPTIGA Trust M metadata operations (diagnostics)\n");
+    printf("3) Full Protected Update workflow with TESAIoT\n");
+    printf("4) Test OPTIGA Trust M metadata operations (diagnostics)\n");
 #if TESAIOT_DEBUG_ENABLED  /* Menu 6 hidden in production - use for debug only */
 	printf("........................................................\n");
     printf("6) Test Protected Update (Isolated - No TESAIoT Platform)\n");
     printf("Select option (1-6) then press Enter: ");
 #else
-    printf("Select option (1-5) then press Enter: ");
+    printf("Select option (1-4) then press Enter: ");
 #endif
     fflush(stdout);
 }
@@ -221,80 +219,6 @@ static void print_factory_identity(void)
         printf("%s Failed to read factory device certificate\n", LABEL_WARN);
         #endif /* TESAIOT_DEBUG_WARNING_ENABLED */
     }
-}
-
-
-// Local CSR generation - displays CSR without platform interaction (utility function)
-static void run_csr_workflow(void)
-{
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("\n%s Starting key generation and CSR creation...\n", MENU_CSR_LOCAL);
-    // Step 0: Read Factory UID for CN
-    printf("%s Step 0/4: Reading factory UID...\n", MENU_CSR_LOCAL);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-    char factory_uid[65] = {0};
-    if (!tesaiot_read_factory_uid(factory_uid, sizeof(factory_uid)))
-    {
-        #if TESAIOT_DEBUG_VERBOSE_ENABLED
-        printf("%s ERROR: Failed to read factory UID\n", MENU_CSR_LOCAL);
-        #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-        return;
-    }
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s --> Factory UID: %s\n", MENU_CSR_LOCAL, factory_uid);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-
-    // Step 1: Generate keypair on OPTIGA
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s Step 1/4: Generating ECC P-256 keypair on OPTIGA Trust M...\n", MENU_CSR_LOCAL);
-    printf("%s   Using OID: 0x%04X (TESAIOT_TARGET_KEY_OID)\n", MENU_CSR_LOCAL, TESAIOT_TARGET_KEY_OID);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-    uint8_t public_key_der[128];
-    uint16_t public_key_der_len = sizeof(public_key_der);
-
-    if (!tesaiot_generate_device_keypair(TESAIOT_TARGET_KEY_OID, public_key_der, &public_key_der_len))
-    {
-        #if TESAIOT_DEBUG_VERBOSE_ENABLED
-        printf("%s ERROR: Failed to generate keypair\n", MENU_CSR_LOCAL);
-        #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-        return;
-    }
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s --> Keypair generated successfully (%u bytes public key)\n", MENU_CSR_LOCAL, public_key_der_len);
-    // Step 2: Prepare subject with CN=UID and O=Infineon Technologies
-    printf("%s Step 2/4: Preparing CSR subject...\n", MENU_CSR_LOCAL);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-    char subject[256];
-    snprintf(subject, sizeof(subject), "CN=%s,O=Infineon Technologies", factory_uid);
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s --> Subject: %s\n", MENU_CSR_LOCAL, subject);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-
-    // Step 3: Generate CSR
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s Step 3/4: Generating Certificate Signing Request (CSR)...\n", MENU_CSR_LOCAL);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-    char csr_pem[2048];
-
-    if (!tesaiot_generate_csr_pem(TESAIOT_TARGET_KEY_OID, public_key_der, public_key_der_len,
-                                   subject, csr_pem, sizeof(csr_pem)))
-    {
-        #if TESAIOT_DEBUG_VERBOSE_ENABLED
-        printf("%s ERROR: Failed to generate CSR\n", MENU_CSR_LOCAL);
-        #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-        return;
-    }
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s --> CSR generated successfully\n", MENU_CSR_LOCAL);
-    // Step 4: Display CSR (local only - no platform submission)
-    printf("%s Step 4/4: CSR ready for signing\n\n", MENU_CSR_LOCAL);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
-    printf("========== CERTIFICATE SIGNING REQUEST (CSR) ==========\n");
-    printf("%s", csr_pem);
-    printf("========================================================\n\n");
-    #if TESAIOT_DEBUG_VERBOSE_ENABLED
-    printf("%s Local workflow complete (use CSR Workflow to submit to Platform)\n", MENU_CSR_LOCAL);
-    #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
 }
 
 /*******************************************************************************
@@ -463,7 +387,7 @@ static void test_mqtt_connection(void)
     printf("  1. Certificate mismatch (factory cert may not be trusted by broker)\n");
     printf("  2. Network connectivity issues\n");
     printf("  3. Broker configuration issues\n");
-    printf("%s Recommendation: Check certificate configuration or run CSR workflow\n\n", MENU_MQTT_TEST);
+    printf("%s Recommendation: Check certificate configuration or run Protected Update\n\n", MENU_MQTT_TEST);
 #endif /* MQTT_LIGHTWEIGHT_PUBLISH_TEST */
 }
 
@@ -607,7 +531,7 @@ void optiga_client_task(void *pvParameters) {
 
 	/* Set the client certificate for the TLS handshake.
 	 * This is either the factory certificate, or a new certificate installed
-	 * via protected update or CSR workflow.
+	 * via Protected Update workflow (v3.0.0).
 	 */
 	cy_tls_set_client_cert((const uint8_t *)optiga_cert_pem, optiga_cert_pem_size, 1);
 
@@ -648,9 +572,6 @@ void optiga_client_task(void *pvParameters) {
 
 	for (;;)
 	{
-		/* Check for deferred auto-CSR renewal (triggered by Factory Cert fallback) */
-		tesaiot_check_pending_csr();
-
 		print_menu_prompt();
 		/* Use FreeRTOS-friendly getchar to prevent blocking after MQTT connection */
 		int selection = rtos_getchar();
@@ -668,9 +589,6 @@ void optiga_client_task(void *pvParameters) {
 			test_mqtt_connection();
 			break;
 		case '3':
-			tesaiot_run_csr_workflow();
-			break;
-		case '4':
 			#if TESAIOT_DEBUG_VERBOSE_ENABLED
 			printf("\n%s Starting Protected Update workflow with TESAIoT...\n", LABEL_MENU);
 			#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
@@ -678,7 +596,7 @@ void optiga_client_task(void *pvParameters) {
 			printf("\n%s Protected Update workflow returned. Returning to menu...\n", LABEL_MENU);
 			fflush(stdout);
 			break;
-		case '5':
+		case '4':
 			#if TESAIOT_DEBUG_VERBOSE_ENABLED
 			printf(LABEL_METADATA_TEST " Starting OPTIGA Trust M metadata diagnostic tests...\n");
 			printf(LABEL_METADATA_TEST " This will help diagnose why certificate write fails.\n");
@@ -699,7 +617,7 @@ void optiga_client_task(void *pvParameters) {
 #if TESAIOT_DEBUG_ENABLED
 			printf("%s Invalid selection '%c'. Please choose 1-6.\n", LABEL_WARN, selection);
 #else
-			printf("%s Invalid selection '%c'. Please choose 1-5.\n", LABEL_WARN, selection);
+			printf("%s Invalid selection '%c'. Please choose 1-4.\n", LABEL_WARN, selection);
 #endif
 			#endif /* TESAIOT_DEBUG_WARNING_ENABLED */
 			break;
@@ -889,9 +807,9 @@ int main(void)
     printf("%s\n", LABEL_FEATURES);
     #endif /* TESAIOT_DEBUG_INFO_ENABLED */
     printf("  - OPTIGA Trust M V3 hardware security\n");
-    printf("  - CSR workflow with TESAIoT Platform (MQTT)\n");
-    printf("  - Certificate Lifecycle Management (auto-renewal)\n");
-    printf("  - Protected Update workflow (manifest + fragments)\n");
+    printf("  - Protected Update workflow with TESAIoT Platform (MQTT)\n");
+    printf("  - Certificate Lifecycle Management (Protected Update)\n");
+    printf("  - Factory pre-provisioning + secure certificate renewal\n");
     printf("  - Mutual TLS authentication\n");
     printf("===============================================================\n\n");
 

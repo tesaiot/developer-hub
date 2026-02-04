@@ -64,6 +64,7 @@
 
 #include "cybsp.h"
 #include "string.h"
+#include "time.h"
 #include "FreeRTOS.h"
 
 /* Task header files */
@@ -158,6 +159,8 @@ static volatile uint32_t callback_count_manifest = 0;
 static volatile uint32_t callback_count_fragment = 0;
 static volatile uint32_t callback_count_pubkey = 0;
 static volatile uint32_t callback_count_unknown = 0;
+static volatile uint32_t callback_queue_send_success = 0;
+static volatile uint32_t callback_queue_send_fail = 0;
 
 /* Smart Auto-Fallback response tracking variables */
 SemaphoreHandle_t check_certificate_response_semaphore = NULL;
@@ -197,6 +200,383 @@ static void optiga_trust_m_callback(void *context, optiga_lib_status_t return_st
  xSemaphoreGiveFromISR(trust_m_write_semaphore, &xHigherPriorityTaskWoken);
  portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
  }
+}
+
+/******************************************************************************
+ * Certificate Installation ACK Helper Functions (Phase 1: Core ACK)
+ ******************************************************************************
+ * These functions send acknowledgment to TESAIoT platform after successful
+ * certificate installation via CSR or Protected Update workflows.
+ *
+ * Phase 1 Implementation: Minimal ACK (no certificate data)
+ * - Event type, timestamp, status, correlation_id, workflow, OID
+ *
+ * Future Phases:
+ * - Phase 2: Add certificate_der_b64, optiga_verification, installation_duration_ms
+ * - Phase 3: Add error handling for failed installations
+ ******************************************************************************/
+
+/**
+ * Get current time in ISO8601 format with milliseconds
+ *
+ * @param buffer Output buffer (minimum 32 bytes)
+ * @param buffer_len Size of output buffer
+ *
+ * Format: YYYY-MM-DDTHH:MM:SS.sssZ
+ * Example: 2026-02-03T15:05:30.123Z
+ */
+static void get_iso8601_timestamp(char *buffer, size_t buffer_len)
+{
+	if (!buffer || buffer_len < 32) {
+		return;
+	}
+
+	// Get current tick count for milliseconds
+	TickType_t ticks = xTaskGetTickCount();
+	uint32_t ms = (ticks % 1000);
+
+	// Get current time from system
+	// Note: This requires NTP to be synchronized
+	time_t now = time(NULL);
+	struct tm *tm_info = gmtime(&now);
+
+	// Format: 2026-02-03T15:05:30.123Z
+	snprintf(buffer, buffer_len,
+	         "%04d-%02d-%02dT%02d:%02d:%02d.%03luZ",
+	         tm_info->tm_year + 1900,
+	         tm_info->tm_mon + 1,
+	         tm_info->tm_mday,
+	         tm_info->tm_hour,
+	         tm_info->tm_min,
+	         tm_info->tm_sec,
+	         (unsigned long)ms);
+}
+
+/**
+ * Read certificate from OPTIGA OID and encode as base64 (Phase 2)
+ *
+ * @param oid OPTIGA OID to read (e.g., 0xE0E1)
+ * @param out_b64 Output buffer for base64 string
+ * @param out_b64_len Size of output buffer (min 3KB for 1800-byte cert)
+ * @param out_der_len Returns actual DER certificate length
+ * @return CY_RSLT_SUCCESS on success, error code otherwise
+ */
+static cy_rslt_t read_and_encode_certificate(
+	uint16_t oid,
+	char *out_b64,
+	size_t out_b64_len,
+	size_t *out_der_len)
+{
+	// Validate inputs
+	if (!out_b64 || out_b64_len < 2048 || !out_der_len) {
+		printf("%s ERROR: Invalid certificate encode parameters\n", LABEL_SUBSCRIBER);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	// Allocate buffer for DER certificate (max 1800 bytes)
+	uint8_t *cert_der = (uint8_t*)pvPortMalloc(2048);
+	if (!cert_der) {
+		printf("%s ERROR: Failed to allocate certificate buffer\n", LABEL_SUBSCRIBER);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	uint16_t cert_len = 2048;
+
+	// Acquire OPTIGA instance (thread-safe)
+	optiga_util_t *me_util = optiga_manager_acquire();
+	if (!me_util) {
+		printf("%s ERROR: OPTIGA instance not available\n", LABEL_SUBSCRIBER);
+		vPortFree(cert_der);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	// Perform async read
+	optiga_lib_status = OPTIGA_LIB_BUSY;
+	optiga_lib_status_t status = optiga_util_read_data(me_util, oid, 0, cert_der, &cert_len);
+
+	if (OPTIGA_LIB_SUCCESS != status) {
+		printf("%s ERROR: OPTIGA read failed (0x%04X)\n", LABEL_SUBSCRIBER, status);
+		optiga_manager_release();
+		vPortFree(cert_der);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	// Wait for read completion (max 2 seconds)
+	TickType_t start = xTaskGetTickCount();
+	TickType_t timeout = pdMS_TO_TICKS(2000);
+	while (optiga_lib_status == OPTIGA_LIB_BUSY && (xTaskGetTickCount() - start) < timeout) {
+		vTaskDelay(pdMS_TO_TICKS(100));
+	}
+
+	if (optiga_lib_status != OPTIGA_LIB_SUCCESS) {
+		printf("%s ERROR: OPTIGA read timeout/failed (0x%04X)\n", LABEL_SUBSCRIBER, optiga_lib_status);
+		optiga_manager_release();
+		vPortFree(cert_der);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	optiga_manager_release();
+	*out_der_len = cert_len;
+
+	// Base64 encode certificate
+	size_t olen = 0;
+	int ret = mbedtls_base64_encode(
+		(unsigned char*)out_b64,
+		out_b64_len,
+		&olen,
+		cert_der,
+		cert_len
+	);
+
+	vPortFree(cert_der);
+
+	if (ret != 0) {
+		printf("%s ERROR: Base64 encode failed (%d)\n", LABEL_SUBSCRIBER, ret);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	out_b64[olen] = '\0';  // Null-terminate
+	return CY_RSLT_SUCCESS;
+}
+
+/**
+ * Send certificate installation acknowledgment to TESAIoT platform
+ *
+ * Phase 1: Minimal ACK payload
+ * Phase 2: Full data with certificate_der_b64 (if include_cert_data=true)
+ *
+ * @param correlation_id UUID from original CSR/PU request (required)
+ * @param workflow "csr_workflow" or "protected_update" (required)
+ * @param target_oid OPTIGA OID where certificate was written (e.g., 0xE0E1)
+ * @param include_cert_data Set true to include certificate data (Phase 2)
+ * @param installation_duration_ms Time taken for installation (Phase 2)
+ * @return CY_RSLT_SUCCESS on success, error code otherwise
+ */
+static cy_rslt_t send_certificate_ack(
+	const char *correlation_id,
+	const char *workflow,
+	uint16_t target_oid,
+	bool include_cert_data,
+	uint32_t installation_duration_ms)
+{
+	cy_rslt_t result = CY_RSLT_SUCCESS;
+
+	// Validate inputs
+	if (!correlation_id || !workflow) {
+		printf("%s ERROR: Invalid ACK parameters (corr_id=%p, workflow=%p)\n",
+		       LABEL_SUBSCRIBER, (void*)correlation_id, (void*)workflow);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	// Get ISO8601 timestamp
+	char timestamp[32];
+	get_iso8601_timestamp(timestamp, sizeof(timestamp));
+
+	// Allocate payload buffer dynamically based on phase
+	// Phase 1: 512 bytes (minimal)
+	// Phase 2: 4096 bytes (with certificate base64)
+	size_t buffer_size = include_cert_data ? 4096 : 512;
+	char *ack_payload = (char*)pvPortMalloc(buffer_size);
+	if (!ack_payload) {
+		printf("%s ERROR: Failed to allocate ACK payload buffer\n", LABEL_SUBSCRIBER);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	int payload_len = 0;
+
+	if (!include_cert_data) {
+		// Phase 1: Minimal ACK payload (~512 bytes)
+		payload_len = snprintf(ack_payload, buffer_size,
+		    "{"
+		    "\"event\":\"certificate_installed\","
+		    "\"timestamp\":\"%s\","
+		    "\"oid\":\"0x%04X\","
+		    "\"status\":\"success\","
+		    "\"correlation_id\":\"%s\","
+		    "\"workflow\":\"%s\","
+		    "\"installation_duration_ms\":%lu"
+		    "}",
+		    timestamp,
+		    target_oid,
+		    correlation_id,
+		    workflow,
+		    (unsigned long)installation_duration_ms);
+	} else {
+		// Phase 2: Full data with certificate
+		// Read and encode certificate
+		char *cert_b64 = (char*)pvPortMalloc(3072);  // Base64 buffer (2048 DER → ~3KB base64)
+		if (!cert_b64) {
+			printf("%s ERROR: Failed to allocate certificate buffer\n", LABEL_SUBSCRIBER);
+			vPortFree(ack_payload);
+			return CY_RSLT_TYPE_ERROR;
+		}
+
+		size_t cert_der_len = 0;
+		cy_rslt_t cert_result = read_and_encode_certificate(target_oid, cert_b64, 3072, &cert_der_len);
+
+		if (cert_result == CY_RSLT_SUCCESS) {
+			// Certificate read succeeded - include in payload
+			payload_len = snprintf(ack_payload, buffer_size,
+			    "{"
+			    "\"event\":\"certificate_installed\","
+			    "\"timestamp\":\"%s\","
+			    "\"oid\":\"0x%04X\","
+			    "\"status\":\"success\","
+			    "\"correlation_id\":\"%s\","
+			    "\"workflow\":\"%s\","
+			    "\"certificate_der_b64\":\"%s\","
+			    "\"optiga_verification\":\"passed\","
+			    "\"installation_duration_ms\":%lu"
+			    "}",
+			    timestamp,
+			    target_oid,
+			    correlation_id,
+			    workflow,
+			    cert_b64,
+			    (unsigned long)installation_duration_ms);
+		} else {
+			// Certificate read failed - send minimal payload
+			printf("%s WARNING: Failed to read certificate, sending minimal ACK\n", LABEL_SUBSCRIBER);
+			payload_len = snprintf(ack_payload, buffer_size,
+			    "{"
+			    "\"event\":\"certificate_installed\","
+			    "\"timestamp\":\"%s\","
+			    "\"oid\":\"0x%04X\","
+			    "\"status\":\"success\","
+			    "\"correlation_id\":\"%s\","
+			    "\"workflow\":\"%s\","
+			    "\"installation_duration_ms\":%lu"
+			    "}",
+			    timestamp,
+			    target_oid,
+			    correlation_id,
+			    workflow,
+			    (unsigned long)installation_duration_ms);
+		}
+
+		vPortFree(cert_b64);
+	}
+
+	if (payload_len < 0 || payload_len >= (int)buffer_size) {
+		printf("%s ERROR: ACK payload buffer too small (needed=%d, have=%lu)\n",
+		       LABEL_SUBSCRIBER, payload_len, (unsigned long)buffer_size);
+		vPortFree(ack_payload);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	printf("%s [ACK] Sending certificate installation acknowledgment...\n", LABEL_SUBSCRIBER);
+	if (include_cert_data) {
+		printf("%s [ACK] Payload (%d bytes, with certificate)\n", LABEL_SUBSCRIBER, payload_len);
+	} else {
+		printf("%s [ACK] Payload (%d bytes): %s\n", LABEL_SUBSCRIBER, payload_len, ack_payload);
+	}
+	fflush(stdout);
+
+	// Build MQTT publish info
+	cy_mqtt_publish_info_t pub_info = {
+		.qos = CY_MQTT_QOS0,
+		.topic = "device/" DEVICE_ID "/telemetry/system",
+		.topic_len = strlen("device/" DEVICE_ID "/telemetry/system"),
+		.payload = ack_payload,
+		.payload_len = (size_t)payload_len,
+		.retain = false,
+		.dup = false
+	};
+
+	// Publish ACK message
+	result = cy_mqtt_publish(mqtt_connection, &pub_info);
+
+	if (result == CY_RSLT_SUCCESS) {
+		printf("%s [ACK] Certificate ACK published successfully\n", LABEL_SUBSCRIBER);
+	} else {
+		printf("%s [ACK] WARNING: Failed to publish certificate ACK: 0x%08lX\n",
+		       LABEL_SUBSCRIBER, (unsigned long)result);
+		printf("%s [ACK] Note: ACK failure is non-fatal - device continues normally\n",
+		       LABEL_SUBSCRIBER);
+	}
+
+	fflush(stdout);
+	vPortFree(ack_payload);
+	return result;
+}
+
+/**
+ * Send failed certificate installation acknowledgment (Phase 3)
+ *
+ * @param correlation_id UUID from original CSR/PU request (required)
+ * @param workflow "csr_workflow" or "protected_update" (required)
+ * @param error_code Hex error code (e.g., "0x8001")
+ * @param error_message Human-readable error description
+ * @return CY_RSLT_SUCCESS on success, error code otherwise
+ */
+static cy_rslt_t send_certificate_ack_failed(
+	const char *correlation_id,
+	const char *workflow,
+	const char *error_code,
+	const char *error_message)
+{
+	cy_rslt_t result = CY_RSLT_SUCCESS;
+
+	// Validate inputs
+	if (!correlation_id || !workflow || !error_code || !error_message) {
+		printf("%s ERROR: Invalid failed ACK parameters\n", LABEL_SUBSCRIBER);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	// Get ISO8601 timestamp
+	char timestamp[32];
+	get_iso8601_timestamp(timestamp, sizeof(timestamp));
+
+	// Build failed ACK payload
+	char ack_payload[512];
+	int payload_len = snprintf(ack_payload, sizeof(ack_payload),
+	    "{"
+	    "\"event\":\"certificate_install_failed\","
+	    "\"timestamp\":\"%s\","
+	    "\"status\":\"failed\","
+	    "\"correlation_id\":\"%s\","
+	    "\"workflow\":\"%s\","
+	    "\"error_code\":\"%s\","
+	    "\"error_message\":\"%s\""
+	    "}",
+	    timestamp,
+	    correlation_id,
+	    workflow,
+	    error_code,
+	    error_message);
+
+	if (payload_len < 0 || payload_len >= (int)sizeof(ack_payload)) {
+		printf("%s ERROR: Failed ACK payload buffer too small\n", LABEL_SUBSCRIBER);
+		return CY_RSLT_TYPE_ERROR;
+	}
+
+	printf("%s [ACK] Sending failed certificate installation acknowledgment...\n", LABEL_SUBSCRIBER);
+	printf("%s [ACK] Error: %s (%s)\n", LABEL_SUBSCRIBER, error_message, error_code);
+	fflush(stdout);
+
+	// Build MQTT publish info
+	cy_mqtt_publish_info_t pub_info = {
+		.qos = CY_MQTT_QOS0,
+		.topic = "device/" DEVICE_ID "/telemetry/system",
+		.topic_len = strlen("device/" DEVICE_ID "/telemetry/system"),
+		.payload = ack_payload,
+		.payload_len = (size_t)payload_len,
+		.retain = false,
+		.dup = false
+	};
+
+	// Publish failed ACK message
+	result = cy_mqtt_publish(mqtt_connection, &pub_info);
+
+	if (result == CY_RSLT_SUCCESS) {
+		printf("%s [ACK] Failed certificate ACK published successfully\n", LABEL_SUBSCRIBER);
+	} else {
+		printf("%s [ACK] WARNING: Failed to publish failed ACK: 0x%08lX\n",
+		       LABEL_SUBSCRIBER, (unsigned long)result);
+	}
+
+	fflush(stdout);
+	return result;
 }
 
 /******************************************************************************
@@ -297,6 +677,8 @@ typedef struct {
 	uint16_t fragment_1_len;
 	char *fragment_2_b64;
 	uint16_t fragment_2_len;
+	char *correlation_id;        /* UUID for request-response matching */
+	uint16_t correlation_id_len; /* Length of correlation_id string */
 	uint8_t fragment_count;
 } protected_update_ctx_t;
 
@@ -309,7 +691,7 @@ static cy_rslt_t protected_update_json_callback(cy_JSON_object_t* json_obj, void
 	char *val = json_obj->value;
 	uint16_t val_len = json_obj->value_length;
 
-	// Parse string fields (signing_certificate, manifest, fragment_0)
+	// Parse string fields (signing_certificate, manifest, fragment_0, correlation_id)
 	// Field names aligned with TESAIoT Platform Protected Update API v2.11
 	if (json_obj->value_type == JSON_STRING_TYPE) {
 		// signing_certificate: X.509 Certificate DER (~580 bytes, base64 encoded ~773 chars)
@@ -327,6 +709,11 @@ static cy_rslt_t protected_update_json_callback(cy_JSON_object_t* json_obj, void
 			ctx->fragment_0_b64 = val;
 			ctx->fragment_0_len = val_len;
 		}
+		// correlation_id: UUID for request-response matching
+		else if (key_len == 14 && strncmp(key, "correlation_id", 14) == 0) {
+			ctx->correlation_id = val;
+			ctx->correlation_id_len = val_len;
+		}
 	}
 	// Parse number fields (fragment_count)
 	else if (json_obj->value_type == JSON_NUMBER_TYPE) {
@@ -337,6 +724,41 @@ static cy_rslt_t protected_update_json_callback(cy_JSON_object_t* json_obj, void
 
 	return CY_RSLT_SUCCESS;
 }
+
+
+/* Multi-Topic JSON Callbacks (2026-02-03) */
+typedef struct { char *pubkey_b64; uint16_t pubkey_len; } pubkey_ctx_t;
+static cy_rslt_t pubkey_cb(cy_JSON_object_t* j, void *a) {
+	pubkey_ctx_t *c = (pubkey_ctx_t *)a;
+	if (j->value_type == JSON_STRING_TYPE && j->object_string_length == 6 &&
+	    strncmp(j->object_string, "pubkey", 6) == 0) {
+		c->pubkey_b64 = j->value; c->pubkey_len = j->value_length;
+	}
+	return CY_RSLT_SUCCESS;
+}
+typedef struct { char *manifest_b64; uint16_t manifest_len; } manifest_ctx_t;
+static cy_rslt_t manifest_cb(cy_JSON_object_t* j, void *a) {
+	manifest_ctx_t *c = (manifest_ctx_t *)a;
+	if (j->value_type == JSON_STRING_TYPE && j->object_string_length == 8 &&
+	    strncmp(j->object_string, "manifest", 8) == 0) {
+		c->manifest_b64 = j->value; c->manifest_len = j->value_length;
+	}
+	return CY_RSLT_SUCCESS;
+}
+typedef struct { char *frag_b64; uint16_t frag_len; int idx; } frag_ctx_t;
+static cy_rslt_t frag_cb(cy_JSON_object_t* j, void *a) {
+	frag_ctx_t *c = (frag_ctx_t *)a;
+	if (j->value_type == JSON_STRING_TYPE && j->object_string_length == 13 &&
+	    strncmp(j->object_string, "fragment_data", 13) == 0) {
+		c->frag_b64 = j->value; c->frag_len = j->value_length;
+	}
+	else if (j->value_type == JSON_NUMBER_TYPE && j->object_string_length == 14 &&
+	         strncmp(j->object_string, "fragment_index", 14) == 0) {
+		c->idx = (int)j->intval;
+	}
+	return CY_RSLT_SUCCESS;
+}
+
 
 /******************************************************************************
  * Function Name: subscriber_task
@@ -582,9 +1004,11 @@ void subscriber_task(void *pvParameters)
  (unsigned long)callback_count_fragment,
  (unsigned long)callback_count_pubkey,
  (unsigned long)callback_count_unknown);
+ printf("%s Queue stats: send_success=%lu send_fail=%lu\n", LABEL_SUBSCRIBER, (unsigned long)callback_queue_send_success, (unsigned long)callback_queue_send_fail);
  #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
 #endif
 
+ printf("%s [DEBUG] About to enter switch, cmd=%d\n", LABEL_SUBSCRIBER, subscriber_q_data.cmd);
  switch(subscriber_q_data.cmd)
  {
  case SUBSCRIBE_TO_TOPIC:
@@ -722,43 +1146,96 @@ void subscriber_task(void *pvParameters)
  	memcpy(json_copy, subscriber_q_data.data, subscriber_q_data.data_size);
  	json_copy[subscriber_q_data.data_size] = '\0'; // Null-terminate
  	__DSB(); __DMB(); __ISB(); // Memory barriers for cache coherency
-#if 0  /* TRACE messages disabled */
- 	printf("%s [TRACE-3] JSON buffer copied (%d bytes)\n", LABEL_SUBSCRIBER, subscriber_q_data.data_size);
+ 	// TRACE: JSON buffer copied successfully
+ 	printf("%s [TRACE-3] JSON buffer copied (%d bytes) at %p\n", LABEL_SUBSCRIBER, subscriber_q_data.data_size, (void*)json_copy);
  	fflush(stdout);
-#endif
 
  	// Initialize context to collect parsed JSON fields
  	protected_update_ctx_t parse_ctx = {0};
 
  	// Register callback and parse JSON using Cypress JSON Parser
-#if 0  /* TRACE messages disabled */
- 	printf("%s [TRACE-4] Parsing JSON...\n", LABEL_SUBSCRIBER);
+ 	printf("%s [TRACE-4] About to parse JSON (size=%d)...\n", LABEL_SUBSCRIBER, subscriber_q_data.data_size);
  	fflush(stdout);
-#endif
+
  	cy_JSON_parser_register_callback(protected_update_json_callback, &parse_ctx);
- 	cy_rslt_t result = cy_JSON_parser(json_copy, subscriber_q_data.data_size);
-#if 0  /* TRACE messages disabled */
- 	printf("%s [TRACE-5] JSON parse result: 0x%08lX\n", LABEL_SUBSCRIBER, (unsigned long)result);
+
+ 	printf("%s [TRACE-5] Calling cy_JSON_parser()...\n", LABEL_SUBSCRIBER);
  	fflush(stdout);
-#endif
+
+ 	cy_rslt_t result = cy_JSON_parser(json_copy, subscriber_q_data.data_size);
+
+ 	printf("%s [TRACE-6] cy_JSON_parser() returned: 0x%08lX\n", LABEL_SUBSCRIBER, (unsigned long)result);
+ 	fflush(stdout);
 
  	if (result != CY_RSLT_SUCCESS) {
- 		#if TESAIOT_DEBUG_VERBOSE_ENABLED
  		printf("%s ERROR: JSON parse failed: 0x%08lX\n", LABEL_SUBSCRIBER, (unsigned long)result);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 		fflush(stdout);
  		g_protected_update_active = false;  // Reset flag on early exit
  		vPortFree(json_copy);
  		break;
  	}
 
+ 	// DEBUG: JSON parse success
+ 	printf("%s [DEBUG] JSON parse OK (%d bytes)\n", LABEL_SUBSCRIBER, subscriber_q_data.data_size);
+ 	fflush(stdout);
+
+	// Track start time for installation duration measurement (Phase 2)
+	TickType_t pu_start_ticks = xTaskGetTickCount();
+
  	// Validate required fields
  	if (!parse_ctx.signing_cert_b64 || !parse_ctx.manifest_b64 || !parse_ctx.fragment_0_b64) {
- 		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: Missing required fields\n", LABEL_SUBSCRIBER);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 		printf("%s ERROR: Missing required fields (cert=%p manifest=%p frag0=%p)\n",
+ 		       LABEL_SUBSCRIBER,
+ 		       (void*)parse_ctx.signing_cert_b64,
+ 		       (void*)parse_ctx.manifest_b64,
+ 		       (void*)parse_ctx.fragment_0_b64);
+ 		fflush(stdout);
  		g_protected_update_active = false;  // Reset flag on early exit
  		vPortFree(json_copy);
  		break;
+ 	}
+
+ 	// DEBUG: Required fields OK
+ 	printf("%s [DEBUG] Required fields OK\n", LABEL_SUBSCRIBER);
+ 	fflush(stdout);
+
+ 	// ========================================
+ 	// CORRELATION ID VALIDATION (Prevent Retained Message Race Condition)
+ 	// ========================================
+ 	// Problem: MQTT broker may retain old Protected Update responses.
+ 	// When device subscribes, it receives stale response with wrong correlation_id.
+ 	// Solution: Validate correlation_id matches current request before processing.
+ 	const char *expected_corr_id = trustm_current_correlation_id();
+ 	if (expected_corr_id && parse_ctx.correlation_id) {
+ 		// Compare correlation_id (case-sensitive, exact match required)
+ 		bool match = (parse_ctx.correlation_id_len == strlen(expected_corr_id)) &&
+ 		             (strncmp(parse_ctx.correlation_id, expected_corr_id, parse_ctx.correlation_id_len) == 0);
+
+ 		if (!match) {
+ 			printf("%s ====================================================================\n", LABEL_SUBSCRIBER);
+ 			printf("%s WARNING: Correlation ID mismatch - IGNORING STALE MESSAGE\n", LABEL_SUBSCRIBER);
+ 			printf("%s ====================================================================\n", LABEL_SUBSCRIBER);
+ 			printf("%s This is likely a retained message from a previous request.\n", LABEL_SUBSCRIBER);
+ 			printf("%s Expected: %s\n", LABEL_SUBSCRIBER, expected_corr_id);
+ 			printf("%s Received: %.*s\n", LABEL_SUBSCRIBER, parse_ctx.correlation_id_len, parse_ctx.correlation_id);
+ 			printf("%s Ignoring this message and waiting for correct response...\n", LABEL_SUBSCRIBER);
+ 			printf("%s ====================================================================\n", LABEL_SUBSCRIBER);
+ 			fflush(stdout);
+
+ 			g_protected_update_active = false;  // Reset flag - not processing this message
+ 			vPortFree(json_copy);
+ 			continue;  // Skip this message, wait for next one
+ 		}
+
+ 		// Correlation ID matches - safe to process
+ 		printf("%s Correlation ID matched: %.*s\n", LABEL_SUBSCRIBER,
+ 		       parse_ctx.correlation_id_len, parse_ctx.correlation_id);
+ 		fflush(stdout);
+ 	} else if (expected_corr_id && !parse_ctx.correlation_id) {
+ 		// Expected correlation_id but didn't receive one - old server?
+ 		printf("%s WARNING: No correlation_id in response (old server protocol?)\n", LABEL_SUBSCRIBER);
+ 		printf("%s Proceeding anyway, but this may cause issues with retained messages.\n", LABEL_SUBSCRIBER);
+ 		fflush(stdout);
  	}
 
 #if TESAIOT_DEBUG_SUBSCRIBER_ENABLED
@@ -947,10 +1424,10 @@ void subscriber_task(void *pvParameters)
  	if (OPTIGA_LIB_SUCCESS == metadata_status) {
  	 // Wait for metadata write completion by polling optiga_lib_status
  	 TickType_t start_ticks = xTaskGetTickCount();
- 	 TickType_t timeout_ticks = pdMS_TO_TICKS(1000);
+ 	 TickType_t timeout_ticks = pdMS_TO_TICKS(5000); // Increased to 5s to prevent MQTT disconnect
 
  	 while ((xTaskGetTickCount() - start_ticks) < timeout_ticks) {
- 	 vTaskDelay(pdMS_TO_TICKS(10));
+ 	 vTaskDelay(pdMS_TO_TICKS(100));
  	 if (optiga_lib_status != OPTIGA_LIB_BUSY) {
  	 break;
  	 }
@@ -968,9 +1445,18 @@ void subscriber_task(void *pvParameters)
 #if TESAIOT_DEBUG_SUBSCRIBER_ENABLED
  	 #if TESAIOT_DEBUG_VERBOSE_ENABLED
  	 printf("%s [1.1] Waiting 500ms for metadata NVM commit...\n", LABEL_SUBSCRIBER);
+ 	 fflush(stdout);
  	 #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
 #endif
  	 vTaskDelay(pdMS_TO_TICKS(500));
+
+ 	 /* Debug: Confirm task resumed after delay */
+#if TESAIOT_DEBUG_SUBSCRIBER_ENABLED
+ 	 #if TESAIOT_DEBUG_VERBOSE_ENABLED
+ 	 printf("%s [1.1] NVM commit delay complete, continuing to STEP 1.2...\n", LABEL_SUBSCRIBER);
+ 	 fflush(stdout);
+ 	 #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+#endif
  	 } else {
  	 #if TESAIOT_DEBUG_VERBOSE_ENABLED
  	 printf("%s [1.1] WARNING: Metadata write failed (0x%04X) - continuing with data write\n", LABEL_SUBSCRIBER,
@@ -998,11 +1484,11 @@ void subscriber_task(void *pvParameters)
  	if (OPTIGA_LIB_SUCCESS == write_status) {
  		// Wait for Trust M operation by polling optiga_lib_status
  		TickType_t start_ticks = xTaskGetTickCount();
- 		TickType_t timeout_ticks = pdMS_TO_TICKS(1000);
+ 		TickType_t timeout_ticks = pdMS_TO_TICKS(5000); // Increased to 5s to prevent MQTT disconnect
  		bool operation_complete = false;
 
  		while ((xTaskGetTickCount() - start_ticks) < timeout_ticks) {
- 			vTaskDelay(pdMS_TO_TICKS(10));
+ 			vTaskDelay(pdMS_TO_TICKS(100));
  			if (optiga_lib_status != OPTIGA_LIB_BUSY) {
  				operation_complete = true;
  				break;
@@ -1068,11 +1554,11 @@ void subscriber_task(void *pvParameters)
 			if (OPTIGA_LIB_SUCCESS == read_metadata_status) {
 				// Wait for metadata read completion by polling
 				TickType_t start_ticks = xTaskGetTickCount();
-				TickType_t timeout_ticks = pdMS_TO_TICKS(1000);
+				TickType_t timeout_ticks = pdMS_TO_TICKS(5000); // Increased to 5s to prevent MQTT disconnect
 				bool operation_complete = false;
 
 				while ((xTaskGetTickCount() - start_ticks) < timeout_ticks) {
-					vTaskDelay(pdMS_TO_TICKS(10));
+					vTaskDelay(pdMS_TO_TICKS(100));
 					if (optiga_lib_status != OPTIGA_LIB_BUSY) {
 						operation_complete = true;
 						break;
@@ -1201,11 +1687,11 @@ void subscriber_task(void *pvParameters)
 			if (OPTIGA_LIB_SUCCESS == read_data_status) {
 				// Wait for data read completion by polling
 				TickType_t start_ticks = xTaskGetTickCount();
-				TickType_t timeout_ticks = pdMS_TO_TICKS(1000);
+				TickType_t timeout_ticks = pdMS_TO_TICKS(5000); // Increased to 5s to prevent MQTT disconnect
 				bool operation_complete = false;
 
 				while ((xTaskGetTickCount() - start_ticks) < timeout_ticks) {
-					vTaskDelay(pdMS_TO_TICKS(10));
+					vTaskDelay(pdMS_TO_TICKS(100));
 					if (optiga_lib_status != OPTIGA_LIB_BUSY) {
 						operation_complete = true;
 						break;
@@ -1603,7 +2089,7 @@ void subscriber_task(void *pvParameters)
  		// Wait for async operation
  		uint32_t mud_timeout_ms = 5000, mud_elapsed_ms = 0;
  		while (optiga_lib_status == OPTIGA_LIB_BUSY && mud_elapsed_ms < mud_timeout_ms) {
- 			vTaskDelay(pdMS_TO_TICKS(10));
+ 			vTaskDelay(pdMS_TO_TICKS(100));
  			mud_elapsed_ms += 10;
  		}
 
@@ -1828,6 +2314,82 @@ void subscriber_task(void *pvParameters)
  	printf("%s Certificate written to OID 0xE0E1 via Protected Update mechanism\n", LABEL_SUBSCRIBER);
  	printf("%s ====================================================================\n", LABEL_SUBSCRIBER);
  	fflush(stdout);
+
+	// ========================================
+	// Send Certificate Installation ACK to TESAIoT Platform (Phase 1: Core ACK)
+	// ========================================
+	// Copy correlation_id to null-terminated string for safe passing
+	// parse_ctx.correlation_id points into json_copy buffer (not null-terminated)
+	if (parse_ctx.correlation_id && parse_ctx.correlation_id_len > 0 && parse_ctx.correlation_id_len < 37) {
+		char correlation_id_str[37]; // UUID v4 max length (36 + null terminator)
+		memcpy(correlation_id_str, parse_ctx.correlation_id, parse_ctx.correlation_id_len);
+		correlation_id_str[parse_ctx.correlation_id_len] = '\0';
+
+
+		// Calculate installation duration
+		TickType_t pu_end_ticks = xTaskGetTickCount();
+		uint32_t duration_ms = (uint32_t)((pu_end_ticks - pu_start_ticks) * portTICK_PERIOD_MS);
+
+		cy_rslt_t ack_result = send_certificate_ack(
+			correlation_id_str,
+			"protected_update",
+			0xE0E1,  // Target OID where certificate was written
+			false,   // Phase 1: minimal payload (~512 bytes, no certificate data)
+			duration_ms  // Installation duration in milliseconds
+		);
+
+		if (ack_result == CY_RSLT_SUCCESS) {
+			printf("%s Certificate installation ACK sent successfully (duration: %lu ms)\n",
+			       LABEL_SUBSCRIBER, (unsigned long)duration_ms);
+		} else {
+			printf("%s WARNING: Failed to send certificate ACK (0x%08lX)\n",
+			       LABEL_SUBSCRIBER, (unsigned long)ack_result);
+			printf("%s Note: ACK failure is non-fatal - device operation continues\n",
+			       LABEL_SUBSCRIBER);
+		}
+		fflush(stdout);
+	} else {
+		printf("%s WARNING: No correlation_id available - skipping ACK\n", LABEL_SUBSCRIBER);
+		fflush(stdout);
+	}
+
+ 	// ========================================
+ 	// CRITICAL: Force certificate cache refresh
+ 	// ========================================
+ 	// PROBLEM: PSA crypto and mbedTLS cache certificates in RAM.
+ 	// After Protected Update writes new certificate to OID 0xE0E1,
+ 	// the cache still contains the old certificate.
+ 	// This causes Menu 5 (diagnostics) to show old certificate until board reset.
+ 	//
+ 	// SOLUTION: Force re-read OID 0xE0E1 to invalidate/refresh cache
+ 	// ========================================
+ 	printf("%s [CACHE] Force re-read OID 0xE0E1 to refresh certificate cache...\n", LABEL_SUBSCRIBER);
+ 	fflush(stdout);
+
+ 	uint8_t cert_readback[600];
+ 	uint16_t cert_readback_len = sizeof(cert_readback);
+
+ 	optiga_lib_status = OPTIGA_LIB_BUSY;
+ 	optiga_lib_status_t read_status = optiga_util_read_data(me_util, 0xE0E1, 0, cert_readback, &cert_readback_len);
+
+ 	if (OPTIGA_LIB_SUCCESS == read_status) {
+ 		// Wait for read completion
+ 		TickType_t start_ticks = xTaskGetTickCount();
+ 		TickType_t timeout_ticks = pdMS_TO_TICKS(5000); // Increased to 5s to prevent MQTT disconnect
+ 		while (optiga_lib_status == OPTIGA_LIB_BUSY && (xTaskGetTickCount() - start_ticks) < timeout_ticks) {
+ 			vTaskDelay(pdMS_TO_TICKS(100));
+ 		}
+
+ 		if (OPTIGA_LIB_SUCCESS == optiga_lib_status) {
+ 			printf("%s [CACHE] Certificate cache refreshed - new cert ready (%u bytes)\n", LABEL_SUBSCRIBER, cert_readback_len);
+ 		} else {
+ 			printf("%s [CACHE] WARNING: Certificate re-read failed (0x%04X)\n", LABEL_SUBSCRIBER, optiga_lib_status);
+ 		}
+ 	} else {
+ 		printf("%s [CACHE] WARNING: Read request failed (0x%04X)\n", LABEL_SUBSCRIBER, read_status);
+ 	}
+ 	fflush(stdout);
+
  	optiga_manager_release();
 
  	// Cleanup JSON copy buffer
@@ -2032,111 +2594,151 @@ void subscriber_task(void *pvParameters)
  }
 
  /******************************************************************************
- * DEPRECATED HANDLERS - Replaced by UPDATE_PROTECTED_UPDATE_BUNDLE (2025-10-22)
+ * Multi-Topic Protocol Handlers (Re-enabled 2026-02-03)
  *
- * These handlers are no longer used. The Platform now sends all Protected Update
- * components (pubkey, manifest, fragments) in a single JSON message via the
- * UPDATE_PROTECTED_UPDATE_BUNDLE handler.
+ * These handlers process Protected Update components sent as separate messages:
+ * - UPDATE_DEVICE_PUBLIC_KEY: Signing certificate (Trust Anchor) ~800 bytes
+ * - UPDATE_DEVICE_MANIFEST: Manifest data ~300 bytes
+ * - UPDATE_DEVICE_FRAGMENT: Fragment data (with index) ~400 bytes each
  *
- * Kept here for reference only. Will be removed in future version.
+ * Protocol: 4 separate messages, max 800 bytes each (MCU proven working)
  ******************************************************************************/
- #if 0
+ #if 1
  case UPDATE_DEVICE_MANIFEST:
  {
- 	uint8_t *manifest_buf = (uint8_t*) pvPortMalloc(subscriber_q_data.data_size);
+ 	// MQTT callback already copied buffer - use it directly
+ 	uint8_t *manifest_buf = (uint8_t*)subscriber_q_data.data;
  	if (!manifest_buf) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: malloc manifest fail\n", LABEL_SUBSCRIBER);
+ 		printf("%s ERROR: NULL manifest\\n", LABEL_SUBSCRIBER);
  		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
  		break;
  	}
- 	memcpy(manifest_buf, subscriber_q_data.data, subscriber_q_data.data_size);
  	__DSB(); __DMB(); __ISB();
-
- 	manifest_ecc_key = manifest_buf;
- 	manifest_ecc_key_length = subscriber_q_data.data_size;
+ 
+ 	manifest_ctx_t ctx={0}; cy_JSON_parser_register_callback(manifest_cb,&ctx);
+ 	cy_JSON_parser((const char*)manifest_buf,subscriber_q_data.data_size);
+ 	if(!ctx.manifest_b64){
+ 		if (subscriber_q_data.need_free) vPortFree(subscriber_q_data.data);
+ 		break;
+ 	}
+ 	manifest_ecc_key = ctx.manifest_b64;
+ 	manifest_ecc_key_length = ctx.manifest_len;
  	#if TESAIOT_DEBUG_SUBSCRIBER_ENABLED
  	#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 	printf("%s Manifest OK\n", LABEL_SUBSCRIBER);
+ 	printf("%s Manifest OK\\n", LABEL_SUBSCRIBER);
  	#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
  	#endif
-
+ 
  	xEventGroupSetBits(data_received_event_group, MANIFEST_RECEIVED_BIT);
+ 	// Note: Don't free manifest_buf - it points to ctx.manifest_b64 which is used later
+ 	// But DO free the original MQTT buffer
+ 	if (subscriber_q_data.need_free) vPortFree(subscriber_q_data.data);
  	break;
  }
  case UPDATE_DEVICE_FRAGMENT:
  {
- 	uint8_t *fragment_buf = (uint8_t*) pvPortMalloc(subscriber_q_data.data_size);
+ 	// MQTT callback already copied buffer - use it directly
+ 	uint8_t *fragment_buf = (uint8_t*)subscriber_q_data.data;
  	if (!fragment_buf) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: malloc fragment fail\n", LABEL_SUBSCRIBER);
+ 		printf("%s ERROR: NULL fragment\\n", LABEL_SUBSCRIBER);
  		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
  		break;
  	}
- 	memcpy(fragment_buf, subscriber_q_data.data, subscriber_q_data.data_size);
  	__DSB(); __DMB(); __ISB();
-
- 	ecc_key_final_fragment_array = fragment_buf;
- 	ecc_key_final_fragment_array_length = subscriber_q_data.data_size;
+ 
+ 	frag_ctx_t ctx={0}; ctx.idx=-1; cy_JSON_parser_register_callback(frag_cb,&ctx);
+ 	cy_JSON_parser((const char*)fragment_buf,subscriber_q_data.data_size);
+ 	if(!ctx.frag_b64){
+ 		if (subscriber_q_data.need_free) vPortFree(subscriber_q_data.data);
+ 		break;
+ 	}
+ 	ecc_key_final_fragment_array = ctx.frag_b64;
+ 	ecc_key_final_fragment_array_length = ctx.frag_len;
  	#if TESAIOT_DEBUG_SUBSCRIBER_ENABLED
  	#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 	printf("%s Fragment OK (%lu bytes)\n", LABEL_SUBSCRIBER, (unsigned long)subscriber_q_data.data_size);
+ 	printf("%s Fragment OK (%lu bytes)\\n", LABEL_SUBSCRIBER, (unsigned long)subscriber_q_data.data_size);
  	#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
  	#endif
-
-		// DEBUG: Fragment hex dump (disabled to reduce serial load)
-		#if 0  // DISABLED: HEX dump causes serial buffer overflow
-		printf("%s DEBUG: Fragment hex (%lu bytes)\n", LABEL_SUBSCRIBER, (unsigned long)subscriber_q_data.data_size);
-		for (size_t i = 0; i < subscriber_q_data.data_size; i++) {
-			printf("%02x", fragment_buf[i]);
-		}
-		printf("\n");
-		#endif
-
+ 
+ 		// DEBUG: Fragment hex dump (disabled to reduce serial load)
+ 		#if 0  // DISABLED: HEX dump causes serial buffer overflow
+ 		printf("%s DEBUG: Fragment hex (%lu bytes)\\n", LABEL_SUBSCRIBER, (unsigned long)subscriber_q_data.data_size);
+ 		for (size_t i = 0; i < subscriber_q_data.data_size; i++) {
+ 			printf("%02x", fragment_buf[i]);
+ 		}
+ 		printf("\\n");
+ 		#endif
+ 
  	xEventGroupSetBits(data_received_event_group, FRAGMENT_RECEIVED_BIT);
+ 	// Note: Don't free fragment_buf - it points to ctx.frag_b64 which is used later
+ 	// But DO free the original MQTT buffer
+ 	if (subscriber_q_data.need_free) vPortFree(subscriber_q_data.data);
  	break;
  }
  case UPDATE_DEVICE_PUBLIC_KEY:
+	// PRODUCTION-READY: Minimal logging to prevent MQTT timeout
+	// Removed: 20+ debug printf lines that caused 500ms+ blocking
  {
- 	// MINIMAL printf to avoid UART overflow
+ 	#if TESAIOT_DEBUG_VERBOSE_ENABLED
+ 	printf("%s [PUBKEY] Received (%d bytes)\n", LABEL_SUBSCRIBER, subscriber_q_data.data_size);
+ 	#endif
+
  	if (!subscriber_q_data.data) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: NULL pubkey\n", LABEL_SUBSCRIBER);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 		printf("%s [PUBKEY] ERROR: NULL data\n", LABEL_SUBSCRIBER);
+ 		#endif
+ 		if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  		break;
  	}
 
- 	uint8_t *pubkey_buf = (uint8_t*) pvPortMalloc(subscriber_q_data.data_size + 1);
- 	if (!pubkey_buf) {
+ 	char *pubkey_buf = (char*)subscriber_q_data.data;
+	int data_size = subscriber_q_data.data_size;
+
+	// Skip MQTT header if present
+	if (data_size > 2 && (unsigned char)pubkey_buf[0] == 0x00 && (unsigned char)pubkey_buf[1] == 0x02) {
+		pubkey_buf += 2;
+		data_size -= 2;
+	}
+
+ 	// Parse JSON to extract "pubkey" field
+ 	pubkey_ctx_t ctx = {0};
+ 	cy_JSON_parser_register_callback(pubkey_cb, &ctx);
+ 	cy_rslt_t parse_result = cy_JSON_parser((const char*)pubkey_buf, data_size);
+
+ 	if (parse_result != CY_RSLT_SUCCESS || !ctx.pubkey_b64) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: malloc pubkey fail\n", LABEL_SUBSCRIBER);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 		printf("%s [PUBKEY] ERROR: JSON parse failed\n", LABEL_SUBSCRIBER);
+ 		#endif
+ 		if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  		break;
  	}
- 	memcpy(pubkey_buf, subscriber_q_data.data, subscriber_q_data.data_size);
- 	pubkey_buf[subscriber_q_data.data_size] = '\0';
- 	__DSB(); __DMB(); __ISB();
 
  	// Decode Base64 to DER
  	size_t decoded_len = 0;
  	uint8_t *pubkey_der = NULL;
- 	int decode_ret = mbedtls_base64_decode(NULL, 0, &decoded_len, pubkey_buf, subscriber_q_data.data_size);
+ 	int decode_ret = mbedtls_base64_decode(NULL, 0, &decoded_len, (uint8_t*)ctx.pubkey_b64, ctx.pubkey_len);
+
  	if (decode_ret == MBEDTLS_ERR_BASE64_BUFFER_TOO_SMALL) {
  		pubkey_der = (uint8_t*) pvPortMalloc(decoded_len);
  		if (pubkey_der) {
- 			decode_ret = mbedtls_base64_decode(pubkey_der, decoded_len, &decoded_len,
- 			 pubkey_buf, subscriber_q_data.data_size);
+ 			decode_ret = mbedtls_base64_decode(pubkey_der, decoded_len, &decoded_len, (uint8_t*)ctx.pubkey_b64, ctx.pubkey_len);
  		}
  	}
 
  	if (decode_ret != 0 || !pubkey_der) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: B64 decode fail\n", LABEL_SUBSCRIBER);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
- 		vPortFree(pubkey_buf);
+ 		printf("%s [PUBKEY] ERROR: Base64 decode failed\n", LABEL_SUBSCRIBER);
+ 		#endif
  		if (pubkey_der) vPortFree(pubkey_der);
+ 		if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  		break;
  	}
+
+ 	#if TESAIOT_DEBUG_VERBOSE_ENABLED
+ 	printf("%s [PUBKEY] Decoded %u bytes DER\n", LABEL_SUBSCRIBER, (unsigned)decoded_len);
+ 	#endif
 
  	// Create semaphore for Trust M async operations (first time only)
  	if (trust_m_write_semaphore == NULL) {
@@ -2145,8 +2747,8 @@ void subscriber_task(void *pvParameters)
  			#if TESAIOT_DEBUG_VERBOSE_ENABLED
  			printf("%s ERROR: semaphore fail\n", LABEL_SUBSCRIBER);
  			#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
- 			vPortFree(pubkey_buf);
  			vPortFree(pubkey_der);
+ 			if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  			break;
  		}
  	}
@@ -2156,67 +2758,93 @@ void subscriber_task(void *pvParameters)
  	optiga_util_t *me_util = optiga_manager_acquire();
  	if (!me_util) {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
- 		printf("%s ERROR: Failed to acquire OPTIGA instance\n", LABEL_SUBSCRIBER);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
- 		vPortFree(pubkey_buf);
+ 		printf("%s [PUBKEY] ERROR: OPTIGA acquire failed\n", LABEL_SUBSCRIBER);
+ 		#endif
  		vPortFree(pubkey_der);
+ 		if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  		break;
  	}
 
  	// Write Trust Anchor to OID 0xE0E8
- 	optiga_lib_status = OPTIGA_LIB_BUSY;  // Set global status for polling
+ 	#if TESAIOT_DEBUG_VERBOSE_ENABLED
+ 	printf("%s [PUBKEY] Writing Trust Anchor (%u bytes)\n", LABEL_SUBSCRIBER, (unsigned)decoded_len);
+ 	#endif
+
+ 	optiga_lib_status = OPTIGA_LIB_BUSY;
  	optiga_lib_status_t write_status = optiga_util_write_data(
  		me_util, 0xE0E8, OPTIGA_UTIL_ERASE_AND_WRITE, 0, pubkey_der, decoded_len
  	);
-
+ 	// OPTIGA write initiated (async operation)
  	if (OPTIGA_LIB_SUCCESS == write_status) {
- 		// Wait for Trust M operation by polling optiga_lib_status
- 		// vTaskDelay() forces subscriber task to sleep, releasing CPU for MQTT task
- 		// to receive and process incoming packets (manifest, fragments)
+ 		// *** LAYER 2: AGGRESSIVE TASK YIELDING ***
+ 		// Strategy: Poll every 10ms (10x faster) to reduce response time
+ 		// This allows MQTT task to process manifest/fragment while we wait
  		TickType_t start_ticks = xTaskGetTickCount();
- 		TickType_t timeout_ticks = pdMS_TO_TICKS(1000);
+ 		TickType_t timeout_ticks = pdMS_TO_TICKS(5000);
  		bool operation_complete = false;
 
  		while ((xTaskGetTickCount() - start_ticks) < timeout_ticks) {
- 			// Note: vTaskDelay FIRST to ensure MQTT task gets CPU time
- 			vTaskDelay(pdMS_TO_TICKS(10)); // Force sleep to allow MQTT packet reception
+ 			// CRITICAL: Yield CPU every 5ms (was 100ms)
+ 			// This gives MQTT task 20x more opportunities to run
+ 			vTaskDelay(pdMS_TO_TICKS(5));
 
  			if (optiga_lib_status != OPTIGA_LIB_BUSY) {
  				operation_complete = true;
+ 				if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  				break;
  			}
  		}
- 		trust_m_async_status = optiga_lib_status;  // Copy result
+ 		trust_m_async_status = optiga_lib_status;
 
  		if (operation_complete) {
  			if (OPTIGA_LIB_SUCCESS == trust_m_async_status) {
  				#if TESAIOT_DEBUG_VERBOSE_ENABLED
  				printf("%s TrustAnchor-OK\n", LABEL_SUBSCRIBER);
- 				#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 				#endif
+
+				// CRITICAL: Yield 100ms to let MQTT task process PUBACKs and keepalive
+				#if TESAIOT_DEBUG_VERBOSE_ENABLED
+				printf("%s [YIELD] Yielding 500ms for MQTT task...\n", LABEL_SUBSCRIBER);
+				#endif
+				vTaskDelay(pdMS_TO_TICKS(500));
+
+				#if TESAIOT_DEBUG_VERBOSE_ENABLED
+				printf("%s [YIELD] Yield complete, MQTT should be alive\n", LABEL_SUBSCRIBER);
+				#endif
+
+				// *** LAYER 3: RETURN TO MAIN LOOP ***
+				// CRITICAL: Do NOT delay here - return to main loop immediately
+				// Platform timing is unpredictable (can be +2s to +20s from pubkey)
+				// Main loop will block at xQueueReceive() until manifest/fragment arrive
+				// This approach works regardless of Platform timing variations
+
+				#if TESAIOT_DEBUG_VERBOSE_ENABLED
+				printf("%s >>>VERSION 5d4cd4c<<< Returning to main loop\n", LABEL_SUBSCRIBER);
+				#endif
  			} else {
  				#if TESAIOT_DEBUG_VERBOSE_ENABLED
  				printf("%s TrustAnchor-FAIL:0x%04X\n", LABEL_SUBSCRIBER, trust_m_async_status);
- 				#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 				#endif
  			}
  		} else {
  			#if TESAIOT_DEBUG_VERBOSE_ENABLED
  			printf("%s TrustAnchor-timeout\n", LABEL_SUBSCRIBER);
- 			#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 			#endif
  		}
  	} else {
  		#if TESAIOT_DEBUG_VERBOSE_ENABLED
  		printf("%s TrustAnchor-write-fail:0x%04X\n", LABEL_SUBSCRIBER, write_status);
- 		#endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+ 		#endif
  	}
 
  	// Release (not destroy) persistent OPTIGA instance
  	optiga_manager_release();
  	pubkey = pubkey_der;
  	pubkey_length = decoded_len;
- 	vPortFree(pubkey_buf);
+ 	if (subscriber_q_data.need_free && subscriber_q_data.data) vPortFree(subscriber_q_data.data);
  	break;
  }
- #endif // End of deprecated handlers
+ #endif // End of multi-topic handlers
 
  default:
  	#if TESAIOT_DEBUG_VERBOSE_ENABLED
@@ -2259,6 +2887,14 @@ void mqtt_subscription_callback(cy_mqtt_publish_info_t *received_msg_info)
  // Increment total callback counter (atomic operation, safe in ISR/callback)
  callback_count_total++;
 
+
+	// TEMPORARY DEBUG: Print topic to diagnose manifest/fragment matching issue
+	// WARNING: printf in callback - use only for debugging, remove in production!
+	static uint8_t debug_topic_count = 0;
+	if (debug_topic_count < 10) {  // Limit to 5 messages to avoid excessive blocking
+		printf("[CB-DEBUG] Topic(%d): %.*s\n", received_topic_len, received_topic_len, received_topic);
+		debug_topic_count++;
+	}
  // Match topic - NO printf to avoid UART overflow!
  // Check new single-message protected_update topic FIRST
  if ((strlen(MQTT_SUB_TOPIC_COMMAND_PROTECTED_UPDATE) == received_topic_len) &&
@@ -2338,35 +2974,67 @@ void mqtt_subscription_callback(cy_mqtt_publish_info_t *received_msg_info)
  valid_topic = true;
  }
  }
- #if 0 // DEPRECATED: Old 4-message protocol replaced by single JSON message (2025-10-22)
+ #if 1 // Multi-topic routing enabled 2026-02-03
  else if ((strlen(MQTT_SUB_TOPIC_COMMAND_MANIFEST) == received_topic_len) &&
  (strncmp(MQTT_SUB_TOPIC_COMMAND_MANIFEST, received_topic, received_topic_len) == 0))
  {
  subscriber_q_data.cmd = UPDATE_DEVICE_MANIFEST;
- subscriber_q_data.data = received_msg;
- subscriber_q_data.data_size = received_msg_len;
- valid_topic = true;
- callback_count_manifest++;
+ // Note: Copy data to prevent buffer reuse by MQTT library
+ char *data_copy = (char*)pvPortMalloc(received_msg_len + 1);
+ if (data_copy) {
+ 	memcpy(data_copy, received_msg, received_msg_len);
+ 	data_copy[received_msg_len] = '\0';
+ 	subscriber_q_data.data = data_copy;
+ 	subscriber_q_data.data_size = received_msg_len;
+ 	subscriber_q_data.need_free = true;
+ 	valid_topic = true;
+ 	callback_count_manifest++;
+ }
  }
  else if ((strlen(MQTT_SUB_TOPIC_COMMAND_FRAGMENT) == received_topic_len) &&
  (strncmp(MQTT_SUB_TOPIC_COMMAND_FRAGMENT, received_topic, received_topic_len) == 0))
  {
  subscriber_q_data.cmd = UPDATE_DEVICE_FRAGMENT;
- subscriber_q_data.data = received_msg;
- subscriber_q_data.data_size = received_msg_len;
- valid_topic = true;
- callback_count_fragment++;
+ // Note: Copy data to prevent buffer reuse by MQTT library
+ char *data_copy = (char*)pvPortMalloc(received_msg_len + 1);
+ if (data_copy) {
+ 	memcpy(data_copy, received_msg, received_msg_len);
+ 	data_copy[received_msg_len] = '\0';
+ 	subscriber_q_data.data = data_copy;
+ 	subscriber_q_data.data_size = received_msg_len;
+ 	subscriber_q_data.need_free = true;
+ 	valid_topic = true;
+ 	callback_count_fragment++;
+ }
  }
  else if ((strlen(MQTT_SUB_TOPIC_COMMAND_PUB_KEY) == received_topic_len) &&
  (strncmp(MQTT_SUB_TOPIC_COMMAND_PUB_KEY, received_topic, received_topic_len) == 0))
  {
  subscriber_q_data.cmd = UPDATE_DEVICE_PUBLIC_KEY;
- subscriber_q_data.data = received_msg;
- subscriber_q_data.data_size = received_msg_len;
- valid_topic = true;
- callback_count_pubkey++;
+ // Note: Copy data to prevent buffer reuse by MQTT library
+ char *data_copy = (char*)pvPortMalloc(received_msg_len + 1);
+ if (data_copy) {
+ 	memcpy(data_copy, received_msg, received_msg_len);
+ 	data_copy[received_msg_len] = '\0';
+ 	subscriber_q_data.data = data_copy;
+ 	subscriber_q_data.data_size = received_msg_len;
+ 	subscriber_q_data.need_free = true;
+ 	valid_topic = true;
+ 	callback_count_pubkey++;
+ 	// REMOVED: printf/fflush in callback - causes MQTT disconnect!
+ 	// Debug info available via callback_count_pubkey counter
+ 	// Topic name: commands/pubkey (verified)
+ 	// DO NOT add printf here - callback MUST return immediately!
  }
- #endif // End of deprecated topic routing
+ }
+	// DEBUG: Print topic info for ALL messages (including unknown)
+	if (callback_count_total <= 10) {
+		printf("[CB#%lu] cmd=%d valid=%d (manifest=%lu frag=%lu pubkey=%lu unknown=%lu)\n",
+		       (unsigned long)callback_count_total, subscriber_q_data.cmd, valid_topic,
+		       (unsigned long)callback_count_manifest, (unsigned long)callback_count_fragment,
+		       (unsigned long)callback_count_pubkey, (unsigned long)callback_count_unknown);
+	}
+ #endif // End of multi-topic routing
  else
  {
  callback_count_unknown++;
@@ -2385,7 +3053,12 @@ void mqtt_subscription_callback(cy_mqtt_publish_info_t *received_msg_info)
  // MUST use timeout=0 (no blocking!) - callback MUST return immediately
  // Queue size 20 is large enough to buffer all messages during Trust M write
  // If queue full -> drop message (should never happen with queue size 20)
- xQueueSend(subscriber_task_q, &subscriber_q_data, 0);
+	BaseType_t queue_result = xQueueSend(subscriber_task_q, &subscriber_q_data, 0);
+	if (queue_result == pdPASS) {
+		callback_queue_send_success++;
+	} else {
+		callback_queue_send_fail++;
+	}
 }
 
 

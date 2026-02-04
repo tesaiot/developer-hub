@@ -66,7 +66,7 @@
 ********************************************************************************/
 /* Task parameters for Button Task. */
 #define PUBLISHER_TASK_PRIORITY               (2U)
-#define PUBLISHER_TASK_STACK_SIZE             (1024U * 2U)  /* 2048 words (8KB) - Same as Infineon template */
+#define PUBLISHER_TASK_STACK_SIZE             (1536U)  /* 1536 words (6KB) - Reduced for multi-topic protocol */
 
 /*******************************************************************************
 * Global Variables

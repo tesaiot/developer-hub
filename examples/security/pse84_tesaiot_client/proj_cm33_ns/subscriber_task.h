@@ -71,7 +71,7 @@
 ********************************************************************************/
 /* Task parameters for Subscriber Task. */
 #define SUBSCRIBER_TASK_PRIORITY           (2U)  // Same as network tasks; Timer Task (3) must run for OPTIGA callbacks
-#define SUBSCRIBER_TASK_STACK_SIZE         (1536U)  /* 1536 words (6KB) - increased for Protected Update workflow */
+#define SUBSCRIBER_TASK_STACK_SIZE         (1024U)  /* 1024 words (4KB) - Multi-Topic Protocol with JSON parsing */
 
 
 #define MANIFEST_RECEIVED_BIT 					(1 << 0)

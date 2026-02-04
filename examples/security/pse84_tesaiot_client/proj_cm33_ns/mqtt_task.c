@@ -381,6 +381,11 @@ bool mqtt_request_stop(void)
     mqtt_started = false;
     mqtt_start_requested = false;
 
+    /* Step 9: Reset workflow flags to prevent stale state from affecting next MQTT session */
+    g_csr_workflow_active = false;
+    g_protected_update_active = false;
+    g_protected_update_just_completed = false;
+
     printf("[MQTT-Stop] MQTT session stopped successfully\n");
     printf("[MQTT-Stop] Wi-Fi remains connected for CSR workflow\n");
     fflush(stdout);
@@ -1340,16 +1345,35 @@ mqtt_wait_for_start:
                     else
                     {
                         #if TESAIOT_DEBUG_VERBOSE_ENABLED
-                        /* Create publisher task - REQUIRED for proper MQTT slot management */
-                        printf("[MQTT-Task] Creating Publisher task (stack=%u words)...\n",
-                               (unsigned)PUBLISHER_TASK_STACK_SIZE);
+                        /* Check available heap before creating task */
+                        size_t free_heap = xPortGetFreeHeapSize();
+                        size_t min_heap = xPortGetMinimumEverFreeHeapSize();
+                        size_t required_bytes = PUBLISHER_TASK_STACK_SIZE * sizeof(StackType_t);
+
+                        printf("[MQTT-Task] Heap before Publisher creation:\n");
+                        printf("              Free: %u bytes, Min-ever: %u bytes\n",
+                               (unsigned)free_heap, (unsigned)min_heap);
+                        printf("              Required: %u bytes (stack=%u words)\n",
+                               (unsigned)required_bytes, (unsigned)PUBLISHER_TASK_STACK_SIZE);
                         fflush(stdout);
+
+                        if (free_heap < required_bytes + 1024) {
+                            printf("[MQTT-Task] WARNING: Low heap! May fail to create task.\n");
+                            fflush(stdout);
+                        }
                         #endif /* TESAIOT_DEBUG_VERBOSE_ENABLED */
+
+                        printf("[MQTT-Task] Calling xTaskCreate NOW...\n");
+                        fflush(stdout);
 
                         BaseType_t pub_result = xTaskCreate(publisher_task, "Publisher task",
                                                             PUBLISHER_TASK_STACK_SIZE,
                                                             NULL, PUBLISHER_TASK_PRIORITY,
                                                             &publisher_task_handle);
+
+                        printf("[MQTT-Task] xTaskCreate returned: %d (pdPASS=%d)\n",
+                               (int)pub_result, (int)pdPASS);
+                        fflush(stdout);
 
                         if (pdPASS == pub_result)
                         {

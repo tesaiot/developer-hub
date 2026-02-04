@@ -9,7 +9,7 @@
 |--------|-------------|
 | `tesaiot.h` | Main umbrella - includes all headers + license API |
 | `tesaiot_config.h` | Configuration, debug levels, OID definitions |
-| `tesaiot_csr.h` | CSR workflow API |
+| `tesaiot_protected_update.h` | Protected Update workflow API |
 | `tesaiot_license_config.h` | Customer editable (UID + license key) |
 | `tesaiot_optiga.h` | OPTIGA Trust M integration |
 | `tesaiot_optiga_core.h` | OPTIGA manager (init, acquire, release) |
@@ -28,7 +28,7 @@
 
 ```c
 #include "tesaiot_platform.h"  // MQTT + SNTP only
-#include "tesaiot_csr.h"       // CSR workflow only
+#include "tesaiot_protected_update.h"       // Protected Update workflow only
 #include "tesaiot_optiga.h"    // OPTIGA integration only
 ```
 
@@ -47,7 +47,7 @@ Edit `tesaiot_license_config.h` with your device UID and license key:
 tesaiot.h (main umbrella)
 ├── tesaiot_config.h
 ├── tesaiot_platform.h (MQTT + SNTP)
-├── tesaiot_csr.h
+├── tesaiot_protected_update.h
 ├── tesaiot_protected_update.h
 ├── tesaiot_optiga.h
 └── tesaiot_optiga_core.h

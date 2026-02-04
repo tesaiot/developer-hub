@@ -33,7 +33,7 @@
     },
     {
         "asset-name": "core-make",
-        "locked-commit": "release-v3.8.0"
+        "locked-commit": "release-v3.7.0"
     },
     {
         "asset-name": "cy-mbedtls-acceleration",

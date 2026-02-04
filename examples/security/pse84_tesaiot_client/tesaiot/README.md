@@ -12,7 +12,7 @@ TESAIoT Library provides secure device provisioning and certificate management f
 ### Features
 
 - **License Key System** - ECDSA signature-based device licensing
-- **CSR Workflow** - Generate Certificate Signing Requests using OPTIGA Trust M
+- **Protected Update Only** - Generate certificate renewals using OPTIGA Trust M
 - **MQTT with mTLS** - Secure MQTT communication with mutual TLS authentication
 - **OPTIGA Integration** - Full integration with OPTIGA Trust M secure element
 - **Protected Update** - Secure firmware/certificate update workflow
@@ -28,7 +28,6 @@ The library provides 8 header files:
 |--------|-------------|
 | `tesaiot.h` | Main umbrella - includes all headers + license API |
 | `tesaiot_config.h` | Configuration, debug levels, OID definitions |
-| `tesaiot_csr.h` | CSR workflow API |
 | `tesaiot_license_config.h` | **Customer editable** - Your UID + license key |
 | `tesaiot_optiga.h` | OPTIGA Trust M integration |
 | `tesaiot_optiga_core.h` | OPTIGA manager (init, acquire, release) |
@@ -43,13 +42,12 @@ The library provides 8 header files:
 
 // Option 2: Domain-specific includes
 #include "tesaiot_platform.h"  // MQTT, SNTP
-#include "tesaiot_csr.h"       // CSR workflow
 #include "tesaiot_optiga.h"    // OPTIGA Trust M
 ```
 
 ---
 
-## License Key Configuration (v2.8.0)
+## License Key Configuration (v3.0.0)
 
 ### 3-Layer Architecture
 
@@ -89,7 +87,7 @@ const char* tesaiot_license_key = TESAIOT_LICENSE_KEY;
 5. Place in `tesaiot/include/` folder (moved from `proj_cm33_ns/`)
 6. Rebuild and flash - Licensed!
 
-### Security Benefits (v2.8.0)
+### Security Benefits (v3.0.0)
 
 | Aspect | Old (v2.6) | New (v2.8) |
 |--------|-----------|-----------|
@@ -123,21 +121,15 @@ const char* tesaiot_license_key = TESAIOT_LICENSE_KEY;
 | `tesaiot_sntp_get_time()` | Get current Unix timestamp |
 | `tesaiot_sntp_is_time_synced()` | Check if time is synced |
 
-### CSR Functions (from tesaiot_csr.h)
 
 | Function | Description |
 |----------|-------------|
-| `tesaiot_csr_workflow_init()` | Initialize CSR workflow |
-| `tesaiot_csr_workflow_start()` | Start CSR workflow |
-| `tesaiot_csr_workflow_run()` | Run one iteration |
-| `tesaiot_csr_workflow_get_state()` | Get current state |
 
 ### OPTIGA Functions (from tesaiot_optiga.h)
 
 | Function | Description |
 |----------|-------------|
 | `tesaiot_optiga_generate_keypair()` | Generate keypair |
-| `tesaiot_optiga_generate_csr()` | Generate CSR |
 | `tesaiot_optiga_write_cert()` | Write certificate |
 | `tesaiot_optiga_get_cert_oid()` | Get current cert OID |
 

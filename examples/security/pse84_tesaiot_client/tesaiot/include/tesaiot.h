@@ -301,8 +301,8 @@ const char* tesaiot_error_str(tesaiot_error_t error);
 /* Group 1: Core OPTIGA instance management */
 #include "tesaiot_optiga_core.h"
 
-/* Group 2: CSR Workflow */
-#include "tesaiot_csr.h"
+/* Group 2: CSR Workflow - REMOVED in v3.0.0 */
+/* #include "tesaiot_csr.h" */
 
 /* Group 3: Protected Update Workflow */
 #include "tesaiot_protected_update.h"

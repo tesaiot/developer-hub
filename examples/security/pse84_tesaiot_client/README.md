@@ -1,15 +1,16 @@
 # PSoC Edge E84 + OPTIGA Trust M: TESAIoT MQTT Client
 
-**Firmware Version:** 2026.02 Public Beta
-**TESAIoT Library:** v2.8.0
+**Firmware Version:** v3.0.0 Production
+**TESAIoT Library:** v3.0.0
 **Date:** 2026-02-01
+
 **Status:** Production Ready
 
 This project demonstrates a **secure IoT device provisioning workflow** using:
 
 - **PSoC Edge E84** (Cortex-M33 + M55)
 - **OPTIGA Trust M** secure element for hardware-protected private keys
-- **TESAIoT Platform** for Certificate Signing Request (CSR) workflow
+- **TESAIoT Platform** for Protected Update certificate renewal
 - **MQTT over TLS** with device certificates stored in OPTIGA
 
 ---
@@ -19,7 +20,6 @@ This project demonstrates a **secure IoT device provisioning workflow** using:
 | Feature | Description |
 |---------|-------------|
 | **Hardware Root of Trust** | Private keys generated and stored in OPTIGA Trust M (never leave the chip) |
-| **CSR Workflow** | Automated certificate enrollment via TESAIoT Platform |
 | **Two-Certificate PKI** | Factory/Bootstrap certificate + Operational/Device certificate |
 | **SAFE MODE** | Automatic fallback to Factory Certificate for recovery |
 | **Secure MQTT** | TLS 1.2/1.3 with hardware-bound keys |
@@ -31,16 +31,16 @@ This project demonstrates a **secure IoT device provisioning workflow** using:
 
 ```sh
 ================ PSoC Edge-to-TESAIoT Platform Menu ================
-[VERSION] PSE84 Trust M + TESAIoT Firmware 2026.02 Public Beta
+[VERSION] PSE84 Trust M + TESAIoT Firmware v3.0.0 Production
 [STATUS] Wi-Fi: connected | MQTT: idle
 [LICENSE] Valid - UID: CD16339301001C000500000A01BB820003004000AE801010712440
 [TIME] 2026-02-01 17:52:29 UTC+7 (NTP synced)
 1) Print factory UID and factory certificate
 2) Test MQTT connection with current certificate
-3) Full CSR workflow with TESAIoT
-4) Full Protected Update workflow with TESAIoT
+3) Full Protected Update workflow with TESAIoT
+4) Test OPTIGA Trust M metadata operations (diagnostics)
 5) Test OPTIGA Trust M metadata operations (diagnostics)
-Select option (1-5) then press Enter:
+Select option (1-4) then press Enter:
 ```
 
 ### Menu Descriptions
@@ -49,8 +49,8 @@ Select option (1-5) then press Enter:
 |------|----------|-------------|
 | **1** | Print Factory Info | Displays OPTIGA Trust M UID and reads Factory Certificate from OID 0xE0E0 |
 | **2** | Test MQTT | Tests TLS connection to broker using current certificate (Factory or Device) |
-| **3** | **CSR Workflow** | Full automated workflow: Generate keys, create CSR, publish to TESAIoT, receive signed certificate |
-| **4** | **Protected Update** | Certificate renewal workflow via TESAIoT Platform (manifest + fragment) |
+| **3** | **Protected Update** | Full Protected Update workflow: Receive signed certificate via manifest verification |
+| **4** | **Diagnostics** | Test OPTIGA Trust M metadata operations (read/write access conditions) |
 | **5** | Metadata Diagnostics | Read OPTIGA metadata, display installed certificates, lifecycle state |
 
 ---
@@ -63,10 +63,10 @@ Select option (1-5) then press Enter:
 |-----|------|------|---------|-----------|
 | __0xE0C2__ | Factory UID | Read-Only | Hardware identity (27 bytes) | Permanent |
 | __0xE0E0__ | Factory Certificate | Certificate | Pre-provisioned TLS certificate | Read-only after provisioning |
-| __0xE0E1__ | Device Certificate | Certificate | Operational certificate from CSR | Writable (up to 1728 bytes) |
+| __0xE0E1__ | Device Certificate | Certificate | Operational certificate from TESAIoT Platform (factory pre-provisioned) | Writable (up to 1728 bytes) |
 | __0xE0E3__ | Trust Anchor (ROOT_CA) | Public Key | Protected Update signature verification | Provisioned |
 | __0xE0F0__ | Factory Private Key | ECC P-256 | Paired with Factory Cert (0xE0E0) | Read-only |
-| __0xE0F1__ | Device Private Key | ECC P-256 | Paired with Device Cert (0xE0E1) | Generated during CSR |
+| __0xE0F1__ | Device Private Key | ECC P-256 | Paired with Device Cert (0xE0E1) | Pre-provisioned in secure factory (Infineon CC EAL6+) |
 | __0xF1D0-0xF1DF__ | User Data Objects | Data | Application-specific storage | Read/Write |
 
 ### OID Access Conditions
@@ -97,18 +97,18 @@ LcsO (Lifecycle State Object) = 0x07 (Operational)
     +------------------------------+             +------------------------------+
     | OID: 0xE0E0                  |             | OID: 0xE0E1                  |
     | Key: 0xE0F0                  |             | Key: 0xE0F1                  |
-    | Type: Pre-provisioned        |  -------->  | Type: Enrolled via CSR       |
-    | Purpose: Initial TLS auth    |  CSR Flow   | Purpose: Production MQTT     |
+    | Type: Pre-provisioned        |  -------->  | Type: Factory pre-provisioned       |
+    | Purpose: Initial TLS auth    |  Factory Provisioning   | Purpose: Production MQTT     |
     | Status: Read-only            |             | Status: Renewable            |
     +------------------------------+             +------------------------------+
               |                                            |
               v                                            v
     +------------------------------+             +------------------------------+
     | When Used:                   |             | When Used:                   |
-    | - First boot                 |             | - After successful CSR       |
+    | - First boot                 |             | - After factory provisioning       |
     | - After board reset          |             | - Normal production mode     |
     | - Recovery mode              |             | - Until cert expires/reset   |
-    | - CSR workflow connection    |             |                              |
+    | - factory provisioning    |             |                              |
     +------------------------------+             +------------------------------+
 ```
 
@@ -120,112 +120,16 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 /*
  * Certificate Selection Priority (after reset):
  * 1. Force Factory Certificate (SAFE MODE) - Prevents key/cert mismatch
- * 2. After CSR workflow - Use Device Certificate
+ * 2. After factory provisioning - Use Device Certificate
  */
 ```
 
 **Why SAFE MODE?**
 
 - Device Certificate (0xE0E1) may not match Device Key (0xE0F1) after reset
-- Key generated during CSR is lost on power cycle (RAM only until cert written)
+- Pre-provisioned factory key is lost on power cycle (RAM only until cert written)
 - Factory Certificate + Factory Key are always paired correctly
 - Guarantees MQTT connection works for recovery
-
----
-
-## CSR Workflow - Complete Flow
-
-### Official State Machine Diagram
-
-```sh
-+==============================================================================+
-|                    TESAIoT CSR Workflow State Machine                        |
-+==============================================================================+
-
-                         +------------------+
-                         |      IDLE        |
-                         +--------+---------+
-                                  |
-                                  | CSR Workflow selected
-                                  | tesaiot_csr_workflow_start()
-                                  v
-                         +------------------+
-                         | GENERATE_KEYPAIR |
-                         |   OID: 0xE0F1    |
-                         | ECC P-256 Key    |
-                         +--------+---------+
-                                  |
-                                  | optiga_crypt_ecc_generate_keypair()
-                                  | Public key: 68 bytes
-                                  v
-                         +------------------+
-                         |   GENERATE_CSR   |
-                         | X.509 CSR format |
-                         | CN=<Device UID>  |
-                         +--------+---------+
-                                  |
-                                  | CSR ~440-450 bytes (DER)
-                                  | Convert to PEM for JSON
-                                  v
-                         +------------------+
-                         |  CONNECT_MQTT    |
-                         | Use Factory Cert |
-                         |   OID: 0xE0E0    |
-                         +--------+---------+
-                                  |
-                                  | TLS handshake with 0xE0E0 + 0xE0F0
-                                  | mqtt.tesaiot.com:8883
-                                  v
-                         +------------------+
-                         |   PUBLISH_CSR    |
-                         | Topic: device/   |
-                         | <uuid>/commands/ |
-                         | csr              |
-                         +--------+---------+
-                                  |
-                                  | JSON: {"uid":"...", "csr":"-----BEGIN..."}
-                                  v
-                         +------------------+
-                         | WAIT_CERTIFICATE |
-                         | Subscribe to:    |
-                         | device/<uuid>/   |
-                         | commands/#       |
-                         +--------+---------+
-                                  |
-                                  | Platform signs CSR, sends cert
-                                  | Timeout: 60 seconds
-                                  v
-                         +------------------+
-                         | WRITE_TO_OPTIGA  |
-                         |   OID: 0xE0E1    |
-                         | DER format ~639  |
-                         | bytes            |
-                         +--------+---------+
-                                  |
-                                  | optiga_util_write_data(0xE0E1)
-                                  | Reset fallback flag
-                                  v
-                         +------------------+
-                         |      DONE        |
-                         | Device Cert now  |
-                         | matches Device   |
-                         | Key (0xE0F1)     |
-                         +------------------+
-                                  |
-                                  v
-                    +---------------------------+
-                    | Ready for Production MQTT |
-                    | Using 0xE0E1 + 0xE0F1     |
-                    +---------------------------+
-```
-
-### MQTT Topics
-
-| Topic | Direction | Purpose |
-|-------|-----------|---------|
-| `device/<uuid>/commands/csr` | Device → Platform | Publish CSR request |
-| `device/<uuid>/commands/#` | Platform → Device | Receive signed certificate |
-| `device/<uuid>/telemetry` | Device → Platform | Operational data |
 
 ---
 
@@ -235,12 +139,12 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 
 | Scenario | Trigger | Action Required |
 |----------|---------|-----------------|
-| **First Boot** | No Device Cert exists | Run CSR Workflow |
-| **After Board Reset** | Key/Cert mismatch possible | Factory Cert used (SAFE MODE), then CSR Workflow |
-| **Certificate Expired** | TLS handshake fails | Run CSR Workflow to get new certificate |
-| **Before Expiry** | Proactive renewal | Run CSR Workflow (manual trigger) |
-| **Key Compromise** | Security incident | Run CSR Workflow to generate new keypair |
-| **Factory Reset** | User-initiated | Factory Cert used, then CSR Workflow |
+| **First Boot** | No Device Cert exists | Use Protected Update for certificate renewal |
+| **After Board Reset** | Key/Cert mismatch possible | Factory Cert used (SAFE MODE), then Protected Update |
+| **Certificate Expired** | TLS handshake fails | Use Protected Update for certificate renewal to get new certificate |
+| **Before Expiry** | Proactive renewal | Use Protected Update for certificate renewal (manual trigger) |
+| **Key Compromise** | Security incident | Use Protected Update for certificate renewal to generate new keypair |
+| **Factory Reset** | User-initiated | Factory Cert used, then Protected Update |
 
 ### Certificate Renewal Flow Diagram
 
@@ -267,7 +171,7 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
          | MQTT Connect Successful
          v
 +------------------+     Manual     +------------------+
-| User runs CSR    |--------------->| CSR Workflow     |
+| User initiates renewal    |--------------->| Protected Update     |
 | Workflow         |                | Runs completely  |
 +------------------+                +--------+---------+
                                              |
@@ -299,27 +203,27 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
 Timeline: Certificate Lifecycle
 ============================================================================
 
-   Factory Provisioning          CSR Workflow           Certificate Expires
+   Factory Provisioning          Protected Update           Certificate Expires
           |                           |                        |
           v                           v                        v
    [FACTORY CERT]              [DEVICE CERT]             [RENEWAL NEEDED]
-   Valid: 10 years             Valid: 1 year             Must run CSR Workflow
+   Valid: 10 years             Valid: 1 year             Must run Protected Update
           |                           |                        |
           +------ Bootstrap ----------+------ Production ------+
 
    Renewal Trigger Points:
    1. Before Expiry (Recommended):
-      - Run CSR Workflow anytime to get fresh certificate
+      - Use Protected Update for certificate renewal anytime to get fresh certificate
       - Platform issues new cert with extended validity
 
    2. At Expiry:
       - TLS handshake fails with Device Cert
       - System falls back to Factory Cert (SAFE MODE)
-      - User runs CSR Workflow to renew
+      - User runs Protected Update to renew
 
    3. After Expiry (Recovery):
       - Factory Cert still valid (longer validity period)
-      - Connect to platform, run CSR Workflow
+      - Connect to platform, run Protected Update
       - Get new Device Certificate
 ```
 
@@ -342,7 +246,7 @@ Timeline: Certificate Lifecycle
 ### Network
 
 - Wi-Fi access point (2.4GHz)
-- TESAIoT Platform account (for CSR workflow)
+- TESAIoT Platform account (for Protected Update)
 
 ---
 
@@ -411,7 +315,7 @@ make program
 2. Connect serial terminal (115200 baud)
 3. Wait for Wi-Fi connection and NTP sync
 4. Observe SAFE MODE message (Factory Certificate)
-5. Select CSR Workflow from menu
+5. Select Protected Update from menu
 6. Wait for "Workflow completed successfully"
 7. Select MQTT Connection Test to verify Device Certificate connection
 ```
@@ -422,8 +326,8 @@ make program
 1. Power on device (or reset)
 2. System automatically uses Factory Certificate (SAFE MODE)
 3. MQTT Connection Test will work immediately (Factory Cert connection)
-4. Run CSR Workflow if you need Device Certificate
-5. After CSR Workflow, system uses Device Certificate
+4. Use Protected Update for certificate renewal if you need Device Certificate
+5. After Protected Update, system uses Device Certificate
 ```
 
 ### Certificate Renewal
@@ -431,7 +335,7 @@ make program
 ```sh
 1. Connect to device terminal
 2. If certificate expired: System uses Factory Cert (SAFE MODE)
-3. Run CSR Workflow
+3. Use Protected Update for certificate renewal
 4. New certificate will be issued by platform
 5. Device automatically switches to new Device Certificate
 ```
@@ -464,7 +368,6 @@ make clean && make build -j8
 | Flag | Location | Default | Purpose |
 |------|----------|---------|---------|
 | `g_force_factory_cert` | tesaiot_optiga_trust_m.c | `true` | Force Factory Cert on boot (SAFE MODE) |
-| `TESAIOT_AUTO_CSR_RENEWAL_ENABLED` | tesaiot_debug_config.h | `0` | Auto CSR on Factory Cert connect |
 | `TESAIOT_DEBUG_LEVEL` | tesaiot_debug_config.h | `2` (WARNING) | Debug output verbosity |
 
 ---
@@ -483,7 +386,7 @@ This implementation follows industry standards:
 
 - Private keys never leave OPTIGA Trust M hardware
 - Certificate-based authentication (no passwords)
-- Automatic certificate rotation via CSR workflow
+- Automatic certificate rotation via Protected Update
 - Factory certificate cannot be modified (read-only after provisioning)
 - SAFE MODE ensures recovery is always possible
 
@@ -510,7 +413,6 @@ This implementation follows industry standards:
 pse84_trustm_tesaiot_mqtt_mTLS/
 ├── proj_cm33_ns/                    # Main application (Non-Secure CM33)
 │   ├── main.c                       # Menu system and task orchestration
-│   ├── tesaiot_csr_workflow.c       # CSR state machine
 │   ├── tesaiot_optiga_trust_m.c     # OPTIGA operations + cert selection
 │   ├── optiga_trust_helpers.c       # OPTIGA helpers + DER parser
 │   ├── mqtt_task.c                  # MQTT connection management
@@ -538,26 +440,25 @@ pse84_trustm_tesaiot_mqtt_mTLS/
 
 ---
 
-## TESAIoT Library Architecture (v2.8.0)
+## TESAIoT Library Architecture (v3.0.0)
 
 ### Header Files
 
-The project uses 9 consolidated TESAIoT headers (v2.8.0):
+The project uses 9 consolidated TESAIoT headers (v3.0.0):
 
 ```ini
 tesaiot/include/
 ├── tesaiot.h                  # Main umbrella (includes all)
 ├── tesaiot_config.h           # Configuration
-├── tesaiot_csr.h              # CSR workflow
 ├── tesaiot_license_config.h   # Customer editable (UID + License Key)
-├── tesaiot_license.h          # License API (NEW in v2.8.0)
+├── tesaiot_license.h          # License API (NEW in v3.0.0)
 ├── tesaiot_optiga.h           # OPTIGA integration
 ├── tesaiot_optiga_core.h      # OPTIGA manager
 ├── tesaiot_platform.h         # MQTT + SNTP
 └── tesaiot_protected_update.h # Protected Update
 ```
 
-### 3-Layer License Architecture (NEW in v2.8.0)
+### 3-Layer License Architecture (NEW in v3.0.0)
 
 ```ini
 Layer 1: Configuration (Customer Edits)

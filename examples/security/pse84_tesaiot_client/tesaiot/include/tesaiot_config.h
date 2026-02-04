@@ -68,7 +68,7 @@ extern "C" {
  * Current debug level - Change this to control output verbosity
  */
 #ifndef TESAIOT_DEBUG_LEVEL
-#define TESAIOT_DEBUG_LEVEL TESAIOT_DEBUG_LEVEL_WARNING
+#define TESAIOT_DEBUG_LEVEL TESAIOT_DEBUG_LEVEL_VERBOSE
 #endif
 
 /* Automatic Level Enable Flags */

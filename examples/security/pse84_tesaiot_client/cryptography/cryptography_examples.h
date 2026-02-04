@@ -23,26 +23,16 @@
 // Default scenario can be overridden at runtime via MQTT scenario command
 #define TRUSTM_DEFAULT_SCENARIO 1
 
-// needed for scenario 1 (use tesaiot_config.h values if available)
-#ifndef TRUST_ANCHOR_OID
+// needed for scenario 1
 #define TRUST_ANCHOR_OID 0xE0E8
-#endif
-#ifndef CONFIDENTIALITY_OID
 #define CONFIDENTIALITY_OID 0xF1D4
-#endif
 
 //needed for scenario 2
-#ifndef DEVICE_CERTIFICATE_OID
 #define DEVICE_CERTIFICATE_OID 0xE0E1
-#endif
-#ifndef ROOT_CA_OID
 #define ROOT_CA_OID 0xE0E9
-#endif
 
 //needed for both scenarios
-#ifndef TARGET_KEY_OID
 #define TARGET_KEY_OID 0xE0F1
-#endif
 
 
 /*******************************************************************************
