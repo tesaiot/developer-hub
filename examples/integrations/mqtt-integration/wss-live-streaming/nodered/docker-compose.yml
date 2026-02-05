@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nodered:
+    image: nodered/node-red:latest
+    container_name: tesaiot-wss-streaming-nodered
+    restart: unless-stopped
+    ports:
+      - "${NODE_RED_PORT:-1880}:1880"
+    volumes:
+      - ./data:/data
+      - ./flows:/data/flows:ro
+    environment:
+      - TZ=${TZ:-Asia/Bangkok}
+      - MQTT_API_TOKEN=${MQTT_API_TOKEN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1880/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  nodered-data:

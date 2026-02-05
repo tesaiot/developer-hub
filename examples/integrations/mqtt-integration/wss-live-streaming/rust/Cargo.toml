@@ -1,0 +1,33 @@
+[package]
+name = "tesaiot-wss-streaming"
+version = "1.0.0"
+edition = "2021"
+authors = ["TESAIoT"]
+description = "TESAIoT WSS Live Streaming - Rust Client"
+license = "Apache-2.0"
+keywords = ["tesaiot", "mqtt", "wss", "websocket", "iot", "streaming"]
+
+[dependencies]
+# Async MQTT client with WebSocket support
+rumqttc = { version = "0.24", features = ["websocket"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Environment variable loader
+dotenv = "0.15"
+
+# JSON parsing
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Timestamp handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# URL parsing
+url = "2.5"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
