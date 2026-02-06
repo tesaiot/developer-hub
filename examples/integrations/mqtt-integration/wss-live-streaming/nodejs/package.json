@@ -1,0 +1,28 @@
+{
+  "name": "tesaiot-wss-streaming-nodejs",
+  "version": "1.0.0",
+  "description": "TESAIoT WSS Live Streaming - Node.js Example",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "tesaiot",
+    "mqtt",
+    "wss",
+    "websocket",
+    "iot",
+    "streaming",
+    "telemetry"
+  ],
+  "author": "TESAIoT",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "mqtt": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

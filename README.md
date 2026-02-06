@@ -16,19 +16,19 @@ All examples connect to TESAIoT Platform's 14 core services. Here's a simplified
 ┌─────────────┐               │                                     │
 │   Device    │──MQTTS/QUIC──►│  TESA MQTT Broker ──► TESA Bridge   │
 │  Examples   │               │       │              │              │
-│  #4-9,21-22 │               │       ▼              ▼              │
+│  #4-9,26-27 │               │       ▼              ▼              │
 └─────────────┘               │  TimescaleDB    TESA Core API       │
                               │  (telemetry)    (FastAPI)           │
 ┌─────────────┐               │                     │               │
 │   REST API  │───HTTPS──────►│ TESA Proxy Server ──► TESA Core API │
 │  Examples   │               │       │             │               │
-│  #1-3,10-14 │               │       ▼             ▼               │
+│  #1-3,17-19 │               │       ▼             ▼               │
 └─────────────┘               │   TESA API Gateway   MongoDB        │
                               │   (gateway)     (metadata)          │
 ┌─────────────┐               │                                     │
 │  Real-time  │────WSS───────►│ TESA Proxy Server ──► WebSocket B2B │
 │  Examples   │               │                     │               │
-│  #15-17     │               │                     ▼               │
+│  #20-22     │               │                     ▼               │
 └─────────────┘               │            TESA MQTT Broker (sub)   │
                               └─────────────────────────────────────┘
 ```
@@ -37,21 +37,21 @@ All examples connect to TESAIoT Platform's 14 core services. Here's a simplified
 
 ### Key Services Used by Examples
 
-| Service | Port | Protocol | Used By Examples |
-|---------|------|----------|------------------|
-| **TESA MQTT Broker** | 8883, 14567 | MQTTS, QUIC | #4-9, #21-22 (MQTT clients) |
-| **TESA Core API** | 443 (via nginx) | HTTPS | #1-3, #10-14 (REST API) |
-| **TESA Proxy Server** | 443 | HTTPS/WSS | All examples (SSL termination) |
-| **WebSocket B2B** | 443/ws | WSS | #15-17 (real-time streaming) |
-| **TESA Vault PKI** | 8200 | HTTPS | mTLS examples (#6-7) for PKI |
+| Service               | Port            | Protocol    | Used By Examples                 |
+| --------------------- | --------------- | ----------- | -------------------------------- |
+| **TESA MQTT Broker**  | 8883, 14567     | MQTTS, QUIC | #4-8, #10, #26-27 (MQTT clients) |
+| **TESA Core API**     | 443 (via nginx) | HTTPS       | #1-3, #17-19 (REST API)          |
+| **TESA Proxy Server** | 443             | HTTPS/WSS   | All examples (SSL termination)   |
+| **WebSocket B2B**     | 443/ws          | WSS         | #20-22 (real-time streaming)     |
+| **TESA Vault PKI**    | 8200            | HTTPS       | mTLS examples (#6-7) for PKI     |
 
 ### Security Authentication Methods
 
-| Method | Security Level | Examples | Description |
-|--------|----------------|----------|-------------|
-| **mTLS** | Highest | #6-7 | Mutual TLS with client certificate |
-| **Server-TLS + API Key** | Standard | #1-5, #8 | TLS + X-API-Key header |
-| **JWT Token** | Application | #10-14 | Bearer token authentication |
+| Method                   | Security Level | Examples | Description                        |
+| ------------------------ | -------------- | -------- | ---------------------------------- |
+| **mTLS**                 | Highest        | #6-7     | Mutual TLS with client certificate |
+| **Server-TLS + API Key** | Standard       | #1-5, #8 | TLS + X-API-Key header             |
+| **JWT Token**            | Application    | #17-19   | Bearer token authentication        |
 
 **[Read more about Security Architecture](./ARCHITECTURE.md#security-architecture)**
 
@@ -61,79 +61,89 @@ All examples connect to TESAIoT Platform's 14 core services. Here's a simplified
 
 ### Embedded Devices - Entry Level
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 1 | [python-cli](./examples/embedded-devices/entry/python-cli/) | Python | REST API client with CLI interface |
-| 2 | [nodejs-mqtt](./examples/embedded-devices/entry/nodejs-mqtt/) | Node.js | MQTT telemetry publisher |
-| 3 | [micropython-esp32](./examples/embedded-devices/entry/micropython-esp32/) | MicroPython | ESP32 with DHT22 sensor |
-| 4 | [python-mqtt](./examples/embedded-devices/entry/python-mqtt/) | Python | Basic MQTT with paho-mqtt |
-| 5 | [mqtt-quic-python](./examples/embedded-devices/entry/mqtt-quic-python/) | Python | MQTT over QUIC with aioquic |
+| #   | Example                                                                   | Language    | Description                        |
+| --- | ------------------------------------------------------------------------- | ----------- | ---------------------------------- |
+| 1   | [python-cli](./examples/embedded-devices/entry/python-cli/)               | Python      | REST API client with CLI interface |
+| 2   | [nodejs-mqtt](./examples/embedded-devices/entry/nodejs-mqtt/)             | Node.js     | MQTT telemetry publisher           |
+| 3   | [micropython-esp32](./examples/embedded-devices/entry/micropython-esp32/) | MicroPython | ESP32 with DHT22 sensor            |
+| 4   | [python-mqtt](./examples/embedded-devices/entry/python-mqtt/)             | Python      | Basic MQTT with paho-mqtt          |
+| 5   | [mqtt-quic-python](./examples/embedded-devices/entry/mqtt-quic-python/)   | Python      | MQTT over QUIC with aioquic        |
 
 ### Embedded Devices - Intermediate Level
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 6 | [device-mtls/CLI_Python](./examples/embedded-devices/intermediate/device-mtls/CLI_Python/) | Bash/Python | mTLS MQTT CLI with mosquitto_pub |
-| 7 | [device-mtls/Linux_C](./examples/embedded-devices/intermediate/device-mtls/Linux_C/) | C | mTLS MQTT client with libmosquitto |
-| 8 | [device-servertls](./examples/embedded-devices/intermediate/device-servertls/) | C | Server TLS with API key auth |
+| #   | Example                                                                                    | Language    | Description                        |
+| --- | ------------------------------------------------------------------------------------------ | ----------- | ---------------------------------- |
+| 6   | [device-mtls/CLI_Python](./examples/embedded-devices/intermediate/device-mtls/CLI_Python/) | Bash/Python | mTLS MQTT CLI with mosquitto_pub   |
+| 7   | [device-mtls/Linux_C](./examples/embedded-devices/intermediate/device-mtls/Linux_C/)       | C           | mTLS MQTT client with libmosquitto |
+| 8   | [device-servertls](./examples/embedded-devices/entry/device-servertls/)                    | C           | Server TLS with API key auth       |
 
 ### Integrations
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 9 | [nodered-integration](./examples/integrations/nodered-integration/) | Node-RED | Visual workflow integration |
-| 10 | [mqtt-quic-c](./examples/integrations/mqtt-integration/mqtt-quic-c/) | C | NanoSDK MQTT over QUIC |
-| 11 | [wss-mqtt-streaming](./examples/integrations/wss-mqtt-streaming/) | Node.js | Real-time MQTT via WebSocket Secure |
+| #   | Example                                                                                        | Language | Description                         |
+| --- | ---------------------------------------------------------------------------------------------- | -------- | ----------------------------------- |
+| 9   | [nodered-integration](./examples/integrations/workflow-automation/nodered-integration/)        | Node-RED | Visual workflow integration         |
+| 10  | [mqtt-quic-c](./examples/integrations/mqtt-integration/mqtt-quic-c/)                           | C        | NanoSDK MQTT over QUIC              |
+| 11  | [wss-live-streaming](./examples/integrations/mqtt-integration/wss-live-streaming/)             | Node.js  | Real-time MQTT via WebSocket Secure |
+| 12  | [edge-ai-device-simulator](./examples/integrations/mqtt-integration/edge-ai-device-simulator/) | Python   | Simulation of Edge AI devices       |
+| 13  | [n8n-automation](./examples/integrations/workflow-automation/n8n-automation/)                  | n8n      | Workflow automation                 |
+
+### Security - Identity & SSO
+
+| #   | Example                                                                | Language | Description               |
+| --- | ---------------------------------------------------------------------- | -------- | ------------------------- |
+| 14  | [keycloak-flutter](./examples/security/identity-sso/keycloak-flutter/) | Flutter  | Mobile SSO authentication |
+| 15  | [keycloak-python](./examples/security/identity-sso/keycloak-python/)   | Python   | Python SSO client         |
+| 16  | [keycloak-react](./examples/security/identity-sso/keycloak-react/)     | React    | Frontend SSO integration  |
 
 ### Analytics API
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 12 | [javascript](./examples/analytics-api/javascript/) | JavaScript | Fetch-based API client |
-| 13 | [python](./examples/analytics-api/python/) | Python | httpx async API client |
-| 14 | [rust](./examples/analytics-api/rust/) | Rust | reqwest async API client |
+| #   | Example                                            | Language   | Description              |
+| --- | -------------------------------------------------- | ---------- | ------------------------ |
+| 17  | [javascript](./examples/analytics-api/javascript/) | JavaScript | Fetch-based API client   |
+| 18  | [python](./examples/analytics-api/python/)         | Python     | httpx async API client   |
+| 19  | [rust](./examples/analytics-api/rust/)             | Rust       | reqwest async API client |
 
 ### Applications - Real-time
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 15 | [react-dashboard](./examples/applications/real-time/react-dashboard/) | React/TS | Edge AI visualization dashboard |
-| 16 | [live-streaming-dashboard](./examples/applications/real-time/live-streaming-dashboard/) | React/TS | Real-time MQTT dashboard |
-| 17 | [wss-python-streaming](./examples/applications/real-time/wss-python-streaming/) | Python | WebSocket Secure streaming client |
+| #   | Example                                                                                   | Language | Description                       |
+| --- | ----------------------------------------------------------------------------------------- | -------- | --------------------------------- |
+| 20  | [react-dashboard](./examples/applications/real-time/react-dashboard/)                     | React/TS | Edge AI visualization dashboard   |
+| 21  | [live-streaming-dashboard](./examples/applications/real-time/live-streaming-dashboard/)   | React/TS | Real-time MQTT dashboard          |
+| 22  | [wss-mqtt-streaming/python](./examples/applications/real-time/wss-mqtt-streaming/python/) | Python   | WebSocket Secure streaming client |
 
 ### Applications - Visualization
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 18 | [grafana-influxdb](./examples/applications/visualization/grafana-influxdb/) | Grafana | InfluxDB time-series dashboards |
-| 19 | [grafana-timescaledb](./examples/applications/visualization/grafana-timescaledb/) | Grafana | TimescaleDB real-time dashboards |
+| #   | Example                                                                           | Language | Description                      |
+| --- | --------------------------------------------------------------------------------- | -------- | -------------------------------- |
+| 23  | [grafana-influxdb](./examples/applications/visualization/grafana-influxdb/)       | Grafana  | InfluxDB time-series dashboards  |
+| 24  | [grafana-timescaledb](./examples/applications/visualization/grafana-timescaledb/) | Grafana  | TimescaleDB real-time dashboards |
 
 ### Applications - Automation
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 20 | [ai-service-template](./examples/applications/automation/ai-service-template/) | Python | Third-party AI service template |
+| #   | Example                                                                        | Language | Description                     |
+| --- | ------------------------------------------------------------------------------ | -------- | ------------------------------- |
+| 25  | [ai-service-template](./examples/applications/automation/ai-service-template/) | Python   | Third-party AI service template |
 
 ### Advanced
 
-| # | Example | Language | Description |
-|---|---------|----------|-------------|
-| 21 | [mqtt-quic/c_cpp](./examples/embedded-devices/advanced/mqtt-quic/c_cpp/) | C/C++ | TCP fallback, 0-RTT, multi-stream |
-| 22 | [mqtt-quic/python](./examples/embedded-devices/advanced/mqtt-quic/python/) | Python | Advanced aioquic with TCP fallback |
+| #   | Example                                                                    | Language | Description                        |
+| --- | -------------------------------------------------------------------------- | -------- | ---------------------------------- |
+| 26  | [mqtt-quic/c_cpp](./examples/embedded-devices/advanced/mqtt-quic/c_cpp/)   | C/C++    | TCP fallback, 0-RTT, multi-stream  |
+| 27  | [mqtt-quic/python](./examples/embedded-devices/advanced/mqtt-quic/python/) | Python   | Advanced aioquic with TCP fallback |
 
 ---
 
 ## Choosing the Right Example
 
-| Your Use Case | Recommended Example | Why |
-|---------------|---------------------|-----|
-| **Just starting out** | #1 python-cli | Simple REST API, no MQTT setup |
-| **Basic MQTT telemetry** | #4 python-mqtt | Standard MQTT with paho-mqtt |
-| **Best performance** | #5 mqtt-quic-python | QUIC is faster than TCP |
-| **Maximum security** | #6 device-mtls | mTLS for zero-trust |
-| **Production MQTT** | #21-22 advanced | Auto-reconnect, fallback, monitoring |
-| **Real-time dashboard** | #16 live-streaming | WebSocket streaming with React |
-| **Analytics queries** | #12-14 analytics-api | Query historical telemetry |
+| Your Use Case            | Recommended Example  | Why                                  |
+| ------------------------ | -------------------- | ------------------------------------ |
+| **Just starting out**    | #1 python-cli        | Simple REST API, no MQTT setup       |
+| **Basic MQTT telemetry** | #4 python-mqtt       | Standard MQTT with paho-mqtt         |
+| **Best performance**     | #5 mqtt-quic-python  | QUIC is faster than TCP              |
+| **Maximum security**     | #6 device-mtls       | mTLS for zero-trust                  |
+| **Production MQTT**      | #26-27 advanced      | Auto-reconnect, fallback, monitoring |
+| **Real-time dashboard**  | #21 live-streaming   | WebSocket streaming with React       |
+| **Analytics queries**    | #17-19 analytics-api | Query historical telemetry           |
 
 **[See detailed Example-to-Service mapping](./ARCHITECTURE.md#example-to-service-mapping)**
 
@@ -190,12 +200,12 @@ TESAIoT Platform provides:
 
 ## Protocol Support
 
-| Protocol | Port | Use Case | Examples |
-|----------|------|----------|----------|
-| **MQTTS** | 8883 | Secure MQTT over TLS | #4, #6-8 |
-| **MQTT-QUIC** | 14567 | Low-latency, 0-RTT | #5, #9, #21-22 |
-| **HTTPS** | 443 | REST API calls | #1-3, #10-14 |
-| **WSS** | 443 | Real-time streaming | #15-17 |
+| Protocol      | Port  | Use Case             | Examples        |
+| ------------- | ----- | -------------------- | --------------- |
+| **MQTTS**     | 8883  | Secure MQTT over TLS | #4, #6-8        |
+| **MQTT-QUIC** | 14567 | Low-latency, 0-RTT   | #5, #10, #26-27 |
+| **HTTPS**     | 443   | REST API calls       | #1-3, #17-19    |
+| **WSS**       | 443   | Real-time streaming  | #20-22          |
 
 **[View full Protocol & Port mapping](./ARCHITECTURE.md#protocol-support)**
 

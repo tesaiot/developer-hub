@@ -1,0 +1,7 @@
+# TESAIoT WSS Live Streaming - Python Dependencies
+
+# MQTT Client with WebSocket support
+paho-mqtt>=2.0.0
+
+# Environment variable loader
+python-dotenv>=1.0.0
