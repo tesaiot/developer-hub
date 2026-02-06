@@ -92,7 +92,6 @@ vault-token*
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
 .Python
 build/
 develop-eggs/
