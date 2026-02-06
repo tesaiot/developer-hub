@@ -100,7 +100,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -129,9 +128,7 @@ yarn-error.log*
 # C/C++
 *.o
 *.obj
-*.a
 *.lib
-*.so
 *.dylib
 *.dll
 *.exe
