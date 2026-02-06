@@ -1,0 +1,22 @@
+# TESAIoT OpenSSL Configuration with OPTIGA Trust M Provider
+# Template - actual path will be determined at runtime
+
+openssl_conf = openssl_init
+
+[openssl_init]
+providers = provider_sect
+
+[provider_sect]
+trustm_provider = trustm_sect
+default = default_sect
+
+[trustm_sect]
+# Module path will be set by run script
+# Common locations:
+# - /usr/lib/aarch64-linux-gnu/ossl-modules/trustm_provider.so (Raspberry Pi 64-bit)
+# - /usr/lib/arm-linux-gnueabihf/ossl-modules/trustm_provider.so (Raspberry Pi 32-bit)
+module = trustm_provider.so
+activate = 1
+
+[default_sect]
+activate = 1

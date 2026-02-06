@@ -1,0 +1,104 @@
+diff --git a/extras/pal/linux/pal_gpio_gpiod.c b/extras/pal/linux/pal_gpio_gpiod.c
+index bb17954..78ea41f 100644
+--- a/extras/pal/linux/pal_gpio_gpiod.c
++++ b/extras/pal/linux/pal_gpio_gpiod.c
+@@ -17,6 +17,7 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <unistd.h>
++#include <string.h>
+ 
+ #include "errno.h"
+ #include "pal_gpio.h"
+@@ -27,24 +28,76 @@
+ #define HIGH 1
+ 
+ static int GPIOWrite(pal_linux_gpio_gpiod_t *pin, int value) {
+-    int ret = 0;
+-    ret = gpiod_ctxless_set_value(
+-        pin->gpio_device,
+-        pin->gpio_device_offset,
+-        value,
+-        false,
+-        "trustm",
+-        NULL,
+-        NULL
+-    );
+-
+-    if (ret != 0) {
+-        char err_msg[100];
+-        sprintf(err_msg, "Failed to write value! Return code = %d\n", ret);
+-        write(STDERR_FILENO, err_msg, strlen(err_msg));
++    struct gpiod_chip *chip;
++    struct gpiod_line_settings *settings;
++    struct gpiod_line_config *line_config;
++    struct gpiod_request_config *req_config;
++    struct gpiod_line_request *request;
++    unsigned int offset;
++    int ret = -1;
++
++    offset = (unsigned int)pin->gpio_device_offset;
++
++    chip = gpiod_chip_open(pin->gpio_device);
++    if (!chip) {
++        write(STDERR_FILENO, "Failed to open GPIO chip\n", 25);
++        return -1;
++    }
++
++    settings = gpiod_line_settings_new();
++    if (!settings) {
++        write(STDERR_FILENO, "Failed to create line settings\n", 31);
++        gpiod_chip_close(chip);
++        return -1;
++    }
++
++    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
++    gpiod_line_settings_set_output_value(settings, value ? GPIOD_LINE_VALUE_ACTIVE : GPIOD_LINE_VALUE_INACTIVE);
++
++    line_config = gpiod_line_config_new();
++    if (!line_config) {
++        write(STDERR_FILENO, "Failed to create line config\n", 29);
++        gpiod_line_settings_free(settings);
++        gpiod_chip_close(chip);
++        return -1;
++    }
++
++    ret = gpiod_line_config_add_line_settings(line_config, &offset, 1, settings);
++    if (ret) {
++        write(STDERR_FILENO, "Failed to add line settings\n", 28);
++        gpiod_line_config_free(line_config);
++        gpiod_line_settings_free(settings);
++        gpiod_chip_close(chip);
++        return -1;
++    }
++
++    req_config = gpiod_request_config_new();
++    if (!req_config) {
++        write(STDERR_FILENO, "Failed to create request config\n", 32);
++        gpiod_line_config_free(line_config);
++        gpiod_line_settings_free(settings);
++        gpiod_chip_close(chip);
+         return -1;
+     }
+ 
++    gpiod_request_config_set_consumer(req_config, "trustm");
++
++    request = gpiod_chip_request_lines(chip, req_config, line_config);
++    if (!request) {
++        write(STDERR_FILENO, "Failed to request GPIO line\n", 28);
++        gpiod_request_config_free(req_config);
++        gpiod_line_config_free(line_config);
++        gpiod_line_settings_free(settings);
++        gpiod_chip_close(chip);
++        return -1;
++    }
++
++    gpiod_line_request_release(request);
++    gpiod_request_config_free(req_config);
++    gpiod_line_config_free(line_config);
++    gpiod_line_settings_free(settings);
++    gpiod_chip_close(chip);
++
+     return 0;
+ }
+ 
