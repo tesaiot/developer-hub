@@ -48,14 +48,10 @@ Portable_Deployment/
 **IMPORTANT**: Binaries are compiled with path `../credentials/` relative to `bin/`.
 Must run from `bin/` directory or use the runner scripts.
 
-## Current Device
+## Device Configuration
 
-This package is pre-configured for device:
-- **Device ID**: `a8a1c4f3-42ae-41e2-b6d3-1f74cc3d5b31`
-- **Device UID**: `CD16339301001C000500000A01BB820003009C002C801010712440`
-
-To use with a different device, you must:
-1. Update `include/tesaiot/tesaiot_config.h` with new DEVICE_ID, DEVICE_UID, LICENSE_KEY
+Each device requires its own credentials in `include/tesaiot/tesaiot_config.h`:
+1. Update `TESAIOT_DEVICE_ID`, `TESAIOT_DEVICE_UID`, `TESAIOT_LICENSE_KEY`
 2. Rebuild binaries from source (see tesaiot_library/)
 
 ## Quick Start
@@ -77,14 +73,14 @@ nano .env    # Set OPENSSL_MODULES to your trustm_provider.so directory
 ### Step 2: Run Workflows
 
 ```bash
-# CSR workflow — enroll device certificate (writes to OID 0xE0E3)
-./run_csr.sh run --target-oid 0xE0E3
+# CSR workflow — enroll device certificate
+./run_csr.sh run --target-oid 0xE0E1
 
-# Protected Update — receive certificate via MQTT (writes to OID 0xE0E3)
-./run_pu.sh run --target-oid 0xE0E3
+# Protected Update — receive certificate via MQTT
+./run_pu.sh run --target-oid 0xE0E1
 
 # Diagnostics — show certificate info, OID metadata, health status
-./run_csr.sh diag --target-oid 0xE0E3
+./run_csr.sh diag --target-oid 0xE0E1
 
 # License check
 ./run_csr.sh license
@@ -101,7 +97,7 @@ cd /home/pi/Portable_Deployment/bin
 # Manual shim setup (runner scripts do this automatically)
 export LD_PRELOAD=../lib/libpaho_shim.so
 export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
-./tesaiot_csr_client run --target-oid 0xE0E3
+./tesaiot_csr_client run --target-oid 0xE0E1
 ```
 
 ### Alternative: System-wide Installation
@@ -390,17 +386,21 @@ Critical design principle: **Complete service separation** between CSR and Prote
 
 | OID | Name | CSR Workflow | PU Workflow | Purpose |
 |-----|------|:------------:|:-----------:|---------|
-| 0xE0F1 | CSR Private Key | ✅ | ❌ | ECC P-256 keypair for CSR signing |
-| 0xE0E1 | Device Certificate 1 | ✅ Write | ✅ Write | X.509 device certificate slot 1 |
-| **0xE0E2** | **Device Certificate 2** | ✅ Write | ✅ Write | X.509 device certificate (default) |
-| 0xE0E3 | Device Certificate 3 | ✅ Write | ✅ Write | X.509 device certificate slot 3 |
-| 0xE0E9 | CA Chain | ✅ Read | ❌ | TESAIoT CA certificate chain |
-| 0xE0E0 | Factory Certificate | ✅ Read | ❌ | Bootstrap TLS authentication |
-| 0xE0C2 | Trust M UID | ✅ Read | ✅ Read | Unique device identifier |
-| 0xE0E8 | Trust Anchor 1 | ❌ | ✅ | PU verification for 0xE0E2 — **locked** (LcsO=0x07) |
-| **0xE0E9** | **Trust Anchor 2** | ✅ Read | ✅ | **Current TA** for 0xE0E3 PU + CSR CA Chain |
-| 0xF1D4 | Secret | ❌ | ✅ | AES-128-CCM decryption key |
-| 0xE0F2 | PU Key Slot | ❌ | ✅ | Protected Update operations |
+| 0xE0C2 | Trust M UID | R | R | Unique 27-byte device identifier |
+| 0xE0E0 | Factory Certificate | R | - | Infineon-signed certificate (bootstrap TLS) |
+| **0xE0E1** | **Device Certificate 1** | W | W | **Default target** for device certificate |
+| 0xE0E2 | Device Certificate 2 | W | W | Alternative certificate slot |
+| 0xE0E3 | Device Certificate 3 | W | W | Alternative certificate slot |
+| 0xE0E8 | Trust Anchor 1 | - | R | PU manifest signature verification |
+| 0xE0E9 | Trust Anchor 2 / CA | R | R | PU verification + CSR CA Chain |
+| 0xE0F0 | Factory Key | S | - | Factory private key |
+| 0xE0F1 | CSR Key | G/S | - | ECC P-256 keypair for CSR signing |
+| 0xE0F2 | PU Key Slot | - | U | Protected Update operations |
+| 0xF1D4 | Secret | - | D | AES-128-CCM key for encrypted updates |
+
+**Legend**: R=Read, W=Write, G=Generate, S=Sign, U=Update, D=Decrypt
+
+**Note**: Use `--target-oid` to select which certificate slot to write to (default: 0xE0E1).
 
 ---
 
@@ -449,11 +449,11 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │ <───────────────────────────────────── │
             │ Topic: device/{id}/commands/certificate│
             │                                        │
-            │  6. Write Certificate to 0xE0E2        │
+            │  6. Write Certificate to Target OID     │
             │     ┌─────────────────────────┐        │
             │     │   OPTIGA Trust M        │        │
             │     │   optiga_util_write_    │        │
-            │     │   data(0xE0E2, cert)    │        │
+            │     │   data(target_oid, cert)│        │
             │     └─────────────────────────┘        │
             │                                        │
             │  7. Verify Certificate Chain           │
@@ -475,7 +475,7 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │                                        │
             │                                        │  1. Create Update Payload
             │                                        │     - New certificate/config
-            │                                        │     - Target OID: 0xE0E2
+            │                                        │     - Target OID (from manifest)
             │                                        │
             │                                        │  2. Generate CBOR Manifest
             │                                        │     (COSE_Sign1, RFC 8152)
@@ -633,7 +633,7 @@ See [ISSUES.md](../TESAIoT_IMPROVEMENT/v3.0.0_Official_TESAIoT_Secure_Library/IS
 |-------|-------------|------------|
 | ISSUE-001 | OPTIGA API hangs after MQTT (trustm_provider I2C lock) | External tools fallback |
 | ISSUE-002 | `trustm_protected_update` fails with 0x8029 | Direct write via `trustm_data` |
-| ISSUE-003 | OID 0xE0E1 locked (Change:NEV) | Use `--target-oid 0xE0E3` |
+| ISSUE-003 | Some devices have OID locked (Change:NEV) | Use `--target-oid` to select an available OID |
 | ISSUE-004 | Root-owned temp files | `run_*.sh` auto-cleanup |
 
 ---
