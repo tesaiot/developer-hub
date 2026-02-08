@@ -2,8 +2,8 @@
 
 คู่มือนี้สำหรับ Developer ที่ต้องการพัฒนาต่อยอดบน TESAIoT Library
 
-**Version**: 2.1
-**Last Updated**: 2026-02-01
+**Version**: 3.0.0
+**Last Updated**: 2026-02-08
 **Copyright**: Thai Embedded Systems Association (TESA)
 
 ---
@@ -32,6 +32,8 @@ TESAIoT Library (`libtesaiot.a`) เป็น Static Library สำหรับ 
 |----------|-------------|
 | **CSR Workflow** | Certificate Signing Request - ขอ Device Certificate จาก TESAIoT Platform |
 | **Protected Update** | Secure Firmware/Data Update - อัพเดตข้อมูลแบบปลอดภัยผ่าน CBOR COSE_Sign1 |
+| **Crypto Utilities** | ฟังก์ชันเข้ารหัส: ECDSA sign/verify, SHA-256, AES-CBC, keygen, RNG (v3.0.0) |
+| **Health & Diagnostics** | ตรวจสอบสถานะ: health check, cert info, OID metadata, counters (v3.0.0) |
 
 ### Architecture
 
@@ -103,6 +105,8 @@ Portable_Deployment/
 │   ├── tesaiot.h                 # Core API (license, init)
 │   ├── tesaiot_csr.h             # CSR Workflow API
 │   ├── tesaiot_protected_update.h # Protected Update API
+│   ├── tesaiot_crypto.h          # Crypto utilities (v3.0.0)
+│   ├── tesaiot_advanced.h        # Health, diag, counters (v3.0.0)
 │   ├── tesaiot_config.h          # Device configuration
 │   └── tesaiot_optiga.h          # Low-level OPTIGA API
 ├── scripts/                      # Runner scripts
@@ -622,7 +626,8 @@ OPTIGA Trust M มี OID สำหรับเก็บ Certificate หลา�
 | **0xE0E1** | Device Certificate 1 | Read/Write | Device certificate slot 1 |
 | **0xE0E2** | Device Certificate 2 | Read/Write | Device certificate slot 2 (**Recommended**) |
 | **0xE0E3** | Device Certificate 3 | Read/Write | Device certificate slot 3 |
-| **0xE0E8** | Trust Anchor | Read/Write | PU manifest verification key |
+| **0xE0E8** | Trust Anchor 1 | **Locked** (LcsO=0x07) | PU verification for 0xE0E2 |
+| **0xE0E9** | **Trust Anchor 2** | Read/Write | **Current TA** for 0xE0E3 PU + CSR CA Chain |
 | **0xE0E9** | CA Chain | Read/Write | CSR CA certificate chain |
 | **0xE0F0** | Factory Key | Key-only | Factory private key (Read-Never) |
 | **0xE0F1** | CSR Key | Key-only | CSR-generated private key |
