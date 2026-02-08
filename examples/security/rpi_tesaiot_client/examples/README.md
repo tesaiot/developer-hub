@@ -109,9 +109,11 @@ Portable_Deployment/
 │   ├── tesaiot_advanced.h        # Health, diag, counters (v3.0.0)
 │   ├── tesaiot_config.h          # Device configuration
 │   └── tesaiot_optiga.h          # Low-level OPTIGA API
-├── scripts/                      # Runner scripts
-│   ├── run_csr_workflow.sh       # Run CSR with proper env
-│   └── run_pu_workflow.sh        # Run PU with proper env
+├── run_csr.sh                    # CSR runner script (top-level)
+├── run_pu.sh                     # PU runner script (top-level)
+├── scripts/                      # Utility scripts
+│   ├── fix_libgpiod_v2.sh       # Auto-patch for libgpiod v2.x
+│   └── libgpiod_v2.patch        # Patch file for manual apply
 └── examples/                     # Example source code
     ├── csr_client_example.c      # CSR client example
     ├── pu_client_example.c       # PU client example
@@ -456,10 +458,10 @@ arm-linux-gnueabihf-gcc -o csr_client csr_client_example.c \
 ```bash
 # CSR Workflow
 cd /path/to/Portable_Deployment
-./scripts/run_csr_workflow.sh run
+./run_csr.sh run --target-oid 0xE0E1
 
 # Protected Update
-./scripts/run_pu_workflow.sh run
+./run_pu.sh run --target-oid 0xE0E1
 ```
 
 ### Environment Variables
@@ -485,24 +487,26 @@ export LD_PRELOAD=/path/to/lib/libpaho_shim.so
 
 ```bash
 # CSR Workflow
-./scripts/run_csr_workflow.sh [command] [options]
+./run_csr.sh [command] [options]
 
 Commands:
   run         Run CSR workflow [DEFAULT]
   identity    Print factory UID
   license     Verify license
+  diag        Diagnostics (v3.0.0)
   help        Show help
 
 Options:
-  --target-oid 0xE0E2   Target OID for certificate (0xE0E1-0xE0E3)
+  --target-oid 0xE0E1   Target OID for certificate (0xE0E1-0xE0E3)
 
 # Protected Update
-./scripts/run_pu_workflow.sh [command] [options]
+./run_pu.sh [command] [options]
 
 Commands:
   run         Run Protected Update workflow [DEFAULT]
   identity    Print factory UID
   license     Verify license
+  diag        Diagnostics (v3.0.0)
   help        Show help
 
 Options:
