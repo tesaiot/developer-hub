@@ -35,8 +35,6 @@ Portable_Deployment/
 │   ├── tesaiot_protected_update.h
 │   └── tesaiot_tool_verify.h   # External tool verification (NEW)
 ├── scripts/
-│   ├── run_csr_workflow.sh     # CSR runner script
-│   ├── run_pu_workflow.sh      # PU runner script
 │   ├── fix_libgpiod_v2.sh      # Auto-patch for libgpiod v2.x
 │   └── libgpiod_v2.patch       # Patch file for manual apply
 ├── config/
@@ -141,7 +139,7 @@ The runner scripts automatically detect and use bundled libraries in `lib/`:
 
 **No additional installation needed!** Just run:
 ```bash
-./scripts/run_csr_workflow.sh    # shim is enabled by default
+./run_csr.sh run --target-oid 0xE0E1
 ```
 
 #### Option B: Use Automatic Patch Script
@@ -333,8 +331,8 @@ export LD_LIBRARY_PATH=/opt/tesaiot/lib:$LD_LIBRARY_PATH
 ### Permission Denied
 
 ```bash
-# Run with sudo (scripts handle sudo internally)
-./scripts/run_pu_workflow.sh
+# Runner scripts handle environment setup automatically
+sudo ./run_pu.sh run --target-oid 0xE0E1
 ```
 
 ---
