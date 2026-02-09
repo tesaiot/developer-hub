@@ -7,7 +7,7 @@ Self-contained deployment package for TESAIoT CSR and Protected Update workflows
 ## Contents
 
 ```
-Portable_Deployment/
+rpi_tesaiot_client/
 ├── bin/
 │   ├── tesaiot_csr_client      # CSR workflow binary
 │   ├── tesaiot_pu_client       # Protected Update workflow binary
@@ -58,7 +58,7 @@ Each device requires its own credentials in `include/tesaiot/tesaiot_config.h`:
 
 ```bash
 # On target RPi
-cd /home/pi/Portable_Deployment
+cd /home/pi/rpi_tesaiot_client
 
 # Create .env from template and edit with your paths
 cp .env_example .env
@@ -87,7 +87,7 @@ nano .env    # Set OPENSSL_MODULES to your trustm_provider.so directory
 ### Alternative: Run Directly from bin/
 
 ```bash
-cd /home/pi/Portable_Deployment/bin
+cd /home/pi/rpi_tesaiot_client/bin
 
 # Manual shim setup (runner scripts do this automatically)
 export LD_PRELOAD=../lib/libpaho_shim.so
@@ -98,7 +98,7 @@ export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
 ### Alternative: System-wide Installation
 
 ```bash
-cd Portable_Deployment
+cd rpi_tesaiot_client
 sudo ./install.sh
 
 # Reload environment
@@ -109,7 +109,7 @@ source /etc/profile.d/tesaiot.sh
 
 ### Important: This package requires external dependencies
 
-Simply copying Portable_Deployment to another RPi is **NOT** enough. You must install the dependencies listed below.
+Simply copying rpi_tesaiot_client to another RPi is **NOT** enough. You must install the dependencies listed below.
 
 ### System Dependencies
 
@@ -148,7 +148,7 @@ git clone https://github.com/Infineon/linux-optiga-trust-m.git
 cd linux-optiga-trust-m
 
 # Run the automatic patch script
-/path/to/Portable_Deployment/scripts/fix_libgpiod_v2.sh
+/path/to/rpi_tesaiot_client/scripts/fix_libgpiod_v2.sh
 
 # Build and install
 ./build.sh
@@ -164,7 +164,7 @@ cd linux-optiga-trust-m
 
 # Apply patch
 cd trustm_lib
-patch -p1 < /path/to/Portable_Deployment/scripts/libgpiod_v2.patch
+patch -p1 < /path/to/rpi_tesaiot_client/scripts/libgpiod_v2.patch
 cd ..
 
 # Build and install
@@ -225,7 +225,7 @@ i2cdetect -y 1
 Use the included install.sh script which handles dependency installation:
 
 ```bash
-cd Portable_Deployment
+cd rpi_tesaiot_client
 sudo ./install.sh
 ```
 
