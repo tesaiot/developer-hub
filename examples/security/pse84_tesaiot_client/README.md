@@ -2,9 +2,7 @@
 
 **Firmware Version:** v3.0.0 Production
 **TESAIoT Library:** v3.0.0
-**Date:** 2026-02-01
-
-**Status:** Production Ready
+**Date:** 2026-02-08
 
 This project demonstrates a **secure IoT device provisioning workflow** using:
 
@@ -24,6 +22,7 @@ This project demonstrates a **secure IoT device provisioning workflow** using:
 | **SAFE MODE** | Automatic fallback to Factory Certificate for recovery |
 | **Secure MQTT** | TLS 1.2/1.3 with hardware-bound keys |
 | **IoT Cybersecurity Compliant** | Follows NIST IR 8259A, IEC 62443, IEEE 802.1AR |
+| **Developer Crypto Utilities** | 14 hardware-accelerated functions (TRNG, AES, HMAC, ECDH, HKDF, ECDSA, counters) |
 
 ---
 
@@ -93,23 +92,23 @@ LcsO (Lifecycle State Object) = 0x07 (Operational)
 |                         TESAIoT Two-Certificate PKI Architecture                       |
 +========================================================================================+
 
-    FACTORY CERTIFICATE (Bootstrap)              DEVICE CERTIFICATE (Operational)
-    +------------------------------+             +------------------------------+
-    | OID: 0xE0E0                  |             | OID: 0xE0E1                  |
-    | Key: 0xE0F0                  |             | Key: 0xE0F1                  |
-    | Type: Pre-provisioned        |  -------->  | Type: Factory pre-provisioned       |
-    | Purpose: Initial TLS auth    |  Factory Provisioning   | Purpose: Production MQTT     |
-    | Status: Read-only            |             | Status: Renewable            |
-    +------------------------------+             +------------------------------+
-              |                                            |
-              v                                            v
-    +------------------------------+             +------------------------------+
-    | When Used:                   |             | When Used:                   |
-    | - First boot                 |             | - After factory provisioning       |
-    | - After board reset          |             | - Normal production mode     |
-    | - Recovery mode              |             | - Until cert expires/reset   |
-    | - factory provisioning    |             |                              |
-    +------------------------------+             +------------------------------+
+    FACTORY CERTIFICATE (Bootstrap)                        DEVICE CERTIFICATE (Operational)
+    +------------------------------+                       +------------------------------+
+    | OID: 0xE0E0                  |                       | OID: 0xE0E1                  |
+    | Key: 0xE0F0                  |                       | Key: 0xE0F1                  |
+    | Type: Pre-provisioned        |  ------------------>  | Type: Factory pre-provisioned|
+    | Purpose: Initial TLS auth    |  Factory Provisioning | Purpose: Production MQTT     |
+    | Status: Read-only            |                       | Status: Renewable            |
+    +------------------------------+                       +------------------------------+
+              |                                                           |
+              v                                                           v
+    +------------------------------+                       +------------------------------+
+    | When Used:                   |                       | When Used:                   |
+    | - First boot                 |                       | - After factory provisioning |
+    | - After board reset          |                       | - Normal production mode     |
+    | - Recovery mode              |                       | - Until cert expires/reset   |
+    | - factory provisioning       |                       |                              |
+    +------------------------------+                       +------------------------------+
 ```
 
 ### Certificate Selection Logic (SAFE MODE)
@@ -171,8 +170,8 @@ After device reset, the firmware uses **SAFE MODE** to ensure reliable operation
          | MQTT Connect Successful
          v
 +------------------+     Manual     +------------------+
-| User initiates renewal    |--------------->| Protected Update     |
-| Workflow         |                | Runs completely  |
+|User initiates    |--------------->| Protected Update |
+| renewal Workflow |                | Runs completely  |
 +------------------+                +--------+---------+
                                              |
                                              | New cert in 0xE0E1
@@ -440,18 +439,54 @@ pse84_trustm_tesaiot_mqtt_mTLS/
 
 ---
 
+## Developer Crypto Utilities (v3.0.0)
+
+14 hardware-accelerated crypto functions wrapping OPTIGA Trust M:
+
+| Function | Category | Description |
+|----------|----------|-------------|
+| `tesaiot_random_generate()` | TRNG | Hardware random bytes (CC EAL6+) |
+| `tesaiot_secure_store_write()` | Storage | Write to OPTIGA data object (14 slots) |
+| `tesaiot_secure_store_read()` | Storage | Read from OPTIGA data object |
+| `tesaiot_aes_generate_key()` | AES | Generate AES key in hardware (128/192/256) |
+| `tesaiot_aes_encrypt()` | AES | AES-CBC encrypt (key never leaves OPTIGA) |
+| `tesaiot_aes_decrypt()` | AES | AES-CBC decrypt |
+| `tesaiot_hmac_sha256()` | HMAC | HMAC-SHA256 with hardware key |
+| `tesaiot_ecdh_shared_secret()` | ECDH | P-256 shared secret derivation |
+| `tesaiot_hkdf_derive()` | KDF | HKDF-SHA256 key derivation (RFC 5869) |
+| `tesaiot_optiga_hash()` | Hash | SHA-256 hardware hash |
+| `tesaiot_sign_data()` | Sign | SHA-256 + ECDSA composite sign |
+| `tesaiot_counter_read()` | Counter | Read monotonic counter (anti-replay) |
+| `tesaiot_counter_increment()` | Counter | Increment monotonic counter |
+| `tesaiot_health_check()` | Diag | Comprehensive device health check |
+
+### Example Codes
+
+10 example files in `proj_cm33_ns/examples/` organized by OID use case:
+
+| Category | Examples | Description |
+|----------|----------|-------------|
+| A: Secure Storage | A1, A2 | Credential store, data encryption at rest |
+| B: Secure Communication | B1, B2, B3 | HMAC MQTT, E2E encryption, D2D channel |
+| C: Identification | C1, C2 | Signed telemetry, challenge-response auth |
+| D: Security Operations | D1, D2 | Anti-replay counter, health dashboard |
+| E: Application Patterns | E1 | Complete smart sensor workflow |
+
+---
+
 ## TESAIoT Library Architecture (v3.0.0)
 
 ### Header Files
 
-The project uses 9 consolidated TESAIoT headers (v3.0.0):
+The project uses 10 consolidated TESAIoT headers (v3.0.0):
 
 ```ini
 tesaiot/include/
 ├── tesaiot.h                  # Main umbrella (includes all)
 ├── tesaiot_config.h           # Configuration
+├── tesaiot_crypto.h           # Developer Crypto Utilities API (NEW in v3.0.0)
 ├── tesaiot_license_config.h   # Customer editable (UID + License Key)
-├── tesaiot_license.h          # License API (NEW in v3.0.0)
+├── tesaiot_license.h          # License API
 ├── tesaiot_optiga.h           # OPTIGA integration
 ├── tesaiot_optiga_core.h      # OPTIGA manager
 ├── tesaiot_platform.h         # MQTT + SNTP
@@ -502,4 +537,4 @@ OPTIGA Trust M integration and TESAIoT workflow by Assoc. Prof. Wiroon Sriborrir
 
 ---
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-02-08

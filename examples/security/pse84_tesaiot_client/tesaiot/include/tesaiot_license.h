@@ -18,10 +18,10 @@ extern "C" {
  * Version Information
  *============================================================================*/
 
-#define TESAIOT_VERSION_MAJOR 2
-#define TESAIOT_VERSION_MINOR 8
+#define TESAIOT_VERSION_MAJOR 3
+#define TESAIOT_VERSION_MINOR 0
 #define TESAIOT_VERSION_PATCH 0
-#define TESAIOT_VERSION_STRING "2.8.0"
+#define TESAIOT_VERSION_STRING "3.0.0"
 #define TESAIOT_VERSION_INT     ((TESAIOT_VERSION_MAJOR << 16) | \
                                   (TESAIOT_VERSION_MINOR << 8) | \
                                    TESAIOT_VERSION_PATCH)
