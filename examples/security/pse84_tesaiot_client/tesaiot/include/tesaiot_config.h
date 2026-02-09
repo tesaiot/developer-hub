@@ -304,6 +304,20 @@ typedef enum {
      (oid) == OPTIGA_CERT_OID_E0E1 || \
      (oid) == OPTIGA_CERT_OID_E0E2)
 
+/* Data Object OID validation (developer-accessible slots) */
+#define IS_VALID_DATA_OID(oid) \
+    (((oid) >= 0xF1D0 && (oid) <= 0xF1DB) || \
+     ((oid) >= 0xF1E0 && (oid) <= 0xF1E1))
+
+/* Counter OID validation (monotonic counters) */
+#define IS_VALID_COUNTER_OID(oid) \
+    ((oid) >= 0xE120 && (oid) <= 0xE123)
+
+/* Reserved OID check - these must not be written by developer crypto functions */
+#define IS_RESERVED_OID(oid) \
+    ((oid) == 0xE0E0 || (oid) == 0xE0E1 || (oid) == 0xE0E8 || \
+     (oid) == 0xF1D4)
+
 /*******************************************************************************
  * Test Data for Menu 8 Protected Update Isolated Testing
  ******************************************************************************/
