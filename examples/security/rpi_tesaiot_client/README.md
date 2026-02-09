@@ -57,9 +57,6 @@ Each device requires its own credentials in `include/tesaiot/tesaiot_config.h`:
 ### Step 1: Set Up Environment
 
 ```bash
-# Copy to target RPi
-scp -r Portable_Deployment/ pi@raspberrypi:/home/pi/
-
 # On target RPi
 cd /home/pi/Portable_Deployment
 
@@ -447,7 +444,7 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │ <───────────────────────────────────── │
             │ Topic: device/{id}/commands/certificate│
             │                                        │
-            │  6. Write Certificate to Target OID     │
+            │  6. Write Certificate to Target OID    │
             │     ┌─────────────────────────┐        │
             │     │   OPTIGA Trust M        │        │
             │     │   optiga_util_write_    │        │
