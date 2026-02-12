@@ -152,7 +152,7 @@ out/
 
 # VSCode
 .vscode/
-*.code-workspace
+# *.code-workspace
 
 # JetBrains
 .idea/
@@ -294,7 +294,7 @@ site/
 
 # Config files with credentials
 **/mqtt-quic-config.json
-**/mqtt_client_config.h
+# **/mqtt_client_config.h  (placeholder values only - safe to track)
 
 # Allow example/placeholder files
 !**/*.example.txt
