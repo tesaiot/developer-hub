@@ -12,7 +12,7 @@ enhance security operations. The overall application flow is described as follow
 Download source code for develop hub.
 
 ```c
- git clone https://github.com/tesaiot/developer-hub.git -b uart
+ git clone https://github.com/tesaiot/developer-hub.git -b uart_secure
  cd examples/uart_secure
  ./apply_patches.sh
 
