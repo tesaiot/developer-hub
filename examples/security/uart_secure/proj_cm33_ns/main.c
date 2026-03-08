@@ -767,7 +767,25 @@ optiga_crypt_hash(crypt,
            printf("%02X", uart_buffer[i]);
         printf("\n");*/
 #endif
+     index =0;
+     while (1)
+    {
+        ch = getchar();   // read one character from UART
 
+        if (index < BUFFER_SIZE)
+            uart_buffer[index++] = ch;
+
+       if (index >= 1 &&
+    (uart_buffer[index-1] == '\n' || uart_buffer[index-1] == '\r'))
+{
+    uart_buffer[index] = '\0';
+
+    printf("UART DBG>\r\n");
+
+    index = 0;
+}
+    }
+    
     optiga_util_close_application(optiga_util, 0);
     optiga_util_destroy(optiga_util);
     optiga_crypt_destroy(crypt);
