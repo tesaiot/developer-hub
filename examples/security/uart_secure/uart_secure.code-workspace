@@ -1,0 +1,44 @@
+{
+    "folders": [
+
+		{
+			"path": "."
+		},
+		{
+			"path": "proj_cm33_s"
+		},
+		{
+			"path": "proj_cm33_ns"
+		},
+		{
+			"path": "proj_cm55"
+		},
+		{
+			"path": "../mtb_shared"
+		}
+    ],
+    "settings": {
+        //mtb//  If this project will be shared with multiple users, the
+        //mtb//  modustoolbox.toolsPath property must be placed in user settings
+        //mtb//  file instead of this file.  The user settings file location for
+        //mtb//  VSCode depends on your OS:
+        //mtb//
+        //mtb//      Windows: %APPDATA%\Code\User\settings.json
+        //mtb//      macOS  : $HOME/Library/Application Support/Code/User/settings.json
+        //mtb//      Linux  : $HOME/.config/Code/User/settings.json
+        //mtb//
+        "modustoolbox.toolsPath": "/Applications/ModusToolbox/tools_3.7",
+        "cortex-debug.armToolchainPath": "/Users/thitipong/Applications/mtb-gcc-arm-eabi/14.2.1/gcc/bin",
+        "cortex-debug.openocdPath": "${config:modustoolbox.toolsPath}/../../../Users/thitipong/Applications/ModusToolboxProgtools-1.6/openocd/bin/openocd",
+        "cortex-debug.JLinkGDBServerPath.windows": "C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe",
+        "cortex-debug.JLinkGDBServerPath.osx": "/Applications/SEGGER/JLink/JLinkGDBServerCLExe",
+        "cortex-debug.JLinkGDBServerPath.linux": "JLinkGDBServerCLExe",
+        "clangd.arguments": [
+            "--background-index",
+            "--query-driver=/Users/thitipong/Applications/mtb-gcc-arm-eabi/14.2.1/gcc/bin/arm-none-eabi-*"
+        ]
+    },
+    "extensions": {
+        "recommendations": [ "marus25.cortex-debug", "ms-vscode.cpptools", "dan-c-underwood.arm" ]
+    }
+}

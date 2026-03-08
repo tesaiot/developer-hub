@@ -1,0 +1,6 @@
+MTB_CACHE_FULLPATH=/Users/thitipong/mtw/developer-hub/examples/security/uart_secure/.mtbqueryapi
+MTB_BUILD_SUPPORT=
+MTB_PROJECTS=proj_cm33_s proj_cm33_ns proj_cm55
+MTB_QUERY=1
+MTB_TOOLS_DIR=/Applications/ModusToolbox/tools_3.7
+MTB_TYPE=APPLICATION
