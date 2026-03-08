@@ -32,3 +32,29 @@ crypt_authen_key_test(RUNTIME);
 
 ```
 and program again 
+
+## Unlock UART with PC application
+
+In the demo firmware, a secure challenge–response mechanism is implemented. After the password is entered, a secure handshake is performed between the PC and the PSoC E84 using OPTIGA Trust. Once the handshake is successfully completed, the UART debug session is enabled.
+
+
+Mac osx 
+
+Run the command line with variables depending on the speed and UART port name
+
+```
+./uart_unlock.bin /dev/tty.usbmodem103 115200
+```
+![uart design](/images/UART_UNLOCK1.png)
+
+Window os
+
+
+```
+.\uart_unlock.exe COM5 115200
+
+```
+
+![uart design](/images/uart_unlock2.png)
+
+
