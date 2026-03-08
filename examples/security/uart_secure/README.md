@@ -5,7 +5,7 @@ Furthermore, the application leverages the Optiga™ Trust M hardware accelerato
 enhance security operations. The overall application flow is described as follows.
 
 
-![uart design](/images/uartflow.png)
+![uart design](images/uartflow.png)
 
 
 ## First environment setup
@@ -46,7 +46,7 @@ Run the command line with variables depending on the speed and UART port name
 ```
 ./uart_unlock.bin /dev/tty.usbmodem103 115200
 ```
-![uart design](/images/UART_UNLOCK1.png)
+![uart design](images/UART_UNLOCK1.png)
 
 Window os
 
@@ -56,6 +56,6 @@ Window os
 
 ```
 
-![uart design](/images/uart_unlock2.png)
+![uart design](images/uart_unlock2.png)
 
 
