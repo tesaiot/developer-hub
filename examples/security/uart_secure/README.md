@@ -37,6 +37,7 @@ and program again
 
 In the demo firmware, a secure challenge–response mechanism is implemented. After the password is entered, a secure handshake is performed between the PC and the PSoC E84 using OPTIGA Trust. Once the handshake is successfully completed, the UART debug session is enabled.
 
+[Download the UART UNLOCK from link](https://drive.google.com/file/d/1fhgSAcZ8EGK54jHMijGjPxxdUWiwBEIA/view?usp=share_link)
 
 Mac osx 
 
