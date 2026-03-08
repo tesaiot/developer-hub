@@ -83,6 +83,8 @@
 #include "semphr.h"
 #include "event_groups.h"
 
+
+
 /*----------------------------------------------------------------------------
  * TESAIoT Library v3.0.0 - Umbrella Headers (5 Domain Groups)
  *
@@ -118,6 +120,11 @@
 static mtb_hal_lptimer_t lptimer_obj;
 typedef mtb_hal_rtc_t rtc_type;
 extern EventGroupHandle_t data_received_event_group;
+#define BUFFER_SIZE 512
+uint8_t uart_buffer[BUFFER_SIZE];
+hash_data_from_host_t tesa_hash_pwd;
+uint8_t digest[32];   
+uint8_t message[] ={"TESA7abcd546FF711"};
 
 
 /*****************************************************************************
@@ -335,7 +342,7 @@ uint8_t random_data[16];
 
 void crypt_authen_key_test(int mode){
    
-    clear_terminal();
+    //clear_terminal();
     optiga_util_t *optiga_util = NULL;
     optiga_crypt_t *crypt = NULL;
    
@@ -410,10 +417,10 @@ void crypt_authen_key_test(int mode){
 
     if (OPTIGA_LIB_SUCCESS == optiga_lib_status)
     {
-        printf("Random number: ");
-        for (int i = 0; i < sizeof(random_data); i++)
-            printf("%02X", random_data[i]);
-        printf("\n");
+       // printf("Random number: ");
+       // for (int i = 0; i < sizeof(random_data); i++)
+       //     printf("%02X", random_data[i]);
+       // printf("\n");
     }
     else
     {
@@ -422,13 +429,13 @@ void crypt_authen_key_test(int mode){
 
 
     uint8_t iv[16] = {           // Initialization Vector
-        0xA0,0xA1,0xA2,0xA3,
-        0xA4,0xA5,0xA6,0xA7,
-        0xA8,0xA9,0xAA,0xAB,
+        'T','E','S','A',
+        '_','A','I','O',
+        'T','1',0xAA,0xAB,
         0xAC,0xAD,0xAE,0xAF
     };
    
-
+     memcpy(&iv[10],&random_data[10],6);
 
 if (mode == PROTECT_UPDATED){
 
@@ -601,13 +608,11 @@ const uint8_t target_key_oid_metadata[] =
 
 
 }else{
-#if 1
- hash_data_from_host_t tesa_hash_pwd;
-uint8_t digest[32];   
-uint8_t message[] ={"TESA7abcd546FF711"};
 
+ 
 tesa_hash_pwd.buffer =message;
-tesa_hash_pwd.length =sizeof(message);
+tesa_hash_pwd.length =17;
+
 
 optiga_lib_status = OPTIGA_LIB_BUSY;
 optiga_crypt_hash(crypt,
@@ -622,23 +627,88 @@ optiga_crypt_hash(crypt,
  }
  if (optiga_lib_status == OPTIGA_LIB_SUCCESS)
     {
-    printf("digest: ");
-        for (int i = 0; i < 32; i++)
-            printf("%02X",digest[i]);
-        printf("\n");
+    //printf("digest: ");
+     //   for (int i = 0; i < 32; i++)
+     //       printf("%02X",digest[i]);
+     //   printf("\n");
     }else{
     
         printf("Encryption failed : %s\n",optiga_status_to_str(optiga_lib_status));
     }
-#endif
+
+    uint8_t ch;
+    int index;
+    int rc;
+    index =0;
+    while (1)
+    {
+        ch = getchar();   // read one character from UART
+
+        if (index < BUFFER_SIZE)
+            uart_buffer[index++] = ch;
+
+        /* Detect CRLF */
+        if (index >= 2 &&
+            uart_buffer[index-2] == '\r' &&
+            uart_buffer[index-1] == '\n')
+        {
+           
+
+            //printf("Received: %s\n", uart_buffer);
+            rc = memcmp(digest,uart_buffer,32);
+            if (rc !=0){
+                printf("FAILED\r\n");
+                
+            }else{
+                printf("OK\r\n");
+                break;
+            }
+             uart_buffer[index] = '\0';
+             index = 0;   // reset buffer
+        }
+    }
+  
+
+
 
 // enable the encryptedv ...
-   memcpy(plain,random_data,16);
-        printf("plaintext: ");
+     memcpy(plain,random_data,16);
+       // printf("plaintext: ");
         for (int i = 0; i < 16; i++)
-            printf("%02X",plain[i]);
-        printf("\n");
- 
+            //printf("%02X",plain[i]);
+            putchar(plain[i]);
+        putchar(0xd);
+        putchar(0xa);    
+            //printf("\n");
+
+       memset(uart_buffer,0,sizeof(uart_buffer));     
+       index =0;
+       while(1){
+            
+        ch = getchar();   // read one character from UART
+
+        if (index < BUFFER_SIZE)
+            uart_buffer[index++] = ch;
+
+        /* Detect CRLF */
+        if (index >= 2 &&
+            uart_buffer[index-2] == '\r' &&
+            uart_buffer[index-1] == '\n')
+        {
+           
+
+            //printf("Received: %s\n", uart_buffer);
+  
+
+            
+            uart_buffer[index] = '\0';
+            index = 0;   // reset buffer
+            break;
+        }
+
+
+        }          
+
  #if 1
  // 4️⃣ Encrypt
     optiga_lib_status = OPTIGA_LIB_BUSY;
@@ -660,10 +730,21 @@ optiga_crypt_hash(crypt,
 
     if (optiga_lib_status == OPTIGA_LIB_SUCCESS)
     {
-        printf("Ciphertext: ");
-        for (int i = 0; i < sizeof(cipher); i++)
-            printf("%02X", cipher[i]);
-        printf("\n");
+        //printf("Ciphertext: ");
+        //for (int i = 0; i < sizeof(cipher); i++)
+         //   printf("%02X", cipher[i]);
+        //printf("\n");
+           rc = memcmp(cipher,uart_buffer,16);
+        if (rc !=0){
+                printf("FAILED\r\n");
+            
+            }else{
+                printf("PSOC_AI_E64>\r\n");
+               
+            }
+
+
+
     }
     else
     {
@@ -671,7 +752,20 @@ optiga_crypt_hash(crypt,
     }
 
 
-
+ 
+  printf("end\r\n");
+ /* printf("Ciphertext: ");
+    for (int i = 0; i < sizeof(cipher); i++)
+           printf("%02X", cipher[i]);
+        printf("\n");
+  printf("IV :");
+  for (int i = 0; i < sizeof(cipher); i++)
+           printf("%02X", iv[i]);
+        printf("\n");  
+  printf("uart buff :");
+  for (int i = 0; i < 16; i++)
+           printf("%02X", uart_buffer[i]);
+        printf("\n");*/
 #endif
 
     optiga_util_close_application(optiga_util, 0);
@@ -862,7 +956,7 @@ int main(void)
 
     /* Enable CM55. CY_CORTEX_M55_APPL_ADDR must be updated if CM55 memory layout is changed. */
     Cy_SysEnableCM55(MXCM55, CY_CM55_APP_BOOT_ADDR, CM55_BOOT_WAIT_TIME_US);
-      clear_terminal();
+    // clear_terminal();
 
     /*Create an OPTIGA Task */
     result = xTaskCreate(optiga_client_task, "OPTIGA", 1024 * 12, NULL, 2, NULL);
