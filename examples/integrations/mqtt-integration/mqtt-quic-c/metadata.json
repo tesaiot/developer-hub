@@ -1,0 +1,33 @@
+{
+  "board": {
+    "architecture": "any",
+    "bsp": "",
+    "display_name": "Any (Software)",
+    "id": "any"
+  },
+  "description": "This example demonstrates connecting to the TESAIoT Platform using MQTT over QUIC with NanoSDK and MsQuic for faster connections and improved reliability.",
+  "display_name": "MQTT over QUIC C/C++ Example",
+  "download": {
+    "format": "zip",
+    "url": "https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/mqtt-quic-c"
+  },
+  "links": {
+    "readme": "https://github.com/tesaiot/developer-hub/blob/main/examples/integrations/mqtt-integration/mqtt-quic-c/README.md",
+    "repository": "https://github.com/tesaiot/developer-hub/tree/main/examples/integrations/mqtt-integration/mqtt-quic-c"
+  },
+  "quick_start_steps": [
+    "Step 1 — Install dependencies (e.g., GCC, CMake, MsQuic, NanoSDK) using the provided install_deps.sh script or manual steps.",
+    "Step 2 — Download MQTT-QUIC credentials from the TESAIoT Platform and place the CA certificate (ca-chain.pem) in the certs folder.",
+    "Step 3 — Build the project using CMake and make in a build directory.",
+    "Step 4 — Run the compiled executable with device ID and password arguments to connect to the MQTT broker via QUIC."
+  ],
+  "schema_version": "1.0.0",
+  "template_id": "mqtt-quic-c-example",
+  "template_type": "application",
+  "toolchain": {
+    "build_system": "CMake",
+    "compiler": "GCC 11+",
+    "ide": "CMake",
+    "ide_version": "3.16+"
+  }
+}
