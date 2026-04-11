@@ -6,6 +6,7 @@
   "difficulty": "beginner",
   "domain": "Sensors",
   "tags": [
+    "tesaiot",
     "dps368",
     "pressure",
     "temperature",

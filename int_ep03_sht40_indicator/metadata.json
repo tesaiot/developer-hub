@@ -6,6 +6,7 @@
   "difficulty": "beginner",
   "domain": "Sensors",
   "tags": [
+    "tesaiot",
     "sht40",
     "sht4x",
     "humidity",

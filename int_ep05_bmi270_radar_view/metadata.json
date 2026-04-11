@@ -6,6 +6,7 @@
   "difficulty": "intermediate",
   "domain": "Sensors",
   "tags": [
+    "tesaiot",
     "bmi270",
     "imu",
     "radar",

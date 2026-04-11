@@ -6,6 +6,7 @@
   "difficulty": "advanced",
   "domain": "Sensors",
   "tags": [
+    "tesaiot",
     "sensorhub",
     "dps368",
     "sht4x",

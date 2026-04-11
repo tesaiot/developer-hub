@@ -6,6 +6,7 @@
   "difficulty": "intermediate",
   "domain": "Sensors",
   "tags": [
+    "tesaiot",
     "bmm350",
     "magnetometer",
     "compass",

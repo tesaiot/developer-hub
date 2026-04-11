@@ -6,6 +6,7 @@
   "difficulty": "beginner",
   "domain": "UI Navigation",
   "tags": [
+    "tesaiot",
     "lvgl",
     "menu",
     "tabs",

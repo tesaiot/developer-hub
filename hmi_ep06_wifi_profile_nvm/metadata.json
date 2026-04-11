@@ -6,6 +6,7 @@
   "difficulty": "intermediate",
   "domain": "WiFi",
   "tags": [
+    "tesaiot",
     "lvgl",
     "wifi",
     "profile",
