@@ -14,7 +14,7 @@
   ],
   "boards": [
     "KIT_PSE84_AI",
-    "KIT_PSE84_EVAL_EPC2"
+    "TESAIoT_PSE84_AI"
   ],
   "files": [
     "main_example.c",

@@ -5,8 +5,19 @@
   "episode_order": 5,
   "difficulty": "intermediate",
   "domain": "Sensors",
-  "tags": ["bmi270", "imu", "radar", "motion", "visualization", "i2c", "lvgl"],
-  "boards": ["KIT_PSE84_AI"],
+  "tags": [
+    "bmi270",
+    "imu",
+    "radar",
+    "motion",
+    "visualization",
+    "i2c",
+    "lvgl"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "TESAIoT_PSE84_AI"
+  ],
   "files": [
     "main_example.c",
     "app_ui/radar/radar_presenter.c",
