@@ -1,0 +1,48 @@
+{
+  "title": "EP07 — Final WiFi Manager",
+  "description": "รวม scan + profile + connect + auto-retry + ping watchdog เป็น WiFi manager สมบูรณ์ พร้อม state machine บนหน้าจอและ auto-connect จาก profile ที่เก็บไว้",
+  "series": "hmi_menu_setting",
+  "episode_order": 7,
+  "difficulty": "intermediate",
+  "domain": "WiFi",
+  "tags": [
+    "lvgl",
+    "wifi",
+    "manager",
+    "connect",
+    "retry",
+    "auto-connect",
+    "state-machine"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "nav/ui_menu_navigation.c",
+    "nav/ui_menu_navigation.h",
+    "nav/ui_menu_layout.h",
+    "nav/menu_nav_logic.c",
+    "nav/menu_nav_logic.h",
+    "wifi_list/ui_wifi_list_page.c",
+    "wifi_list/ui_wifi_list_page.h",
+    "wifi_list/wifi_scan_service.c",
+    "wifi_list/wifi_scan_service.h",
+    "wifi_list/wifi_scan_types.h",
+    "wifi_profile/ui_wifi_profile_page.c",
+    "wifi_profile/ui_wifi_profile_page.h",
+    "wifi_profile/wifi_profile_store.c",
+    "wifi_profile/wifi_profile_store.h",
+    "wifi_profile/wifi_profile_types.h",
+    "wifi_conn/ui_wifi_status_page.c",
+    "wifi_conn/ui_wifi_status_page.h",
+    "wifi_conn/wifi_connection_service.c",
+    "wifi_conn/wifi_connection_service.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": true,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep07-final-wifi-manager"
+}

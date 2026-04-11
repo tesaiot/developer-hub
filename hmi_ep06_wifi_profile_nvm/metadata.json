@@ -1,0 +1,43 @@
+{
+  "title": "EP06 — WiFi Profile NVM",
+  "description": "เก็บ SSID + password ลง non-volatile memory — form กรอก profile ผ่าน lv_textarea (password mode) และ save/load ผ่าน profile store",
+  "series": "hmi_menu_setting",
+  "episode_order": 6,
+  "difficulty": "intermediate",
+  "domain": "WiFi",
+  "tags": [
+    "lvgl",
+    "wifi",
+    "profile",
+    "nvm",
+    "persistence",
+    "password"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "nav/ui_menu_navigation.c",
+    "nav/ui_menu_navigation.h",
+    "nav/ui_menu_layout.h",
+    "nav/menu_nav_logic.c",
+    "nav/menu_nav_logic.h",
+    "wifi_list/ui_wifi_list_page.c",
+    "wifi_list/ui_wifi_list_page.h",
+    "wifi_list/wifi_scan_service.c",
+    "wifi_list/wifi_scan_service.h",
+    "wifi_list/wifi_scan_types.h",
+    "wifi_profile/ui_wifi_profile_page.c",
+    "wifi_profile/ui_wifi_profile_page.h",
+    "wifi_profile/wifi_profile_store.c",
+    "wifi_profile/wifi_profile_store.h",
+    "wifi_profile/wifi_profile_types.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": true,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep06-wifi-profile-nvm"
+}

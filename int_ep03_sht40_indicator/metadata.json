@@ -1,0 +1,38 @@
+{
+  "title": "EP03 — SHT40 Indicator",
+  "description": "วัดความชื้นสัมพัทธ์และอุณหภูมิด้วยเซนเซอร์ Sensirion SHT4x บน I2C แล้วแสดงผลเป็นตัวบ่งชี้บนจอ LVGL",
+  "series": "interactive",
+  "episode_order": 3,
+  "difficulty": "beginner",
+  "domain": "Sensors",
+  "tags": [
+    "sht40",
+    "sht4x",
+    "humidity",
+    "temperature",
+    "environmental",
+    "i2c",
+    "lvgl"
+  ],
+  "boards": [
+    "KIT_PSE84_AI"
+  ],
+  "files": [
+    "main_example.c",
+    "app_ui/sht4x/sht4x_presenter.c",
+    "app_ui/sht4x/sht4x_presenter.h",
+    "app_ui/sht4x/sht4x_view.c",
+    "app_ui/sht4x/sht4x_view.h",
+    "app_sensor/sht4x/sht4x_config.h",
+    "app_sensor/sht4x/sht4x_driver.c",
+    "app_sensor/sht4x/sht4x_driver.h",
+    "app_sensor/sht4x/sht4x_reader.c",
+    "app_sensor/sht4x/sht4x_reader.h",
+    "app_sensor/sht4x/sht4x_types.h"
+  ],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-interactive-examples",
+  "upstream_branch": "ep03-sht40-indicator"
+}

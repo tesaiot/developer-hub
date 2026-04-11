@@ -1,0 +1,32 @@
+{
+  "title": "EP03 — Text Input Keyboard",
+  "description": "lv_textarea + lv_keyboard — รับ input แบบ realtime และแบบ commit-on-OK พร้อม dropdown เลือกโหมด normal / number",
+  "series": "hmi_menu_setting",
+  "episode_order": 3,
+  "difficulty": "beginner",
+  "domain": "UI Widgets",
+  "tags": [
+    "lvgl",
+    "textarea",
+    "keyboard",
+    "dropdown",
+    "input"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "ui_text_input_keyboard.c",
+    "ui_text_input_keyboard.h",
+    "ui_text_input_layout.h",
+    "text_input_logic.c",
+    "text_input_logic.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep03-text-input-keyboard"
+}

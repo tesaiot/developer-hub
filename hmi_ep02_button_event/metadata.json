@@ -1,0 +1,31 @@
+{
+  "title": "EP02 — Button Event",
+  "description": "ปุ่ม UP / DOWN / RESET ที่ตอบสนองต่อ LV_EVENT_PRESSED และ LV_EVENT_LONG_PRESSED_REPEAT — แยก UI logic ออกจาก counter logic",
+  "series": "hmi_menu_setting",
+  "episode_order": 2,
+  "difficulty": "beginner",
+  "domain": "UI Widgets",
+  "tags": [
+    "lvgl",
+    "button",
+    "event",
+    "counter",
+    "callback"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "ui_button_counter.c",
+    "ui_button_counter.h",
+    "counter_logic.c",
+    "counter_logic.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep02-button-event"
+}

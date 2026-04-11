@@ -1,0 +1,32 @@
+{
+  "title": "EP04 — Menu Navigation",
+  "description": "โครง navigation หลัก — top nav bar พร้อมปุ่มสลับหน้า + icon action buttons + stage container ที่โหลดหน้าใหม่เมื่อผู้ใช้เลือกเมนู",
+  "series": "hmi_menu_setting",
+  "episode_order": 4,
+  "difficulty": "beginner",
+  "domain": "UI Navigation",
+  "tags": [
+    "lvgl",
+    "menu",
+    "tabs",
+    "navigation",
+    "layout"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "nav/ui_menu_navigation.c",
+    "nav/ui_menu_navigation.h",
+    "nav/ui_menu_layout.h",
+    "nav/menu_nav_logic.c",
+    "nav/menu_nav_logic.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep04-menu-navigation"
+}

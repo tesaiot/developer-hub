@@ -1,0 +1,37 @@
+{
+  "title": "EP05 — WiFi List",
+  "description": "สแกน WiFi ผ่าน WHD/cy_wcm แล้วแสดงผลเป็น list พร้อม RSSI + security type — เพิ่มหน้า WiFi Scan เข้าไปใน shell ของ EP04",
+  "series": "hmi_menu_setting",
+  "episode_order": 5,
+  "difficulty": "intermediate",
+  "domain": "WiFi",
+  "tags": [
+    "lvgl",
+    "wifi",
+    "scan",
+    "list",
+    "cy_wcm"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c",
+    "nav/ui_menu_navigation.c",
+    "nav/ui_menu_navigation.h",
+    "nav/ui_menu_layout.h",
+    "nav/menu_nav_logic.c",
+    "nav/menu_nav_logic.h",
+    "wifi_list/ui_wifi_list_page.c",
+    "wifi_list/ui_wifi_list_page.h",
+    "wifi_list/wifi_scan_service.c",
+    "wifi_list/wifi_scan_service.h",
+    "wifi_list/wifi_scan_types.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": true,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-hmi-menu-setting-examples",
+  "upstream_branch": "ep05-wifi-list"
+}

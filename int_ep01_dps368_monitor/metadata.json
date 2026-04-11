@@ -1,0 +1,43 @@
+{
+  "title": "EP01 — DPS368 Monitor",
+  "description": "อ่านค่าความดันบรรยากาศและอุณหภูมิจากเซนเซอร์ Infineon DPS368 ผ่าน I2C แล้วแสดงผลบนจอ LVGL",
+  "series": "interactive",
+  "episode_order": 1,
+  "difficulty": "beginner",
+  "domain": "Sensors",
+  "tags": [
+    "dps368",
+    "pressure",
+    "temperature",
+    "barometer",
+    "i2c",
+    "lvgl"
+  ],
+  "boards": [
+    "KIT_PSE84_AI"
+  ],
+  "files": [
+    "main_example.c",
+    "app_ui/basic_label_legacy.c",
+    "app_ui/basic_label_legacy.h",
+    "app_ui/dps368_monitor_legacy.c",
+    "app_ui/dps368_monitor_legacy.h",
+    "app_ui/dps368/dps368_presenter.c",
+    "app_ui/dps368/dps368_presenter.h",
+    "app_ui/dps368/dps368_view.c",
+    "app_ui/dps368/dps368_view.h",
+    "app_sensor/app_dps368_service.c",
+    "app_sensor/app_dps368_service.h",
+    "app_sensor/dps368/dps368_config.h",
+    "app_sensor/dps368/dps368_driver.c",
+    "app_sensor/dps368/dps368_driver.h",
+    "app_sensor/dps368/dps368_reader.c",
+    "app_sensor/dps368/dps368_reader.h",
+    "app_sensor/dps368/dps368_types.h"
+  ],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-interactive-examples",
+  "upstream_branch": "ep01-dps368-monitor"
+}

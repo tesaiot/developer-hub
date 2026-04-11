@@ -1,0 +1,28 @@
+{
+  "title": "EP05 — BMI270 Radar View",
+  "description": "นำข้อมูล accelerometer/gyroscope จาก BMI270 มาวาดเป็น motion radar บนจอ LVGL เพื่อให้เห็นทิศทางการเคลื่อนไหวแบบ polar",
+  "series": "interactive",
+  "episode_order": 5,
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": ["bmi270", "imu", "radar", "motion", "visualization", "i2c", "lvgl"],
+  "boards": ["KIT_PSE84_AI"],
+  "files": [
+    "main_example.c",
+    "app_ui/radar/radar_presenter.c",
+    "app_ui/radar/radar_presenter.h",
+    "app_ui/radar/radar_view.c",
+    "app_ui/radar/radar_view.h",
+    "app_sensor/bmi270/bmi270_config.h",
+    "app_sensor/bmi270/bmi270_driver.c",
+    "app_sensor/bmi270/bmi270_driver.h",
+    "app_sensor/bmi270/bmi270_reader.c",
+    "app_sensor/bmi270/bmi270_reader.h",
+    "app_sensor/bmi270/bmi270_types.h"
+  ],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-interactive-examples",
+  "upstream_branch": "ep05-bmi270-radar-view"
+}

@@ -1,0 +1,37 @@
+{
+  "title": "EP04 — BMM350 Compass",
+  "description": "สร้างเข็มทิศดิจิทัลจากเซนเซอร์สนามแม่เหล็ก Bosch BMM350 บน I3C พร้อมฟีเจอร์ปรับแต่ง (hard-iron calibration)",
+  "series": "interactive",
+  "episode_order": 4,
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "bmm350",
+    "magnetometer",
+    "compass",
+    "calibration",
+    "i3c",
+    "lvgl"
+  ],
+  "boards": [
+    "KIT_PSE84_AI"
+  ],
+  "files": [
+    "main_example.c",
+    "app_ui/bmm350/bmm350_presenter.c",
+    "app_ui/bmm350/bmm350_presenter.h",
+    "app_ui/bmm350/bmm350_view.c",
+    "app_ui/bmm350/bmm350_view.h",
+    "app_sensor/bmm350/bmm350_config.h",
+    "app_sensor/bmm350/bmm350_driver.c",
+    "app_sensor/bmm350/bmm350_driver.h",
+    "app_sensor/bmm350/bmm350_reader.c",
+    "app_sensor/bmm350/bmm350_reader.h",
+    "app_sensor/bmm350/bmm350_types.h"
+  ],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-interactive-examples",
+  "upstream_branch": "ep04-bmm350-compass"
+}

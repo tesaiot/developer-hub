@@ -1,0 +1,26 @@
+{
+  "title": "EP06 — Digital Mic Probe",
+  "description": "เก็บสัญญาณเสียงจากไมโครโฟน PDM สเตอริโอบนบอร์ด คำนวณระดับความดังซ้าย/ขวาแล้วแสดงเป็น level meter บนจอ LVGL",
+  "series": "interactive",
+  "episode_order": 6,
+  "difficulty": "intermediate",
+  "domain": "Audio",
+  "tags": ["pdm", "microphone", "audio", "stereo", "level-meter", "lvgl"],
+  "boards": ["KIT_PSE84_AI"],
+  "files": [
+    "main_example.c",
+    "app_ui/mic/mic_presenter.c",
+    "app_ui/mic/mic_presenter.h",
+    "app_ui/mic/mic_view.c",
+    "app_ui/mic/mic_view.h",
+    "app_audio/pdm/pdm_mic.c",
+    "app_audio/pdm/pdm_mic.h",
+    "app_audio/pdm/pdm_probe_logger.c",
+    "app_audio/pdm/pdm_probe_logger.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": true,
+  "upstream_repo": "tesaiot-platform/human-machine-display-tesaiot-dev-kit-interactive-examples",
+  "upstream_branch": "ep06-digital-mic-probe"
+}
