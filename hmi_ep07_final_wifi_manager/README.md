@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 7 / 7 • **ระดับ:** intermediate
 
+## Screenshot
+
+![hmi_ep07_final_wifi_manager](hmi_ep07_final_wifi_manager.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 ep05 สอนการ scan, ep06 สอนการเก็บ profile ลง NVM — แต่ทั้งสอง episode ยังไม่

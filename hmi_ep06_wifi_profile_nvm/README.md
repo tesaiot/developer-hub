@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 6 / 7 • **ระดับ:** intermediate
 
+## Screenshot
+
+![hmi_ep06_wifi_profile_nvm](hmi_ep06_wifi_profile_nvm.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 ep05 scan WiFi ได้แล้ว แต่ทุกครั้งที่ผู้ใช้ปิดเครื่อง/รีบูต list ก็หายหมด

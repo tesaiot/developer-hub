@@ -4,6 +4,10 @@
 
 ---
 
+## Screenshot
+
+![int_ep02_bmi270_motion_visual](int_ep02_bmi270_motion_visual.png)
+
 ## Why — ทำไมต้องเรียนตอนนี้
 
 **BMI270** เป็น inertial measurement unit (IMU) 6 แกนจาก Bosch Sensortec ออกแบบมาสำหรับสวมใส่ (wearables) และสมาร์ทโฟน จุดเด่น:

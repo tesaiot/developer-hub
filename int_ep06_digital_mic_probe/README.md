@@ -4,6 +4,10 @@
 
 ---
 
+## Screenshot
+
+![int_ep06_digital_mic_probe](int_ep06_digital_mic_probe.png)
+
 ## Why — ทำไมต้องเรียนตอนนี้
 
 บอร์ด PSoC Edge มี peripheral ชื่อ **PDM/PCM converter** — ของจริงของมันคือ:

@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 5 / 7 • **ระดับ:** intermediate
 
+## Screenshot
+
+![hmi_ep05_wifi_list](hmi_ep05_wifi_list.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 ก่อนจะ "เชื่อมต่อ" WiFi ได้ (ep07) ผู้ใช้ต้องมองเห็นก่อนว่ามีเครือข่ายอะไรบ้างให้เลือก

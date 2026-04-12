@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 4 / 7 • **ระดับ:** beginner
 
+## Screenshot
+
+![hmi_ep04_menu_navigation](hmi_ep04_menu_navigation.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 จนถึง ep03 เราวาดหน้าจอ "เดียว" ที่ทำงานเสร็จในตัวเอง แต่ในแอป HMI จริงผู้ใช้

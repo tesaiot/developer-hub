@@ -4,6 +4,10 @@
 
 ---
 
+## Screenshot
+
+![int_ep03_sht40_indicator](int_ep03_sht40_indicator.png)
+
 ## Why — ทำไมต้องเรียนตอนนี้
 
 **SHT4x** series (SHT40 / SHT41 / SHT45) คือเซนเซอร์ humidity + temperature ของ Sensirion ที่ได้ชื่อว่า **แม่นที่สุดในตลาด** ในระดับราคา:

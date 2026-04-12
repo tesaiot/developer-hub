@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 2 / 7 • **ระดับ:** beginner
 
+## Screenshot
+
+![hmi_ep02_button_event](hmi_ep02_button_event.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 ในโลกจริง UI ที่ไม่ตอบสนอง input ก็ไม่ต่างจากภาพ wallpaper หลัง ep01 เรามีหน้าจอ

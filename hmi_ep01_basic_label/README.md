@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 1 / 7 • **ระดับ:** beginner
 
+## Screenshot
+
+![hmi_ep01_basic_label](hmi_ep01_basic_label.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 ทุกคนที่เขียน GUI บน embedded board ต้องเริ่มจาก "ทำยังไงให้มีอะไรโผล่ขึ้นบนหน้าจอ"

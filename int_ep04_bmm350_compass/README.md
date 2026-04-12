@@ -4,6 +4,10 @@
 
 ---
 
+## Screenshot
+
+![int_ep04_bmm350_compass](int_ep04_bmm350_compass.png)
+
 ## Why — ทำไมต้องเรียนตอนนี้
 
 **BMM350** คือ **3-axis magnetometer** รุ่นล่าสุดของ Bosch (2023) เด่นที่:

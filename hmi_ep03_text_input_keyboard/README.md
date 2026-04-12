@@ -2,6 +2,10 @@
 
 > **Series:** HMI Menu & Setting • **Episode:** 3 / 7 • **ระดับ:** beginner
 
+## Screenshot
+
+![hmi_ep03_text_input_keyboard](hmi_ep03_text_input_keyboard.png)
+
 ## Why — ทำไมต้องเรียนตัวอย่างนี้?
 
 HMI ส่วนใหญ่ต้องให้ผู้ใช้ "พิมพ์อะไรบางอย่าง" — ชื่อ WiFi, password, ค่า setpoint
