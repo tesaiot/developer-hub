@@ -113,8 +113,9 @@ INCLUDES+=
 # app_assets/ holds assets (logo, theme icons) that every episode would
 # otherwise duplicate — kept in the master to eliminate ~1.6 MB × N
 # duplication of app_logo.c across episodes.
-INCLUDES += ./core_cfg ./platform ./lvgl_cfg ./lvgl_port ./lvgl_override ./app_assets ./app_core
+INCLUDES += ./core_cfg ./platform ./lvgl_cfg ./lvgl_port ./lvgl_override ./app_assets ./app_core ./app_sensor
 INCLUDES += $(shell find ./apps -type d 2>/dev/null)
+INCLUDES += $(shell find ./app_sensor -type d 2>/dev/null)
 
 # Add additional defines to the build process (without a leading -D).
 # CYBSP_WIFI_CAPABLE required by wifi-core-freertos-lwip-mbedtls middleware
