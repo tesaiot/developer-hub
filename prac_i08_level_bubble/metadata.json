@@ -1,0 +1,17 @@
+{
+  "title": "Level Bubble",
+  "description": "ระดับน้ำฟองอากาศ 2 มิติจาก BMI270 ฟองอากาศเคลื่อนที่ตามมุมเอียงของบอร์ดบนตาราง crosshair พร้อมแสดงสถานะ level/tilted ใช้ app_sensor อ่านเซ็นเซอร์ตรง",
+  "series": "practise",
+  "episode_order": 8,
+  "difficulty": "intermediate",
+  "domain": "Data Visualization",
+  "tags": ["tesaiot", "lvgl", "bubble-level", "bmi270", "accelerometer", "sensor", "tilt"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "sensor_kit_dependency": "app_sensor/bmi270",
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i08_level_bubble"
+}

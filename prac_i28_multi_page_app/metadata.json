@@ -1,0 +1,16 @@
+{
+  "title": "Multi-Page Navigation App",
+  "description": "รูปแบบการนำทางหลายหน้าพร้อม navigation stack, แถบแท็บด้านล่าง และสามหน้า (Home, Sensors, Settings) สาธิตการจัดการ page lifecycle",
+  "series": "practise",
+  "episode_order": 28,
+  "difficulty": "intermediate",
+  "domain": "Layout",
+  "tags": ["tesaiot", "lvgl", "navigation", "multi-page", "tab-bar", "page-manager", "stack"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i28_multi_page_app"
+}

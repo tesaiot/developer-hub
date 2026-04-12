@@ -1,0 +1,16 @@
+{
+  "title": "Rich Text LCD Console",
+  "description": "คอนโซลแบบเทอร์มินัลบนหน้าจอ LVGL พร้อมระบบ log สี่ระดับ (INFO/WARN/ERROR/DEBUG) แสดง timestamp อัตโนมัติ auto-scroll และ ring buffer 50 บรรทัด",
+  "series": "practise",
+  "episode_order": 33,
+  "difficulty": "intermediate",
+  "domain": "Utility",
+  "tags": ["tesaiot", "lvgl", "console", "terminal", "logging", "ring-buffer", "textarea"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i33_lcd_console"
+}

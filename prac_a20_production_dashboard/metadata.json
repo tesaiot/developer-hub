@@ -1,0 +1,16 @@
+{
+  "title": "Production Dashboard",
+  "description": "แดชบอร์ดการผลิตระดับอุตสาหกรรม แสดงการ์ดเซ็นเซอร์ 4 ตัว (BMI270, DPS368, SHT4x, BMM350) กราฟ accel แบบเรียลไทม์ และตัวบอกสถานะระบบ อ่านค่าเซ็นเซอร์โดยตรงผ่าน app_sensor",
+  "series": "practise",
+  "episode_order": 20,
+  "difficulty": "advanced",
+  "domain": "ui-integration",
+  "tags": ["tesaiot", "lvgl", "dashboard", "industrial", "sensor", "chart", "bmi270", "dps368", "sht4x", "bmm350", "production"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "a20_production_dashboard"
+}

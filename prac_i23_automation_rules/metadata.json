@@ -1,0 +1,17 @@
+{
+  "title": "Automation Rules",
+  "description": "ระบบกฎอัตโนมัติ 4 กฎ ตรวจสอบค่าเซ็นเซอร์ BMI270, DPS368, SHT4x เทียบ threshold แสดงผล TRIGGERED/Normal แบบเรียลไทม์",
+  "series": "practise",
+  "episode_order": 23,
+  "difficulty": "intermediate",
+  "domain": "Automation",
+  "tags": ["tesaiot", "lvgl", "automation", "rules", "sensor", "bmi270", "dps368", "sht4x", "threshold"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "sensors_used": ["BMI270", "DPS368", "SHT4x"],
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i23_automation_rules"
+}

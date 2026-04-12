@@ -1,0 +1,16 @@
+{
+  "title": "Snake Game",
+  "description": "เกมงูคลาสสิกแบบทัชสกรีน ตาราง 30x24 ช่อง ควบคุมด้วย D-pad พร้อมระบบตา ลิ้น และธีม Game Boy 4 โทนสี",
+  "series": "practise",
+  "episode_order": 12,
+  "difficulty": "advanced",
+  "domain": "Games",
+  "tags": ["tesaiot", "lvgl", "game", "canvas", "touch", "snake"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "a12_snake_game"
+}

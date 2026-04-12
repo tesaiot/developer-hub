@@ -1,0 +1,17 @@
+{
+  "title": "Environmental Monitor",
+  "description": "ตรวจวัดอุณหภูมิ ความชื้น และความดันอากาศ จาก DPS368+SHT4x พร้อมลูกศรแสดงแนวโน้ม และประเมินโซนความสบาย",
+  "series": "practise",
+  "episode_order": 6,
+  "difficulty": "intermediate",
+  "domain": "Environment",
+  "tags": ["tesaiot", "lvgl", "environment", "sensor", "dps368", "sht4x", "temperature", "humidity", "pressure"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "sensors_used": ["DPS368", "SHT4x"],
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i06_environ_monitor"
+}

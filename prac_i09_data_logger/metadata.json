@@ -1,0 +1,17 @@
+{
+  "title": "Data Logger",
+  "description": "บันทึกค่าเซ็นเซอร์ BMI270, DPS368, SHT4x พร้อม timestamp ลงใน scrollable list รองรับ Start/Stop และ Clear",
+  "series": "practise",
+  "episode_order": 9,
+  "difficulty": "intermediate",
+  "domain": "Analytics",
+  "tags": ["tesaiot", "lvgl", "logger", "sensor", "bmi270", "dps368", "sht4x", "timer"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "sensors_used": ["BMI270", "DPS368", "SHT4x"],
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i09_data_logger"
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Motion Detector",
+  "description": "ตรวจจับการเคลื่อนไหวจากค่าความเร่ง BMI270 แสดงสถานะ alert, นับจำนวนครั้ง และบันทึกประวัติเหตุการณ์แบบ scrollable ใช้ app_sensor อ่านเซ็นเซอร์ตรง",
+  "series": "practise",
+  "episode_order": 7,
+  "difficulty": "intermediate",
+  "domain": "Data Visualization",
+  "tags": ["tesaiot", "lvgl", "motion", "bmi270", "accelerometer", "sensor", "alert", "log"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "sensor_kit_dependency": "app_sensor/bmi270",
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i07_motion_detector"
+}

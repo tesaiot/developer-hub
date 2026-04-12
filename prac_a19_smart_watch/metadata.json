@@ -1,0 +1,16 @@
+{
+  "title": "Multi-Screen Smart Watch",
+  "description": "นาฬิกาอัจฉริยะแบบหน้าจอกลม มี 4 หน้าปัดเลื่อนได้ (Clock, Sensors, Steps, Weather) ใช้ LVGL tileview พร้อม dot indicator อ่านเซ็นเซอร์โดยตรงผ่าน app_sensor (BMI270, DPS368, SHT4x, BMM350)",
+  "series": "practise",
+  "episode_order": 19,
+  "difficulty": "advanced",
+  "domain": "smartwatch",
+  "tags": ["tesaiot", "lvgl", "smartwatch", "swipe", "multi-screen", "sensor", "tileview", "clock", "steps", "weather", "bmi270", "dps368", "sht4x", "bmm350"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c", "watch_screens.h", "watch_clock.c", "watch_sensors.c", "watch_steps.c", "watch_weather.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "a19_smart_watch"
+}

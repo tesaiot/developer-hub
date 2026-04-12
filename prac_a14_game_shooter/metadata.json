@@ -1,0 +1,16 @@
+{
+  "title": "Space Shooter",
+  "description": "เกมยิงอวกาศแบบทัชสกรีน ยาน 44x20 กระสุน 6 ลูก ศัตรู 8 ตัว พร้อมระบบชีวิต ความยากเพิ่มขึ้น และธีม Game Boy 4 โทนสี",
+  "series": "practise",
+  "episode_order": 14,
+  "difficulty": "advanced",
+  "domain": "Games",
+  "tags": ["tesaiot", "lvgl", "game", "canvas", "touch", "shooter"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "a14_game_shooter"
+}

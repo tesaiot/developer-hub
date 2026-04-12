@@ -1,0 +1,16 @@
+{
+  "title": "Game Framework Demo",
+  "description": "ตัวอย่างสาธิตเฟรมเวิร์กเกม แสดง Game Boy 4-tone palette, CRT scanline overlay, Touch D-pad และระบบ Input ทั้งหมด",
+  "series": "practise",
+  "episode_order": 15,
+  "difficulty": "advanced",
+  "domain": "Games",
+  "tags": ["tesaiot", "lvgl", "game", "canvas", "touch", "framework"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "a15_game_framework"
+}

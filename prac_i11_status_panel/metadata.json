@@ -1,0 +1,16 @@
+{
+  "title": "System Status Panel",
+  "description": "แผงสถานะระบบแบบ production-quality แสดง CPU, heap, uptime, สถานะเซ็นเซอร์ และ WiFi ด้วยการ์ดที่มี color-coded indicator (เขียว/เหลือง/แดง) อ่านเซ็นเซอร์โดยตรงผ่าน app_sensor",
+  "series": "practise",
+  "episode_order": 11,
+  "difficulty": "intermediate",
+  "domain": "system",
+  "tags": ["tesaiot", "lvgl", "status", "system", "memory", "uptime", "FreeRTOS", "heap", "dashboard", "bmi270", "sensor"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i11_status_panel"
+}

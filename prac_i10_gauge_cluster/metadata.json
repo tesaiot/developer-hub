@@ -1,0 +1,17 @@
+{
+  "title": "Gauge Cluster",
+  "description": "กลุ่มมาตรวัดแบบ arc gauge 3 ตัวแสดงอุณหภูมิ ความชื้น และความดันบรรยากาศ จาก DPS368 และ SHT4x ใช้ app_sensor อ่านเซ็นเซอร์ตรง",
+  "series": "practise",
+  "episode_order": 10,
+  "difficulty": "intermediate",
+  "domain": "Data Visualization",
+  "tags": ["tesaiot", "lvgl", "gauge", "arc", "dps368", "sht4x", "temperature", "humidity", "pressure", "sensor"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "sensor_kit_dependency": ["app_sensor/dps368", "app_sensor/sht4x"],
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i10_gauge_cluster"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Thai Text Display",
+  "description": "สาธิตการแสดงผลตัวอักษรภาษาไทยด้วยฟอนต์ Noto Sans Thai ในหลายขนาด ครอบคลุมสระลอย วรรณยุกต์ สระอำ สระหน้า และข้อความผสมไทย-อังกฤษ",
+  "series": "practise",
+  "episode_order": 18,
+  "difficulty": "beginner",
+  "domain": "Display",
+  "tags": ["tesaiot", "lvgl", "thai", "font", "text", "i18n", "unicode", "noto-sans-thai"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "b18_thai_text"
+}

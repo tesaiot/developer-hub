@@ -1,0 +1,17 @@
+{
+  "title": "Chart Statistics",
+  "description": "สถิติกราฟแสดง min/max/avg ของค่าความเร่ง BMI270 แกน X พร้อมกราฟเส้นเรียลไทม์ ring buffer และปุ่ม Reset ใช้ app_sensor อ่านเซ็นเซอร์ตรง",
+  "series": "practise",
+  "episode_order": 18,
+  "difficulty": "intermediate",
+  "domain": "Data Visualization",
+  "tags": ["tesaiot", "lvgl", "chart", "statistics", "bmi270", "accelerometer", "sensor", "min-max-avg"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "sensor_kit_dependency": "app_sensor/bmi270",
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i18_chart_statistics"
+}

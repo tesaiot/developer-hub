@@ -1,0 +1,16 @@
+{
+  "title": "RGB Color Mixer",
+  "description": "สไลเดอร์ RGB สามตัวสำหรับผสมสีและแสดงผลในกล่องพรีวิวขนาดใหญ่พร้อมรหัส Hex แบบเรียลไทม์",
+  "series": "practise",
+  "episode_order": 19,
+  "difficulty": "intermediate",
+  "domain": "UI Widgets",
+  "tags": ["tesaiot", "lvgl", "slider", "color", "visualization", "interactive"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i19_color_mixer"
+}

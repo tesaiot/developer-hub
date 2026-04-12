@@ -1,0 +1,17 @@
+{
+  "title": "Multi-Series Bar Chart",
+  "description": "กราฟแท่งเปรียบเทียบค่าเซ็นเซอร์ 4 ตัว (BMI270, DPS368, SHT4x, BMM350) แบบ normalized 0-100 แสดงผลแบบเรียลไทม์",
+  "series": "practise",
+  "episode_order": 3,
+  "difficulty": "intermediate",
+  "domain": "Visualization",
+  "tags": ["tesaiot", "lvgl", "chart", "bar-chart", "sensor", "bmi270", "dps368", "sht4x", "bmm350"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": true,
+  "sensors_used": ["BMI270", "DPS368", "SHT4x", "BMM350"],
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i03_bar_chart_multi"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Tile Navigation",
+  "description": "นำทางแบบไทล์วิวด้วยการปัดหน้าจอ 4 หน้า (เซ็นเซอร์, กราฟ, สถานะ, เกี่ยวกับ) พร้อมตัวบอกหน้าปัจจุบันและ chart แบบเรียลไทม์",
+  "series": "practise",
+  "episode_order": 15,
+  "difficulty": "intermediate",
+  "domain": "Layout",
+  "tags": ["tesaiot", "lvgl", "tileview", "navigation", "swipe", "chart"],
+  "boards": ["KIT_PSE84_AI", "TESAIoT_PSE84_AI"],
+  "files": ["main_example.c"],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "upstream_repo": "tesaiot-platform/developer-hub",
+  "upstream_example": "i15_tile_navigation"
+}
