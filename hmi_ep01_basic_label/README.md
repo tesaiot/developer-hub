@@ -1,4 +1,4 @@
-# EP01 — Basic Label (ตัวอย่างแรก: ป้ายต้อนรับ)
+# EP01 — Basic Label (ตัวอย่างแรก:ป้ายต้อนรับ)
 
 > **Series:** HMI Menu & Setting • **Episode:** 1 / 7 • **ระดับ:** beginner
 
