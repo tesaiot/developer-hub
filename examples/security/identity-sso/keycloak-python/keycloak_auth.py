@@ -102,7 +102,12 @@ class KeycloakAuth:
 
         auth_url = f"{self.settings.auth_url}?{urlencode(auth_params)}"
 
-        # Start local callback server
+        # Open browser for login FIRST (before starting callback server)
+        print(f"\n🔐 Opening browser for login...")
+        print(f"   URL: {auth_url[:80]}...")
+        webbrowser.open(auth_url)
+
+        # Start local callback server and wait for response
         authorization_code = await self._wait_for_callback(redirect_uri, state)
 
         # Exchange code for tokens
@@ -112,11 +117,6 @@ class KeycloakAuth:
 
         # Save tokens
         await self.storage.save(tokens)
-
-        # Open browser for login
-        print(f"\n🔐 Opening browser for login...")
-        print(f"   URL: {auth_url[:80]}...")
-        webbrowser.open(auth_url)
 
         return tokens
 
