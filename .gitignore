@@ -92,7 +92,6 @@ vault-token*
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
 .Python
 build/
 develop-eggs/
@@ -100,7 +99,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -129,9 +127,7 @@ yarn-error.log*
 # C/C++
 *.o
 *.obj
-*.a
 *.lib
-*.so
 *.dylib
 *.dll
 *.exe
@@ -156,7 +152,7 @@ out/
 
 # VSCode
 .vscode/
-*.code-workspace
+# *.code-workspace
 
 # JetBrains
 .idea/
@@ -298,7 +294,7 @@ site/
 
 # Config files with credentials
 **/mqtt-quic-config.json
-**/mqtt_client_config.h
+# **/mqtt_client_config.h  (placeholder values only - safe to track)
 
 # Allow example/placeholder files
 !**/*.example.txt

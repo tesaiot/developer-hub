@@ -120,6 +120,27 @@ bool optiga_manager_is_initialized(void);
  */
 void optiga_manager_cleanup(void);
 
+/**
+ * @brief Create a temporary optiga_crypt_t instance for crypto operations
+ *
+ * MUST be called after optiga_manager_lock().
+ * Caller MUST destroy the instance with optiga_crypt_destroy() before unlocking.
+ *
+ * Usage pattern:
+ * @code
+ *   optiga_manager_lock();
+ *   optiga_crypt_t *crypt = optiga_manager_create_crypt(callback, context);
+ *   // ... use crypt for crypto operations ...
+ *   optiga_crypt_destroy(crypt);
+ *   optiga_manager_unlock();
+ * @endcode
+ *
+ * @param callback  Async completion callback
+ * @param context   Callback context (can be NULL)
+ * @return optiga_crypt_t* or NULL on error
+ */
+optiga_crypt_t* optiga_manager_create_crypt(callback_handler_t callback, void *context);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,8 +1,8 @@
 /**
  * @file tesaiot.h
- * @brief TESAIoT Library - Main Header (Group 6 Umbrella)
- * @copyright (c) 2025 TESAIoT AIoT Foundation Platform
- * @version 2.2
+ * @brief TESAIoT Library - Main Header (Group 7 Umbrella)
+ * @copyright (c) 2025-2026 TESAIoT AIoT Foundation Platform
+ * @version 3.0.0
  *
  * TESAIoT Library for PSoC Edge + OPTIGA Trust M
  * Hardware-secured IoT device provisioning and certificate management.
@@ -58,10 +58,10 @@ extern "C" {
  * VERSION INFO - For ABI compatibility checking
  *============================================================================*/
 
-#define TESAIOT_VERSION_MAJOR   2
-#define TESAIOT_VERSION_MINOR   8
+#define TESAIOT_VERSION_MAJOR   3
+#define TESAIOT_VERSION_MINOR   0
 #define TESAIOT_VERSION_PATCH   0
-#define TESAIOT_VERSION_STRING  "2.8.0"
+#define TESAIOT_VERSION_STRING  "3.0.0"
 
 /** Version as single integer for comparison: 0x020100 = 2.1.0 */
 #define TESAIOT_VERSION_INT     ((TESAIOT_VERSION_MAJOR << 16) | \
@@ -104,7 +104,9 @@ typedef enum {
     TESAIOT_ERROR_NETWORK,             /**< Network error */
     TESAIOT_ERROR_TLS,                 /**< TLS error */
     TESAIOT_ERROR_MQTT,                /**< MQTT error */
-    TESAIOT_ERROR_INTERNAL             /**< Internal error */
+    TESAIOT_ERROR_INTERNAL,            /**< Internal error */
+    TESAIOT_ERROR_BUFFER_TOO_SMALL,    /**< Output buffer too small */
+    TESAIOT_ERROR_RESERVED_OID         /**< Attempted access to reserved OID */
 } tesaiot_error_t;
 
 /*============================================================================
@@ -312,6 +314,9 @@ const char* tesaiot_error_str(tesaiot_error_t error);
 
 /* Group 5: Platform services (MQTT, SNTP) */
 #include "tesaiot_platform.h"
+
+/* Group 7: Developer Crypto Utilities (v3.0.0) */
+#include "tesaiot_crypto.h"
 
 #ifdef __cplusplus
 }

@@ -2,8 +2,8 @@
 
 **Hardware-Secured IoT Device Provisioning for PSoC Edge + OPTIGA Trust M**
 
-Version: 2.8.0
-Last Updated: 2026-02-01
+Version: 3.0.0
+Last Updated: 2026-02-08
 
 ## Overview
 
@@ -12,7 +12,8 @@ TESAIoT Library provides secure device provisioning and certificate management f
 ### Features
 
 - **License Key System** - ECDSA signature-based device licensing
-- **Protected Update Only** - Generate certificate renewals using OPTIGA Trust M
+- **Developer Crypto Utilities** (v3.0.0) - 14 hardware-accelerated crypto functions
+- **Protected Update Only** - Certificate renewal via Protected Update mechanism
 - **MQTT with mTLS** - Secure MQTT communication with mutual TLS authentication
 - **OPTIGA Integration** - Full integration with OPTIGA Trust M secure element
 - **Protected Update** - Secure firmware/certificate update workflow
@@ -22,12 +23,14 @@ TESAIoT Library provides secure device provisioning and certificate management f
 
 ## Header Files
 
-The library provides 8 header files:
+The library provides 10 header files:
 
 | Header | Description |
 |--------|-------------|
 | `tesaiot.h` | Main umbrella - includes all headers + license API |
 | `tesaiot_config.h` | Configuration, debug levels, OID definitions |
+| `tesaiot_crypto.h` | **Developer Crypto Utilities API** (NEW v3.0.0) |
+| `tesaiot_license.h` | License verification API |
 | `tesaiot_license_config.h` | **Customer editable** - Your UID + license key |
 | `tesaiot_optiga.h` | OPTIGA Trust M integration |
 | `tesaiot_optiga_core.h` | OPTIGA manager (init, acquire, release) |
@@ -121,9 +124,24 @@ const char* tesaiot_license_key = TESAIOT_LICENSE_KEY;
 | `tesaiot_sntp_get_time()` | Get current Unix timestamp |
 | `tesaiot_sntp_is_time_synced()` | Check if time is synced |
 
+### Crypto Utility Functions (from tesaiot_crypto.h) - NEW v3.0.0
 
 | Function | Description |
 |----------|-------------|
+| `tesaiot_random_generate()` | Hardware TRNG random bytes (CC EAL6+) |
+| `tesaiot_secure_store_write()` | Write to OPTIGA data object (14 slots) |
+| `tesaiot_secure_store_read()` | Read from OPTIGA data object |
+| `tesaiot_aes_generate_key()` | Generate AES key in hardware (128/192/256) |
+| `tesaiot_aes_encrypt()` | AES-CBC encrypt (key never leaves OPTIGA) |
+| `tesaiot_aes_decrypt()` | AES-CBC decrypt |
+| `tesaiot_hmac_sha256()` | HMAC-SHA256 with hardware key |
+| `tesaiot_ecdh_shared_secret()` | ECDH P-256 shared secret derivation |
+| `tesaiot_hkdf_derive()` | HKDF-SHA256 key derivation (RFC 5869) |
+| `tesaiot_optiga_hash()` | SHA-256 hardware hash |
+| `tesaiot_sign_data()` | SHA-256 + ECDSA composite signing |
+| `tesaiot_counter_read()` | Read monotonic counter (anti-replay) |
+| `tesaiot_counter_increment()` | Increment monotonic counter |
+| `tesaiot_health_check()` | Comprehensive device health check |
 
 ### OPTIGA Functions (from tesaiot_optiga.h)
 

@@ -7,7 +7,7 @@ Self-contained deployment package for TESAIoT CSR and Protected Update workflows
 ## Contents
 
 ```
-Portable_Deployment/
+rpi_tesaiot_client/
 ├── bin/
 │   ├── tesaiot_csr_client      # CSR workflow binary
 │   ├── tesaiot_pu_client       # Protected Update workflow binary
@@ -35,8 +35,6 @@ Portable_Deployment/
 │   ├── tesaiot_protected_update.h
 │   └── tesaiot_tool_verify.h   # External tool verification (NEW)
 ├── scripts/
-│   ├── run_csr_workflow.sh     # CSR runner script
-│   ├── run_pu_workflow.sh      # PU runner script
 │   ├── fix_libgpiod_v2.sh      # Auto-patch for libgpiod v2.x
 │   └── libgpiod_v2.patch       # Patch file for manual apply
 ├── config/
@@ -48,68 +46,70 @@ Portable_Deployment/
 **IMPORTANT**: Binaries are compiled with path `../credentials/` relative to `bin/`.
 Must run from `bin/` directory or use the runner scripts.
 
-## Current Device
+## Device Configuration
 
-This package is pre-configured for device:
-- **Device ID**: `a8a1c4f3-42ae-41e2-b6d3-1f74cc3d5b31`
-- **Device UID**: `CD16339301001C000500000A01BB820003009C002C801010712440`
-
-To use with a different device, you must:
-1. Update `include/tesaiot/tesaiot_config.h` with new DEVICE_ID, DEVICE_UID, LICENSE_KEY
+Each device requires its own credentials in `include/tesaiot/tesaiot_config.h`:
+1. Update `TESAIOT_DEVICE_ID`, `TESAIOT_DEVICE_UID`, `TESAIOT_LICENSE_KEY`
 2. Rebuild binaries from source (see tesaiot_library/)
 
 ## Quick Start
 
-### Option 1: Run from Package Directory (Recommended)
+### Step 1: Set Up Environment
 
 ```bash
-# Copy to target RPi
-scp -r Portable_Deployment/ pi@raspberrypi:/home/pi/
-
 # On target RPi
-cd /home/pi/Portable_Deployment
+cd /home/pi/rpi_tesaiot_client
 
-# Run CSR workflow (shim is enabled by default for OPTIGA Trust M)
-./scripts/run_csr_workflow.sh
-
-# Run Protected Update workflow
-./scripts/run_pu_workflow.sh
-
-# To run WITHOUT shim (not recommended for OPTIGA):
-./scripts/run_csr_workflow.sh --no-shim
+# Create .env from template and edit with your paths
+cp .env_example .env
+nano .env    # Set OPENSSL_MODULES to your trustm_provider.so directory
 ```
 
-### Option 2: Run Directly from bin/
+### Step 2: Run Workflows
 
 ```bash
-cd /home/pi/Portable_Deployment/bin
+# CSR workflow — enroll device certificate
+./run_csr.sh run --target-oid 0xE0E1
 
-# CSR workflow (must be in bin/ for ../credentials path to work)
-sudo ../scripts/run_csr_workflow.sh
+# Protected Update — receive certificate via MQTT
+./run_pu.sh run --target-oid 0xE0E1
 
-# Or manually with shim
-sudo LD_PRELOAD=../lib/libpaho_shim.so ./tesaiot_csr_client
+# Diagnostics — show certificate info, OID metadata, health status
+./run_csr.sh diag --target-oid 0xE0E1
+
+# License check
+./run_csr.sh license
+
+# Device identity
+./run_csr.sh identity
 ```
 
-### Option 3: System-wide Installation
+### Alternative: Run Directly from bin/
 
 ```bash
-cd Portable_Deployment
+cd /home/pi/rpi_tesaiot_client/bin
+
+# Manual shim setup (runner scripts do this automatically)
+export LD_PRELOAD=../lib/libpaho_shim.so
+export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
+./tesaiot_csr_client run --target-oid 0xE0E1
+```
+
+### Alternative: System-wide Installation
+
+```bash
+cd rpi_tesaiot_client
 sudo ./install.sh
 
 # Reload environment
 source /etc/profile.d/tesaiot.sh
-
-# Run workflows (shim is default)
-run_csr
-run_pu
 ```
 
 ## Prerequisites
 
 ### Important: This package requires external dependencies
 
-Simply copying Portable_Deployment to another RPi is **NOT** enough. You must install the dependencies listed below.
+Simply copying rpi_tesaiot_client to another RPi is **NOT** enough. You must install the dependencies listed below.
 
 ### System Dependencies
 
@@ -136,7 +136,7 @@ The runner scripts automatically detect and use bundled libraries in `lib/`:
 
 **No additional installation needed!** Just run:
 ```bash
-./scripts/run_csr_workflow.sh    # shim is enabled by default
+./run_csr.sh run --target-oid 0xE0E1
 ```
 
 #### Option B: Use Automatic Patch Script
@@ -148,7 +148,7 @@ git clone https://github.com/Infineon/linux-optiga-trust-m.git
 cd linux-optiga-trust-m
 
 # Run the automatic patch script
-/path/to/Portable_Deployment/scripts/fix_libgpiod_v2.sh
+/path/to/rpi_tesaiot_client/scripts/fix_libgpiod_v2.sh
 
 # Build and install
 ./build.sh
@@ -164,7 +164,7 @@ cd linux-optiga-trust-m
 
 # Apply patch
 cd trustm_lib
-patch -p1 < /path/to/Portable_Deployment/scripts/libgpiod_v2.patch
+patch -p1 < /path/to/rpi_tesaiot_client/scripts/libgpiod_v2.patch
 cd ..
 
 # Build and install
@@ -225,7 +225,7 @@ i2cdetect -y 1
 Use the included install.sh script which handles dependency installation:
 
 ```bash
-cd Portable_Deployment
+cd rpi_tesaiot_client
 sudo ./install.sh
 ```
 
@@ -234,15 +234,59 @@ This will:
 2. Check for OPTIGA Trust M library (warns if not found)
 3. Install TESAIoT to /opt/tesaiot
 
-## Environment Variables
+## Environment Configuration
 
-The scripts automatically set these, but you can override:
+### `.env` File
+
+Copy `.env_example` to `.env` and configure:
+
+```bash
+cp .env_example .env
+nano .env
+```
+
+**Required setting:**
+- `OPENSSL_MODULES` — Path to directory containing `trustm_provider.so`
+
+**Optional settings:**
+- `TRUSTM_DATA_PATH` — Path to `trustm_data` binary (auto-detected from binary location)
+- `TESAIOT_LOG_LEVEL` — Logging level: ERROR, WARN, INFO, DEBUG
+
+### Environment Variables
+
+Runner scripts (`run_csr.sh`, `run_pu.sh`) automatically set these:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `TRUSTM_LIB_PATH` | Path to trustm tools directory | Auto-detected |
-| `TRUSTM_DATA_PATH` | Path to trustm_data binary | Auto-detected |
-| `TRUSTM_OPENSSL_CONF` | OpenSSL config with trustm_provider | /tmp/tesaiot_trustm_openssl.cnf |
+| `LD_PRELOAD` | libpaho_shim.so for OPTIGA mTLS | Set by runner script |
+| `LD_LIBRARY_PATH` | Bundled libraries in `lib/` | Set by runner script |
+| `TRUSTM_LIB_PATH` | Path to trustm tools directory | `$SCRIPT_DIR/bin/trustm` |
+| `TRUSTM_DATA_PATH` | Path to trustm_data binary | `$SCRIPT_DIR/bin/trustm/trustm_data` |
+| `OPENSSL_MODULES` | trustm_provider.so directory | From `.env` file |
+
+### Tool Path Auto-Detection
+
+External tools (`trustm_data`, `trustm_protected_update`) are found automatically:
+
+1. **`TRUSTM_DATA_PATH`** environment variable (set by runner scripts)
+2. **`/proc/self/exe`** auto-detection: `<binary_dir>/trustm/<tool_name>`
+
+This means tools work whether run via `run_csr.sh`/`run_pu.sh` or directly from `bin/`.
+
+### Tool Signature Verification
+
+All external tools are **ECDSA P-256 verified** before execution (NIST SP 800-193):
+
+```
+bin/trustm/
+├── trustm_data                  # Binary
+├── trustm_data.sig              # ECDSA signature
+├── trustm_protected_update      # Binary
+├── trustm_protected_update.sig  # ECDSA signature
+└── ...
+```
+
+If a tool binary is tampered with, verification fails and execution is **blocked**.
 
 ## Building Custom Applications
 
@@ -284,8 +328,8 @@ export LD_LIBRARY_PATH=/opt/tesaiot/lib:$LD_LIBRARY_PATH
 ### Permission Denied
 
 ```bash
-# Run with sudo (scripts handle sudo internally)
-./scripts/run_pu_workflow.sh
+# Runner scripts handle environment setup automatically
+sudo ./run_pu.sh run --target-oid 0xE0E1
 ```
 
 ---
@@ -337,16 +381,21 @@ Critical design principle: **Complete service separation** between CSR and Prote
 
 | OID | Name | CSR Workflow | PU Workflow | Purpose |
 |-----|------|:------------:|:-----------:|---------|
-| 0xE0F1 | CSR Private Key | ✅ | ❌ | ECC P-256 keypair for CSR signing |
-| 0xE0E1 | Device Certificate 1 | ✅ Write | ✅ Write | X.509 device certificate slot 1 |
-| **0xE0E2** | **Device Certificate 2** | ✅ Write | ✅ Write | X.509 device certificate (default) |
-| 0xE0E3 | Device Certificate 3 | ✅ Write | ✅ Write | X.509 device certificate slot 3 |
-| 0xE0E9 | CA Chain | ✅ Read | ❌ | TESAIoT CA certificate chain |
-| 0xE0E0 | Factory Certificate | ✅ Read | ❌ | Bootstrap TLS authentication |
-| 0xE0C2 | Trust M UID | ✅ Read | ✅ Read | Unique device identifier |
-| 0xE0E8 | Trust Anchor | ❌ | ✅ | PU manifest signature verification |
-| 0xF1D4 | Secret | ❌ | ✅ | AES-128-CCM decryption key |
-| 0xE0F2 | PU Key Slot | ❌ | ✅ | Protected Update operations |
+| 0xE0C2 | Trust M UID | R | R | Unique 27-byte device identifier |
+| 0xE0E0 | Factory Certificate | R | - | Infineon-signed certificate (bootstrap TLS) |
+| **0xE0E1** | **Device Certificate 1** | W | W | **Default target** for device certificate |
+| 0xE0E2 | Device Certificate 2 | W | W | Alternative certificate slot |
+| 0xE0E3 | Device Certificate 3 | W | W | Alternative certificate slot |
+| 0xE0E8 | Trust Anchor 1 | - | R | PU manifest signature verification |
+| 0xE0E9 | Trust Anchor 2 / CA | R | R | PU verification + CSR CA Chain |
+| 0xE0F0 | Factory Key | S | - | Factory private key |
+| 0xE0F1 | CSR Key | G/S | - | ECC P-256 keypair for CSR signing |
+| 0xE0F2 | PU Key Slot | - | U | Protected Update operations |
+| 0xF1D4 | Secret | - | D | AES-128-CCM key for encrypted updates |
+
+**Legend**: R=Read, W=Write, G=Generate, S=Sign, U=Update, D=Decrypt
+
+**Note**: Use `--target-oid` to select which certificate slot to write to (default: 0xE0E1).
 
 ---
 
@@ -395,11 +444,11 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │ <───────────────────────────────────── │
             │ Topic: device/{id}/commands/certificate│
             │                                        │
-            │  6. Write Certificate to 0xE0E2        │
+            │  6. Write Certificate to Target OID    │
             │     ┌─────────────────────────┐        │
             │     │   OPTIGA Trust M        │        │
             │     │   optiga_util_write_    │        │
-            │     │   data(0xE0E2, cert)    │        │
+            │     │   data(target_oid, cert)│        │
             │     └─────────────────────────┘        │
             │                                        │
             │  7. Verify Certificate Chain           │
@@ -421,7 +470,7 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │                                        │
             │                                        │  1. Create Update Payload
             │                                        │     - New certificate/config
-            │                                        │     - Target OID: 0xE0E2
+            │                                        │     - Target OID (from manifest)
             │                                        │
             │                                        │  2. Generate CBOR Manifest
             │                                        │     (COSE_Sign1, RFC 8152)
@@ -451,7 +500,7 @@ Critical design principle: **Complete service separation** between CSR and Prote
             │  4. Verify Signature                   │
             │     ┌─────────────────────────┐        │
             │     │   OPTIGA Trust M        │        │
-            │     │   Trust Anchor (0xE0E8) │        │
+            │     │   Trust Anchor (0xE0E9) │        │
             │     │   optiga_crypt_ecdsa_   │        │
             │     │   verify()              │        │
             │     └─────────────────────────┘        │
@@ -571,18 +620,38 @@ Library automatically verifies signatures before executing tools. If a tool is t
 
 ---
 
+## Known Issues
+
+See [ISSUES.md](../TESAIoT_IMPROVEMENT/v3.0.0_Official_TESAIoT_Secure_Library/ISSUES.md) for details.
+
+| Issue | Description | Workaround |
+|-------|-------------|------------|
+| ISSUE-001 | OPTIGA API hangs after MQTT (trustm_provider I2C lock) | External tools fallback |
+| ISSUE-002 | `trustm_protected_update` fails with 0x8029 | Direct write via `trustm_data` |
+| ISSUE-003 | Some devices have OID locked (Change:NEV) | Use `--target-oid` to select an available OID |
+| ISSUE-004 | Root-owned temp files | `run_*.sh` auto-cleanup |
+
+---
+
 ## Version
 
-- Package Version: 2.2
-- Build Date: 2026-02-01
+- Package Version: 3.0.0
+- Build Date: 2026-02-08
 - Platform: Raspberry Pi (aarch64/armhf)
+- Changes (v3.0.0):
+  - **NEW**: 16 cryptographic utility functions (`tesaiot_crypto.h`, `tesaiot_advanced.h`)
+  - **NEW**: `diag` command — certificate info, OID metadata, health check
+  - **NEW**: Top-level runner scripts (`run_csr.sh`, `run_pu.sh`)
+  - **NEW**: `.env_example` template for environment configuration
+  - **NEW**: Auto-detect tool paths via `/proc/self/exe`
+  - **NEW**: Post-MQTT external tool fallback (30s timeout eliminated)
+  - **NEW**: Monotonic counter support (anti-rollback)
+  - Trust Anchor changed from 0xE0E8 (locked) to 0xE0E9
+  - Library size: ~800 KB (was 363 KB)
 - Changes (v2.2):
-  - **NEW**: External tool ECDSA signature verification (NIST SP 800-193)
-  - All bundled tools now include `.sig` signature files
-  - Library verifies tool signatures before execution
+  - External tool ECDSA signature verification (NIST SP 800-193)
+  - All bundled tools include `.sig` signature files
 - Changes (v2.1):
-  - Added `--target-oid` argument for CSR and PU clients
-  - Shim is now **enabled by default** (use `--no-shim` to disable)
-  - PU request now includes required fields: `target_oid`, `trust_anchor_oid`, `payload_version`
-  - Fixed OPTIGA busy timeout issue after Protected Update write
-  - Default target OID is 0xE0E2 (can be changed with `--target-oid`)
+  - Added `--target-oid` argument
+  - Shim enabled by default
+  - TESAIoT Platform Guideline v1.0.0 compliant

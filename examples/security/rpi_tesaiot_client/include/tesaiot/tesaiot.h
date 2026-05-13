@@ -125,6 +125,21 @@ int tesaiot_init(void);
 int tesaiot_deinit(void);
 
 /**
+ * @brief Reinitialize OPTIGA Trust M (preserving license status)
+ *
+ * @details
+ * Full OPTIGA reinit cycle: close application → destroy instances →
+ * recreate instances → reopen application. License status is preserved.
+ *
+ * Use after MQTT disconnect with trustm_provider to reset OPTIGA I2C state.
+ *
+ * @return 0 on success, negative errno on failure
+ *
+ * @note Thread-safe (uses internal mutex)
+ */
+int tesaiot_reinit(void);
+
+/**
  * @brief Verify device license
  *
  * @details

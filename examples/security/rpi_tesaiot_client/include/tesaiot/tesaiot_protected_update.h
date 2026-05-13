@@ -47,7 +47,7 @@ typedef enum {
  */
 typedef struct {
     const char *device_id;                    /**< Device ID (from Trust M UID) */
-    uint16_t trust_anchor_oid;                /**< Trust Anchor OID (default: 0xE0E8) */
+    uint16_t trust_anchor_oid;                /**< Trust Anchor OID (default: 0xE0E9) */
     uint16_t secret_oid;                      /**< Secret OID for encryption (default: 0xF1D4) */
     bool verify_version;                      /**< Enable version downgrade protection */
     uint32_t current_version;                 /**< Current firmware/data version */
@@ -83,7 +83,7 @@ int tesaiot_pu_workflow_init(const tesaiot_pu_config_t *config);
  * @return 0 on success, negative error code on failure
  *
  * @note This is a blocking call
- * @note Manifest signature is verified with Trust Anchor at OID 0xE0E8
+ * @note Manifest signature is verified with Trust Anchor at OID 0xE0E9
  * @note Target OID is specified in manifest payload
  */
 int tesaiot_protected_update_execute(
@@ -125,7 +125,7 @@ const char *tesaiot_pu_workflow_get_state_name(tesaiot_pu_state_t state);
  * Sets the default OID to write data to. This can be overridden by
  * the target_oid field in the manifest JSON from the platform.
  *
- * @param target_oid Target OID (0xE0E1-0xE0E3, default: 0xE0E2)
+ * @param target_oid Target OID (0xE0E1-0xE0E3, default: TESAIOT_PU_OID_DEFAULT_TARGET)
  *
  * @note If set to 0, the OID from manifest JSON will be used
  * @note This must be called before tesaiot_run_protected_update_workflow()
@@ -135,7 +135,7 @@ void tesaiot_pu_set_default_target_oid(uint16_t target_oid);
 /**
  * @brief Check if Trust Anchor is provisioned
  *
- * Reads OID 0xE0E8 and checks if it contains valid public key data
+ * Reads OID 0xE0E9 and checks if it contains valid public key data
  *
  * @return true if Trust Anchor is provisioned, false otherwise
  */
@@ -144,7 +144,7 @@ bool tesaiot_pu_is_trust_anchor_provisioned(void);
 /**
  * @brief Provision Trust Anchor public key manually
  *
- * Writes SPKI DER-encoded ECC public key to OID 0xE0E8
+ * Writes SPKI DER-encoded ECC public key to OID 0xE0E9
  * Used for one-time provisioning before Protected Update
  *
  * @param pubkey_der SPKI DER-encoded public key (91 bytes for P-256)
@@ -203,8 +203,13 @@ int tesaiot_pu_provision_trust_anchor(const uint8_t *pubkey_der, uint16_t pubkey
  * @{
  */
 
-/** Trust Anchor OID (ECC public key for manifest verification) */
-#define TESAIOT_PU_OID_TRUST_ANCHOR 0xE0E8
+/** Trust Anchor OID (ECC public key for manifest verification)
+ *  Changed to 0xE0E9: 0xE0E8 is locked (LcsO=0x07, Change:LcsO<0x07) with Infineon test cert */
+#define TESAIOT_PU_OID_TRUST_ANCHOR 0xE0E9
+
+/** Default target OID for Protected Update (device certificate slot)
+ *  0xE0E1 is the standard target; override with --target-oid if locked */
+#define TESAIOT_PU_OID_DEFAULT_TARGET 0xE0E1
 
 /** Secret OID (AES-128-CCM key for decryption) */
 #define TESAIOT_PU_OID_SECRET 0xF1D4

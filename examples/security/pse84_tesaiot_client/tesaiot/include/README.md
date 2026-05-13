@@ -1,15 +1,16 @@
 # TESAIoT Headers
 
-**Version:** 2.8.0
-**Last Updated:** 2026-02-01
+**Version:** 3.0.0
+**Last Updated:** 2026-02-08
 
-## Header Files (8 files)
+## Header Files (10 files)
 
 | Header | Description |
 |--------|-------------|
 | `tesaiot.h` | Main umbrella - includes all headers + license API |
 | `tesaiot_config.h` | Configuration, debug levels, OID definitions |
-| `tesaiot_protected_update.h` | Protected Update workflow API |
+| `tesaiot_crypto.h` | **Developer Crypto Utilities API** (NEW v3.0.0) |
+| `tesaiot_license.h` | License verification API |
 | `tesaiot_license_config.h` | Customer editable (UID + license key) |
 | `tesaiot_optiga.h` | OPTIGA Trust M integration |
 | `tesaiot_optiga_core.h` | OPTIGA manager (init, acquire, release) |
@@ -46,8 +47,9 @@ Edit `tesaiot_license_config.h` with your device UID and license key:
 ```
 tesaiot.h (main umbrella)
 ├── tesaiot_config.h
+├── tesaiot_crypto.h (Developer Crypto Utilities - NEW v3.0.0)
+├── tesaiot_license.h (License API)
 ├── tesaiot_platform.h (MQTT + SNTP)
-├── tesaiot_protected_update.h
 ├── tesaiot_protected_update.h
 ├── tesaiot_optiga.h
 └── tesaiot_optiga_core.h
