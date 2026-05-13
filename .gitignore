@@ -328,3 +328,6 @@ site/
 !**/device-servertls/download/.gitkeep
 !**/device-servertls/download/*.example.*
 
+# Temporary files that might contain credentials
+tmp/
+
