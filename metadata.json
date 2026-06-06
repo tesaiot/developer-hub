@@ -1,0 +1,33 @@
+{
+  "board": {
+    "architecture": "arm-cortex-m55",
+    "bsp": "psoc-edge-e84",
+    "display_name": "Infineon PSoC Edge E84",
+    "id": "psoc-edge-e84"
+  },
+  "description": "A foundational firmware template for AIoT development on Infineon PSoC Edge E84 boards, pre-configured with subsystems like HMI, sensors, WiFi, and FreeRTOS for building task-based applications.",
+  "display_name": "TESAIoT Dev Kit Master Project Template",
+  "download": {
+    "format": "zip",
+    "url": "https://github.com/tesaiot/developer-hub/archive/refs/heads/tesaiot_dev_kit_master.zip"
+  },
+  "links": {
+    "readme": "https://github.com/tesaiot/developer-hub/blob/tesaiot_dev_kit_master/README.md",
+    "repository": "https://github.com/tesaiot/developer-hub"
+  },
+  "quick_start_steps": [
+    "Clone or download the project from the repository.",
+    "Download an episode example from the TESAIoT website and place it in the 'proj_cm55/apps/' folder.",
+    "Build the project using ModusToolbox and CMake.",
+    "Flash the firmware to the PSoC Edge E84 board and test the application."
+  ],
+  "schema_version": "1.0.0",
+  "template_id": "tesaiot-dev-kit-master-template",
+  "template_type": "firmware",
+  "toolchain": {
+    "build_system": "CMake",
+    "compiler": "GCC_ARM",
+    "ide": "ModusToolbox",
+    "ide_version": ">=3.0"
+  }
+}
