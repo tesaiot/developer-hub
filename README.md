@@ -1,11 +1,12 @@
 # Practice Examples — TESAIoT Dev Kit
 
 ตัวอย่างสำหรับฝึกฝนนอกเวลาและต่อยอดสร้าง IoT Application บน TESAIoT Dev Kit
-รวม 24 ตัวอย่าง แบ่งเป็น 3 กลุ่มตามลักษณะการใช้งาน
+รวม 24 ตัวอย่าง — **19 ตัวพร้อมใช้บน firmware** (มี combined hex ใน GitHub Releases)
+และ **5 เกมที่ deferred** (ยังพอร์ต game framework ไม่เสร็จ — เก็บไว้ที่ `_deferred/`)
 
 ## รายการตัวอย่าง
 
-### กลุ่ม A: Pure UI — 10 ตัวอย่าง
+### กลุ่ม A: Pure UI — 5 ตัวอย่าง
 
 ตัวอย่างที่ใช้ LVGL ล้วน ไม่ต้องต่อ sensor
 
@@ -16,11 +17,10 @@
 | 3 | prac_i33_lcd_console | Rich Text LCD Console | Intermediate | console แสดง log แบบ color-coded พร้อม auto-scroll |
 | 4 | prac_i15_tile_navigation | Tile Navigation | Intermediate | swipe ซ้าย-ขวาสลับ 4 หน้า ด้วย TileView |
 | 5 | prac_i28_multi_page_app | Multi-Page App | Intermediate | app 3 หน้า (Home/Sensors/Settings) พร้อม tab bar |
-| 6 | prac_a10_flappy_bird | Flappy Bird | Advanced | เกม touch tap, 50fps physics, Game Boy palette |
-| 7 | prac_a12_snake_game | Snake Game | Advanced | เกม touch D-pad, grid 30x24, 140 segments |
-| 8 | prac_a13_pong_game | Pong Game | Advanced | เกม touch, AI opponent, progressive speed-up |
-| 9 | prac_a14_game_shooter | Space Shooter | Advanced | เกม D-pad+fire, entity pool, AABB collision |
-| 10 | prac_a15_game_framework | Game Framework | Advanced | framework สำหรับสร้างเกม: palette, CRT overlay, input |
+
+> **5 เกม (Advanced)** — flappy_bird, snake_game, pong_game, game_shooter, game_framework —
+> ย้ายไปที่ [`_deferred/`](_deferred/) เพราะ game framework ยังพอร์ตมา firmware ไม่เสร็จ
+> (ทำงานได้ใน PC simulator) ดูแผนเปิดใช้ที่ [`_deferred/`](_deferred/)
 
 ### กลุ่ม B: Sensor Visualization — 10 ตัวอย่าง
 
