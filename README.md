@@ -1,49 +1,57 @@
-# TESAIoT Dev Kit — Master Project Template
+# TESAIoT Bento Kit — Master Project Template
 
 <p align="center">
   <strong>ฐานรากสำหรับการพัฒนา AIoT บน PSoC Edge E84</strong><br>
-  ส่วนหนึ่งของหลักสูตร <strong>TESAIoT Firmware Stack</strong> ภายใต้<br>
-  <a href="https://www.tesaiot.dev"><strong>TESAIoT Foundation Platform</strong></a><br>
+  โปรเจกต์ตั้งต้นสำหรับ <strong>Practise Examples</strong> ของหลักสูตร <strong>TESAIoT Firmware Stack</strong><br>
+  ภายใต้ <a href="https://www.tesaiot.dev"><strong>TESAIoT Foundation Platform</strong></a><br>
   โดย <strong>สมาคมสมองกลฝังตัวไทย (TESA)</strong>
 </p>
 
 ---
 
-## 🎓 เกี่ยวกับหลักสูตรนี้
+## 🎓 เกี่ยวกับ Template นี้
 
-**สมาคมสมองกลฝังตัวไทย (TESA)** จัดทำ **TESAIoT Firmware Stack** ขึ้นเพื่อถ่ายทอดองค์ความรู้
-ในการพัฒนา Artificial Intelligence of Things (AIoT) ให้กับนักพัฒนาชาวไทย โดยใช้บอร์ด
-**Infineon PSoC Edge E84** — microcontroller สถาปัตยกรรม Arm Cortex-M55 + Cortex-M33
+`tesaiot_bento_kit_master` คือ **โปรเจกต์ multi-core ตั้งต้นที่ตั้งค่าทุกอย่างให้เรียบร้อยแล้ว**
+สำหรับรันชุดตัวอย่าง **Practise Examples** บนบอร์ด **Infineon PSoC Edge E84 (KIT_PSE84_AI)**
+พร้อมจอสัมผัส 4.3 นิ้ว — microcontroller สถาปัตยกรรม Arm Cortex-M55 + Cortex-M33 คู่
 ที่มาพร้อม GPU แบบ VGLite สำหรับ UI graphics ความเร็วสูง
 
-หลักสูตรนี้เป็นส่วนหนึ่งของ **TESAIoT Foundation Platform** (https://www.tesaiot.dev)
-ซึ่งรวมแหล่งเรียนรู้ catalog ตัวอย่าง เอกสารประกอบ และช่องทางดาวน์โหลดโค้ดสำหรับ
-นักพัฒนาทุกระดับ
+นักพัฒนาเพียงแค่:
 
-**นักพัฒนาจะได้เรียนรู้ผ่านตัวอย่างที่ใช้งานได้จริงบนบอร์ด:**
-- การสร้าง HMI (Human-Machine Interface) ด้วย LVGL บนจอสัมผัส
-- การอ่าน sensor หลายชนิด (pressure, humidity, motion, magnetometer, microphone)
-- การเชื่อมต่อ WiFi พร้อม reconnect logic และ credential persistence
-- การออกแบบ application แบบ task-based ด้วย FreeRTOS
+1. Clone โปรเจกต์นี้ครั้งเดียว แล้ว `make getlibs`
+2. วางไฟล์ตัวอย่าง (practise example) ลงในโฟลเดอร์ `proj_cm55/apps/`
+3. `make build` → ได้ **combined hex รวม 3 cores** ในไฟล์เดียว
+4. `make program` flash ลงบอร์ด
 
-## 🧰 เกี่ยวกับ Master Project Template
+**ไม่ต้องแก้ `main.c`, `Makefile` หรือ config ใด ๆ** — ทุก subsystem ของ Core Firmware Stack
+(จอแสดงผล, ระบบสัมผัส, sensor buses, WiFi stack, FreeRTOS, LVGL) ถูก initialize เตรียมไว้แล้ว
 
-Master Project Template นี้คือ **โปรเจกต์ตั้งต้นที่ตั้งค่าทุกอย่างให้เรียบร้อยแล้ว** นักพัฒนาเพียงแค่:
+> 💡 ตัวอย่างที่ build แล้วพร้อม flash (combined hex) ดาวน์โหลดได้จาก
+> [GitHub Releases](https://github.com/tesaiot/developer-hub/releases) — ไม่ต้อง build เองก็ได้
 
-1. Clone โปรเจกต์นี้ครั้งเดียว
-2. ดาวน์โหลดไฟล์ตัวอย่าง (episode) จาก https://www.tesaiot.dev
-3. วางไฟล์ของ episode ลงในโฟลเดอร์ `proj_cm55/apps/`
-4. Build แล้ว flash ลงบอร์ด
+### Episode Entry Contract
 
-**ไม่ต้องแก้ไฟล์หลัก ไม่ต้อง config อะไรเพิ่ม** — ทุก subsystem ของ Core Firmware Stack
-(จอแสดงผล, ระบบสัมผัส, sensor buses, WiFi stack, audio, FreeRTOS, LVGL graphics engine)
-ถูก initialize เตรียมให้พร้อมใช้ในทุก episode
+Template เรียก `example_main()` หนึ่งครั้งหลัง initialize ระบบเสร็จ — ตัวอย่างแต่ละตัว
+implement ฟังก์ชันนี้ใน `main_example.c`:
+
+```c
+// proj_cm55/apps/main_example.c
+#include "pse84_common.h"     /* UI palette + helper inlines ที่ practise ใช้ร่วมกัน */
+
+void example_main(lv_obj_t *parent)
+{
+    /* สร้าง UI ของตัวอย่างบน parent ที่ template ส่งเข้ามา */
+}
+```
+
+เมื่อ `apps/` ว่าง template จะใช้ **weak fallback** (`app_core/example_main_default.c`)
+แสดงหน้า splash แทน
 
 ---
 
 ## 🧭 สิ่งที่ Core TESAIoT Firmware Stack เตรียมให้พร้อมใช้
 
-เมื่อบอร์ด boot ขึ้นมา ระบบจะเตรียมทรัพยากรทั้งหมดนี้ให้ทำงานแล้ว — episode ของนักพัฒนา
+เมื่อบอร์ด boot ขึ้นมา ระบบจะเตรียมทรัพยากรทั้งหมดนี้ให้ทำงานแล้ว — ตัวอย่างของนักพัฒนา
 เพียงแค่ **เรียกใช้ API** โดยไม่ต้อง init hardware เอง
 
 ### 🖼️ ระบบแสดงผล (Graphics + Display)
@@ -51,9 +59,9 @@ Master Project Template นี้คือ **โปรเจกต์ตั้�
 | Capability | รายละเอียดที่นักพัฒนาใช้ได้ |
 | --- | --- |
 | **LVGL 9** graphics library | Widget ครบชุด (label, button, textarea, keyboard, chart, slider, arc, meter, tabview, list, image, ...) พร้อม flex/grid layout, animations, events, styles |
-| **VGLite GPU** acceleration | การวาดทุกอย่างถูกเร่งความเร็วด้วย GPU ฮาร์ดแวร์ของ PSoC Edge — นักพัฒนาไม่ต้องเขียน GPU code เอง |
-| **Display drivers** 3 แบบ | เลือกได้ตามบอร์ดที่ใช้ (4.3", 7", หรือ 10.1") — ดู section "Hardware ที่รองรับ" |
-| **Fonts** | Montserrat ขนาด 12, 14, 16, 18, 20, 22, 24, 28, 30, 40 พร้อมใช้ (ไม่ต้องเปิดใน config เอง) |
+| **VGLite GPU** acceleration | การวาดทุกอย่างถูกเร่งความเร็วด้วย GPU ฮาร์ดแวร์ของ PSoC Edge — ไม่ต้องเขียน GPU code เอง |
+| **Display drivers** 3 แบบ | เลือกได้ตามบอร์ด (4.3", 7", หรือ 10.1") — ดู section "Hardware ที่รองรับ" |
+| **Fonts** | Montserrat หลายขนาด + **Noto Sans Thai** (14/16/20/28) พร้อมใช้ — รองรับข้อความไทย |
 
 **นักพัฒนาเขียนแค่:**
 ```c
@@ -67,84 +75,65 @@ lv_obj_center(label);
 Touch controller (GT911 / FT5406 / ILI2511) ถูกติดตั้งและเชื่อมกับ LVGL ให้แล้ว
 event จากการแตะหน้าจอจะไปถึง widget โดยอัตโนมัติ
 
-**นักพัฒนาเขียนแค่:**
 ```c
 lv_obj_add_event_cb(my_button, on_clicked, LV_EVENT_CLICKED, NULL);
 ```
 
-### 🌡️ Sensor Bus (I2C + I3C)
+### 🌡️ Sensor Bus (I2C + I3C) + Direct Readers
 
-| Bus | รองรับ Sensor | Middleware ที่พร้อมใช้ |
+| Bus | รองรับ Sensor | Reader API ที่พร้อมใช้ |
 | --- | --- | --- |
-| **Sensor I2C** (1.8V domain) | DPS368 (ความดัน), SHT4x (อุณหภูมิ/ความชื้น), BMI270 (IMU 6 แกน) | Infineon DPS3xx, Sensirion SHT4x, Bosch BMI270 SensorAPI |
-| **Sensor I3C** | BMM350 (magnetometer/เข็มทิศ) | Bosch BMM350 SensorAPI |
+| **Sensor I2C** (1.8V) | DPS368 (ความดัน), SHT4x (อุณหภูมิ/ความชื้น), BMI270 (IMU 6 แกน) | `dps368_reader`, `sht4x_reader`, `bmi270_reader` |
+| **Sensor I3C** | BMM350 (magnetometer/เข็มทิศ) | `bmm350_reader` |
 
-**นักพัฒนาเขียนแค่:**
+ตัวอย่าง Practise อ่านเซนเซอร์ผ่าน **direct reader** (อยู่ใน `proj_cm55/app_sensor/`) บน CM55
+โดยใช้ bus handle ที่ template เตรียมไว้ใน `sensor_bus.h`:
+
 ```c
+#include "pse84_common.h"
 #include "sensor_bus.h"
-#include "dps368/dps368_presenter.h"
+#include "bmi270/bmi270_reader.h"
 
 void example_main(lv_obj_t *parent) {
-    dps368_presenter_start(&sensor_i2c_controller_hal_obj);
+    bmi270_reader_init(&sensor_i2c_controller_hal_obj);   /* bus เตรียมไว้แล้ว */
+    bmi270_sample_t s;
+    if (bmi270_reader_poll(&s)) {
+        /* ใช้ s.ax, s.gy, ... วาดบน parent */
+    }
 }
 ```
-Sensor bus ถูก init ไว้แล้ว — แค่ส่ง handle ให้ presenter ของ episode
-
-### 🎤 ระบบเสียง (Digital Microphone)
-
-PDM stereo microphone เชื่อมต่อผ่าน Cypress PDL — นักพัฒนาสามารถอ่าน audio frames
-แบบ stereo (left/right channel) ได้ทันที
 
 ### 📡 ระบบเครือข่ายไร้สาย (WiFi + TCP/IP + TLS)
 
-ชุด middleware ของ Infineon WiFi Connection Manager (cy_wcm) ถูก link เข้า master
-พร้อมใช้งาน ครอบคลุม:
-- **WiFi radio driver** (WHD + CYW55500)
-- **cy_wcm API** สำหรับ scan / connect / disconnect
-- **lwIP** — TCP/IP stack
-- **mbedTLS** (with hardware acceleration) — TLS/SSL/crypto
-- **WPA3** authentication
+ชุด middleware ของ Infineon WiFi Connection Manager (cy_wcm) ถูก link เข้า master พร้อมใช้:
+- **WiFi radio driver** (WHD + CYW55500) · **cy_wcm API** (scan/connect/disconnect)
+- **lwIP** (TCP/IP) · **mbedTLS** (hardware-accelerated) · **WPA3**
 
-**นักพัฒนาเขียนแค่:**
 ```c
 cy_wcm_init(&config);
-cy_wcm_scan(&scan_filter, on_scan_result, NULL);
 cy_wcm_connect_ap(&params, &ip_info);
 ```
 
-### ⚙️ ระบบจัดการงาน (FreeRTOS)
+### ⚙️ FreeRTOS + 🔍 Debug
 
-FreeRTOS kernel ถูกเตรียมให้พร้อมใช้: task scheduling, mutex, semaphore, queue, timer
-พร้อม **tickless idle** สำหรับประหยัดพลังงาน — นักพัฒนาสามารถสร้าง task เสริมได้ตามต้องการ
-
-### 🔍 Debug & Logging
-
-`printf()` ไปยัง debug UART (115200 baud) ถูกเปิดใช้งาน — นักพัฒนาสามารถดู log
-ผ่าน serial monitor ได้ทันทีเพื่อ debug และตรวจสอบการทำงานของโปรแกรม
+- **FreeRTOS** kernel พร้อมใช้: task, mutex, semaphore, queue, timer + tickless idle
+- **`printf()`** ไปยัง debug UART (115200 baud) เปิดใช้งานแล้ว — ดู log ผ่าน serial monitor ได้ทันที
 
 ---
 
 ## 🛠️ Hardware ที่รองรับ
 
-### Board
+- **Board:** Infineon **KIT_PSE84_AI** (PSoC Edge E84 AI Development Kit) ⭐
 
-- **Infineon KIT_PSE84_AI** (PSoC Edge E84 AI Development Kit) — recommended ⭐
+เลือกจอด้วย `CONFIG_DISPLAY` ใน `common.mk`:
 
-### Display
-
-เลือกได้ 3 แบบโดยการตั้งค่า `CONFIG_DISPLAY` ใน `common.mk`:
-
-| `CONFIG_DISPLAY` | Panel | ขนาด | Touch Controller |
+| `CONFIG_DISPLAY` | Panel | ขนาด | Touch |
 | --- | --- | --- | --- |
 | `W4P3INCH_DISP` ⭐ **default** | Waveshare 4.3" DSI | 480×800 | FT5406 |
 | `WS7P0DSI_RPI_DISP` | Waveshare 7" DSI | 1024×600 | GT911 |
 | `WF101JTYAHMNB0_DISP` | EK79007AD3 10.1" DSI | 1280×800 | ILI2511 |
 
-### Tool chain
-
-- **ModusToolbox 3.6** ขึ้นไป (https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software/)
-- **GCC ARM Embedded** 14.2.1 (มากับ ModusToolbox)
-- **KitProg3** สำหรับ flash และ debug (มากับบอร์ด)
+**Toolchain:** ModusToolbox 3.6+ · GCC ARM Embedded 14.2.1 · KitProg3 (flash/debug)
 
 ---
 
@@ -153,141 +142,75 @@ FreeRTOS kernel ถูกเตรียมให้พร้อมใช้: ta
 ### 1. Clone และเตรียม dependencies
 
 ```sh
-git clone https://github.com/TESA-AIoT-Platform/tesaiot_dev_kit_master.git
-cd tesaiot_dev_kit_master
+git clone -b tesaiot_bento_kit_master https://github.com/tesaiot/developer-hub.git tesaiot_bento_kit_master
+cd tesaiot_bento_kit_master
 
-# ดึง libraries (ประมาณ 1 นาที, ขนาด ~469 MB — ทำครั้งเดียว)
+# ดึง libraries (ทำครั้งเดียว)
 make getlibs
 ```
 
-### 2. เลือกและติดตั้ง Episode ที่ต้องการศึกษา
+### 2. วาง Practise Example ที่ต้องการ
 
-เข้าไปที่ https://www.tesaiot.dev เลือก episode ที่ต้องการ แล้วดาวน์โหลดหรือใช้
-folder ที่ checkout ไว้แล้ว. ใช้ helper script `tools/install_episode.sh`
-ซึ่งจะทำ **clean + install + invalidate build cache** ให้อัตโนมัติในคำสั่งเดียว:
+`apps/` คือช่อง drop-in (ไฟล์ระบบอยู่ใน `app_core/` นอก `apps/` จึงล้าง `apps/` ได้ปลอดภัย):
 
 ```sh
-# ติดตั้ง episode จาก folder (เช่น sibling episodes/ repo)
-tools/install_episode.sh ../episodes/hmi_ep01_basic_label
-
-# หรือจาก path ที่ unzip ไว้
-unzip ~/Downloads/hmi_ep01_basic_label.zip -d /tmp/
-tools/install_episode.sh /tmp/hmi_ep01_basic_label
+# ล้างตัวอย่างเดิม แล้ววางตัวอย่างใหม่
+rm -rf proj_cm55/apps/*
+rsync -a /path/to/prac_b18_thai_text/ proj_cm55/apps/
 ```
 
-สิ่งที่ script ทำให้อัตโนมัติ:
-1. ลบไฟล์ episode เก่าใน `proj_cm55/apps/` (เก็บ `app_interface.h` + `_default/` ไว้)
-2. rsync ไฟล์ของ episode ใหม่เข้าไป
-3. ล้าง build cache ของ `apps/` เพื่อ rebuild สะอาด
-
-> ⚠️ **อย่าลบ `proj_cm55/apps/app_interface.h` หรือ `proj_cm55/apps/_default/`** —
-> เป็นไฟล์ system ของ master template ที่ทุก episode ต้องพึ่ง. รายละเอียดอยู่ใน
-> comment block ของ `app_interface.h`
+> ซอร์สของตัวอย่างทั้งหมดอยู่ที่ branch
+> [`tesaiot_dev_kit_practise_codes`](https://github.com/tesaiot/developer-hub/tree/tesaiot_dev_kit_practise_codes)
 
 ### 3. Build แล้ว Flash
 
 ```sh
-make build      # ประมาณ 30 วินาที
+make build      # ได้ build/app_combined.hex (รวม 3 cores)
 make program    # flash ลงบอร์ดผ่าน KitProg3
 ```
 
-### 4. เปลี่ยน / ย้อน Episode
+### 4. ดู serial log
 
-```sh
-# เปลี่ยนเป็น episode อื่น — script จัดการ clean + install ให้
-tools/install_episode.sh ../episodes/int_ep07_sensorhub_final
-make build && make program
-
-# หรือล้าง episode กลับเป็น default splash screen
-tools/clean_episode.sh
-make build && make program
-```
-
-### 5. ดูผลบนจอของบอร์ดและ serial log
-
-เปิด serial monitor ที่ 115200 baud เพื่อดู debug output:
+เปิด serial monitor ที่ 115200 baud:
 - macOS: `screen /dev/cu.usbmodem* 115200`
 - Linux: `screen /dev/ttyACM0 115200`
-- Windows: ใช้ PuTTY หรือ TeraTerm เปิด COM port
+- Windows: PuTTY / TeraTerm
 
 ---
 
-## 📚 Curriculum — 14 Episodes ที่มีให้ศึกษา
+## 📚 Practise Examples (19 ตัวพร้อมใช้บน firmware)
 
-หลักสูตรแบ่งเป็น 2 ซีรีส์หลัก ศึกษาคู่ขนานกันได้ตามความสนใจ:
+ชุดตัวอย่างฝึกฝน แบ่งเป็น 3 กลุ่ม — แต่ละตัวมี combined hex ใน
+[GitHub Releases](https://github.com/tesaiot/developer-hub/releases) ดาวน์โหลดแล้ว flash ได้ทันที
 
-### 🔵 Series 1 — HMI Menu & Setting (UI + WiFi)
+| กลุ่ม | จำนวน | ตัวอย่าง |
+| --- | :---: | --- |
+| **A — Pure UI** | 5 | thai_text, color_mixer, lcd_console, tile_navigation, multi_page_app |
+| **B — Sensor Visualization** | 10 | line_chart_accel, motion_detector, level_bubble, gauge_cluster, bar_chart_multi, data_logger, environ_monitor, sensor_fusion, automation_rules, chart_statistics |
+| **C — Production Patterns** | 4 | production_dashboard, smart_watch, status_panel, wifi_connect |
 
-เน้นการสร้าง Graphical User Interface และการเชื่อมต่อ WiFi
+รายการเต็ม + เอกสารภาษาไทย: branch
+[`tesaiot_dev_kit_practise_codes`](https://github.com/tesaiot/developer-hub/tree/tesaiot_dev_kit_practise_codes)
 
-| # | Episode | ระดับ | สิ่งที่จะได้เรียนรู้ |
-| --- | --- | --- | --- |
-| 01 | `hmi_ep01_basic_label` | 🟢 Beginner | LVGL label + image — หน้าจอ LVGL ตัวแรก |
-| 02 | `hmi_ep02_button_event` | 🟢 Beginner | Button widget + event callback + counter logic |
-| 03 | `hmi_ep03_text_input_keyboard` | 🟢 Beginner | Textarea + keyboard + input mode switching |
-| 04 | `hmi_ep04_menu_navigation` | 🟢 Beginner | Menu shell + tabs + page routing |
-| 05 | `hmi_ep05_wifi_list` | 🟡 Intermediate | WiFi scan + AP list + signal strength |
-| 06 | `hmi_ep06_wifi_profile_nvm` | 🟡 Intermediate | WiFi profile form + NVM persistence (save/load/clear) |
-| 07 | `hmi_ep07_final_wifi_manager` | 🟡 Intermediate | Full WiFi Manager (connect/disconnect/retry/auto-connect) |
-
-### 🟠 Series 2 — Interactive with TESAIoT Dev Kit (Sensors + Audio)
-
-เน้นการอ่านและนำเสนอข้อมูลจากเซ็นเซอร์ + ไมโครโฟนดิจิทัล
-
-| # | Episode | ระดับ | สิ่งที่จะได้เรียนรู้ |
-| --- | --- | --- | --- |
-| 01 | `int_ep01_dps368_monitor` | 🟢 Beginner | DPS368 — อ่านความดันและอุณหภูมิ |
-| 02 | `int_ep02_bmi270_motion_visual` | 🟢 Beginner | BMI270 — accel/gyro + trend chart |
-| 03 | `int_ep03_sht40_indicator` | 🟢 Beginner | SHT4x — อุณหภูมิ/ความชื้น + comfort zone |
-| 04 | `int_ep04_bmm350_compass` | 🟡 Intermediate | BMM350 — เข็มทิศ + manual calibration |
-| 05 | `int_ep05_bmi270_radar_view` | 🟡 Intermediate | BMI270 — radar-style motion visualization |
-| 06 | `int_ep06_digital_mic_probe` | 🟡 Intermediate | PDM stereo mic + level meter + peak hold |
-| 07 | `int_ep07_sensorhub_final` | 🔴 Advanced | Multi-sensor dashboard — รวม 4 sensors + PDM mic |
-
-### เส้นทางการเรียนรู้แนะนำ
-
-- **เริ่มต้น** → HMI ep01 → ep02 → ep03 → ep04 (ศึกษาพื้นฐาน LVGL)
-- **เซ็นเซอร์** → INT ep01 → ep02 → ep03 → ep04 → ep05 (ศึกษาการอ่าน sensor ทีละตัว)
-- **การเชื่อมต่อ** → HMI ep05 → ep06 → ep07 (ศึกษา WiFi ทีละขั้น)
-- **เสียง** → INT ep06 (PDM mic)
-- **รวมทุกอย่าง** → INT ep07 (sensor dashboard) หรือ HMI ep07 (WiFi Manager)
+> หมายเหตุ: ตัวอย่างชุดเกม (รหัส a10–a15) อยู่ระหว่างพัฒนา game framework บน firmware
+> จึงยังไม่รวมอยู่ในชุดนี้
 
 ---
 
-## 🔄 การสลับระหว่าง Episode
-
-เมื่อศึกษา episode หนึ่งเสร็จแล้วและอยากศึกษา episode ถัดไป:
-
-```sh
-# 1. ลบ episode เก่าออก (เก็บไฟล์ระบบไว้)
-find proj_cm55/apps -mindepth 1 -maxdepth 1 \
-     ! -name 'app_interface.h' ! -name 'README.md' ! -name '_default' \
-     -exec rm -rf {} +
-
-# 2. วาง episode ใหม่
-unzip ~/Downloads/<next_episode>.zip -d proj_cm55/apps/
-
-# 3. Build ใหม่ (incremental — ใช้เวลาแค่ไม่กี่วินาที)
-make build
-make program
-```
-
-**ไม่ต้องแก้ `main.c` หรือ `Makefile`** — ระบบของ Master Template จะรับรู้ episode ใหม่โดยอัตโนมัติ
-
----
-
-## 📂 โครงสร้างของ Master Template
+## 📂 โครงสร้างของ Template
 
 ```
-tesaiot_dev_kit_master/
+tesaiot_bento_kit_master/
 ├── proj_cm55/              ← โปรเจกต์หลัก (Cortex-M55, UI + sensors + WiFi)
-│   ├── main.c              ← ไฟล์หลัก (ไม่ต้องแก้) — เตรียมทุก subsystem แล้วเรียก episode
-│   ├── apps/               ← ⭐ ตำแหน่งสำหรับวาง episode
-│   │   ├── app_interface.h      (สัญญาของ episode)
-│   │   ├── README.md
-│   │   └── _default/            (หน้าจอเริ่มต้นก่อนติดตั้ง episode)
-│   ├── app_assets/         ← โลโก้ + asset ที่ทุก episode ใช้ร่วมกัน
-│   ├── platform/           ← retarget_io, sensor_bus
+│   ├── main.c              ← เตรียมทุก subsystem แล้วเรียก example_main() (ไม่ต้องแก้)
+│   ├── apps/               ← ⭐ ตำแหน่งวาง practise example (เริ่มต้นว่าง)
+│   ├── app_core/           ← ระบบของ template:
+│   │   ├── app_interface.h          (สัญญา example_main)
+│   │   ├── example_main_default.c   (weak fallback / splash)
+│   │   └── pse84_common.h           (UI palette + helper inlines ของ practise)
+│   ├── app_sensor/         ← direct readers: bmi270 / bmm350 / dps368 / sht4x
+│   ├── app_assets/         ← โลโก้ + ฟอนต์ Noto Sans Thai
+│   ├── platform/           ← sensor_bus.h, retarget_io
 │   ├── lvgl_cfg/           ← LVGL configuration
 │   ├── lvgl_port/          ← LVGL display + touch bindings
 │   ├── lvgl_override/      ← VGLite GPU draw path
@@ -300,49 +223,29 @@ tesaiot_dev_kit_master/
 ├── common.mk               ← TARGET, CONFIG, TOOLCHAIN, CONFIG_DISPLAY
 ├── common_app.mk
 ├── Makefile                ← top-level multi-core orchestration
-└── docs/
-    └── EXTENDING.md        ← สำหรับนักพัฒนาที่ต้องการต่อยอดหรือปรับแต่ง master ระดับลึก
+└── docs/EXTENDING.md       ← คู่มือการต่อยอด master ระดับลึก
 ```
+
+> `build/` และ `libs/` ไม่ได้ commit ไว้ใน branch — รัน `make getlibs` เพื่อดึง dependencies
+> และ `make build` เพื่อสร้าง artifacts
 
 ---
 
 ## 🔗 ทรัพยากรเพิ่มเติม
 
 - **🌐 TESAIoT Foundation Platform**: <https://www.tesaiot.dev>
-  แหล่งรวม catalog ของ episodes, เอกสารประกอบ, วิดีโอสอน, และชุมชนนักพัฒนา
-- **📘 Episodes Catalogue**: `../episodes/README.md`
-  รายละเอียดของทั้ง 14 episodes ภาษาไทย (Why / What / How)
-- **🔧 สำหรับการต่อยอดระดับลึก**: `docs/EXTENDING.md`
-  คู่มือการเพิ่ม episode ใหม่ เพิ่ม sensor/peripheral ใน master และการปรับแต่ง build system
-- **📖 LVGL Documentation**: <https://docs.lvgl.io/9.x/>
-- **📖 ModusToolbox User Guide**: <https://www.infineon.com/modustoolbox>
+- **📦 Combined hex releases**: <https://github.com/tesaiot/developer-hub/releases>
+- **📘 Practise source**: branch [`tesaiot_dev_kit_practise_codes`](https://github.com/tesaiot/developer-hub/tree/tesaiot_dev_kit_practise_codes)
+- **🔧 ต่อยอดระดับลึก**: `docs/EXTENDING.md`
+- **📖 LVGL Docs**: <https://docs.lvgl.io/9.x/> · **ModusToolbox**: <https://www.infineon.com/modustoolbox>
 
 ---
 
-## 🏛️ Credit
+## 🏛️ Credit & License
 
-**TESAIoT Firmware Stack** เป็นส่วนหนึ่งของ **TESAIoT Foundation Platform** พัฒนาและดูแลโดย:
+**TESAIoT Firmware Stack** เป็นส่วนหนึ่งของ **TESAIoT Foundation Platform** พัฒนาและดูแลโดย
+**สมาคมสมองกลฝังตัวไทย (Thai Embedded Systems Association — TESA)** · <https://www.tesaiot.dev>
 
-<p align="center">
-  <strong>สมาคมสมองกลฝังตัวไทย</strong><br>
-  Thai Embedded Systems Association (TESA)<br>
-  <a href="https://www.tesaiot.dev">www.tesaiot.dev</a>
-</p>
-
----
-
-## 📝 License
-
-**MIT License** — Contributed by **สมาคมสมองกลฝังตัวไทย (Thai Embedded Systems Association — TESA)**
-
-ดูรายละเอียดใน `LICENSE`
-
-Master template นี้รวมส่วนประกอบ open-source จาก:
-- Infineon ModusToolbox BSP + middleware
-- LVGL Project
-- FreeRTOS
-- Bosch Sensortec BMI270 + BMM350 SensorAPI
-- Sensirion SHT4x driver
-- Infineon WiFi Host Driver + mbedTLS
-
-โดย license ของแต่ละส่วนเป็นไปตามต้นทาง
+**MIT License** (ดู `LICENSE`) — รวมส่วนประกอบ open-source จาก Infineon ModusToolbox BSP +
+middleware, LVGL, FreeRTOS, Bosch Sensortec BMI270/BMM350 SensorAPI, Sensirion SHT4x,
+Infineon WiFi Host Driver + mbedTLS โดย license ของแต่ละส่วนเป็นไปตามต้นทาง

@@ -5,24 +5,26 @@
     "display_name": "Infineon PSoC Edge E84",
     "id": "psoc-edge-e84"
   },
-  "description": "A foundational firmware template for AIoT development on Infineon PSoC Edge E84 boards, pre-configured with subsystems like HMI, sensors, WiFi, and FreeRTOS for building task-based applications.",
-  "display_name": "TESAIoT Dev Kit Master Project Template",
+  "description": "Multi-core firmware template that hosts the TESAIoT practise examples on the Infineon PSoC Edge E84 (KIT_PSE84_AI) with the 4.3-inch display. Pre-configured with LVGL + VGLite GPU, direct sensor readers (BMI270/BMM350/DPS368/SHT4x), WiFi, and FreeRTOS. Drop a practise example into proj_cm55/apps/ and build a combined 3-core image.",
+  "display_name": "TESAIoT Bento Kit Master Project Template",
   "download": {
     "format": "zip",
-    "url": "https://github.com/tesaiot/developer-hub/archive/refs/heads/tesaiot_dev_kit_master.zip"
+    "url": "https://github.com/tesaiot/developer-hub/archive/refs/heads/tesaiot_bento_kit_master.zip"
   },
   "links": {
-    "readme": "https://github.com/tesaiot/developer-hub/blob/tesaiot_dev_kit_master/README.md",
-    "repository": "https://github.com/tesaiot/developer-hub"
+    "readme": "https://github.com/tesaiot/developer-hub/blob/tesaiot_bento_kit_master/README.md",
+    "repository": "https://github.com/tesaiot/developer-hub",
+    "examples": "https://github.com/tesaiot/developer-hub/tree/tesaiot_dev_kit_practise_codes",
+    "releases": "https://github.com/tesaiot/developer-hub/releases"
   },
   "quick_start_steps": [
-    "Clone or download the project from the repository.",
-    "Download an episode example from the TESAIoT website and place it in the 'proj_cm55/apps/' folder.",
-    "Build the project using ModusToolbox and CMake.",
-    "Flash the firmware to the PSoC Edge E84 board and test the application."
+    "Clone the tesaiot_bento_kit_master branch and run 'make getlibs'.",
+    "Place a practise example into the 'proj_cm55/apps/' folder (sources live on the tesaiot_dev_kit_practise_codes branch).",
+    "Build the project with ModusToolbox ('make build') to produce a combined 3-core hex.",
+    "Flash the firmware to the PSoC Edge E84 board ('make program') and test the application."
   ],
   "schema_version": "1.0.0",
-  "template_id": "tesaiot-dev-kit-master-template",
+  "template_id": "tesaiot-bento-kit-master-template",
   "template_type": "firmware",
   "toolchain": {
     "build_system": "CMake",
