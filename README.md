@@ -1,8 +1,8 @@
 # Practice Examples — TESAIoT Dev Kit
 
 ตัวอย่างสำหรับฝึกฝนนอกเวลาและต่อยอดสร้าง IoT Application บน TESAIoT Dev Kit
-รวม 24 ตัวอย่าง — **19 ตัวพร้อมใช้บน firmware** (มี combined hex ใน GitHub Releases)
-และ **5 เกมที่ deferred** (ยังพอร์ต game framework ไม่เสร็จ — เก็บไว้ที่ `_deferred/`)
+รวม **19 ตัวอย่างพร้อมใช้บน firmware** — แต่ละตัวมี combined hex (รวม 3 cores)
+ใน [GitHub Releases](https://github.com/tesaiot/developer-hub/releases) ดาวน์โหลดแล้ว flash ได้ทันที
 
 ## รายการตัวอย่าง
 
@@ -18,9 +18,8 @@
 | 4 | prac_i15_tile_navigation | Tile Navigation | Intermediate | swipe ซ้าย-ขวาสลับ 4 หน้า ด้วย TileView |
 | 5 | prac_i28_multi_page_app | Multi-Page App | Intermediate | app 3 หน้า (Home/Sensors/Settings) พร้อม tab bar |
 
-> **5 เกม (Advanced)** — flappy_bird, snake_game, pong_game, game_shooter, game_framework —
-> ย้ายไปที่ [`_deferred/`](_deferred/) เพราะ game framework ยังพอร์ตมา firmware ไม่เสร็จ
-> (ทำงานได้ใน PC simulator) ดูแผนเปิดใช้ที่ [`_deferred/`](_deferred/)
+> หมายเหตุ: ตัวอย่างชุดเกม (รหัส a10–a15) อยู่ระหว่างพัฒนา game framework บน firmware
+> จึงยังไม่รวมอยู่ในชุดนี้
 
 ### กลุ่ม B: Sensor Visualization — 10 ตัวอย่าง
 
