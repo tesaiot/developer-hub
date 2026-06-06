@@ -14,8 +14,10 @@
 #include "sensor_bus.h"
 
 #define UPDATE_MS    30
-#define AREA_W       400
-#define AREA_H       400
+/* AREA kept <= 240 px: a large LV_RADIUS_CIRCLE (radius >= ~150) hangs the
+ * PSoC Edge VGLite GPU. 240 px (radius 120) renders fine; 400 px hangs. */
+#define AREA_W       240
+#define AREA_H       240
 #define BUBBLE_R     20
 #define SENSITIVITY  150.0f   /* pixels per g */
 

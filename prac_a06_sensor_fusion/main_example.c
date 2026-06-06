@@ -224,6 +224,10 @@ void example_main(lv_obj_t *parent)
     lv_obj_set_style_radius(comp_bg, LV_RADIUS_CIRCLE, 0);
     lv_obj_set_style_border_width(comp_bg, 2, 0);
     lv_obj_set_style_border_color(comp_bg, UI_COLOR_PRIMARY, 0);
+    /* Cardinal labels and the needle below use coordinates relative to the
+     * circle's true top-left (center at COMPASS_R,COMPASS_R). Zero the default
+     * theme padding so that origin assumption holds — otherwise they scatter. */
+    lv_obj_set_style_pad_all(comp_bg, 0, 0);
     lv_obj_clear_flag(comp_bg, LV_OBJ_FLAG_SCROLLABLE);
 
     /* Cardinal labels */
