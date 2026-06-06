@@ -84,6 +84,7 @@ static void add_log_entry(logger_ctx_t *ctx)
     lv_obj_set_style_bg_opa(row, LV_OPA_COVER, 0);
     lv_obj_set_style_radius(row, 4, 0);
     lv_obj_set_style_border_width(row, 0, 0);
+    lv_obj_set_style_pad_ver(row, 0, 0);   /* zero default vertical pad so LEFT_MID children center in the full row height */
     lv_obj_set_style_pad_hor(row, 8, 0);
     lv_obj_clear_flag(row, LV_OBJ_FLAG_SCROLLABLE);
 

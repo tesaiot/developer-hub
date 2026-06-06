@@ -362,11 +362,9 @@ void example_main(lv_obj_t *parent)
     lv_obj_set_style_pad_all(s_content_area, 0, 0);
     lv_obj_clear_flag(s_content_area, LV_OBJ_FLAG_SCROLLABLE);
 
-    lv_obj_t *th_sub = lv_label_create(s_content_area);
-    lv_label_set_text(th_sub, "แอปพลิเคชันหลายหน้า");
-    lv_obj_set_style_text_font(th_sub, &lv_font_noto_thai_14, 0);
-    lv_obj_set_style_text_color(th_sub, UI_COLOR_TEXT_DIM, 0);
-    lv_obj_align(th_sub, LV_ALIGN_TOP_MID, 0, 4);
+    /* (Removed a Thai subtitle that was created here on s_content_area but
+     * immediately destroyed by navigate_to()'s lv_obj_clean() — it never
+     * rendered. Per-page content provides its own titles.) */
 
     /* Tab bar at bottom */
     create_tab_bar(parent);

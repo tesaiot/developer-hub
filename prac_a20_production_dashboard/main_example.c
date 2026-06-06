@@ -59,6 +59,7 @@ static lv_obj_t *create_sensor_card(lv_obj_t *parent, const char *title,
 
     lv_obj_t *card = example_card_create(parent, CARD_W, CARD_H, UI_COLOR_CARD_BG);
     lv_obj_align(card, LV_ALIGN_TOP_MID, x_off, y_base + row * (CARD_H + CARD_GAP));
+    lv_obj_set_style_pad_all(card, 0, 0);   /* children aligned with offsets assume true edges */
 
     /* Accent bar (left edge) */
     lv_obj_t *bar = lv_obj_create(card);
@@ -217,6 +218,7 @@ void example_main(lv_obj_t *parent)
     lv_obj_t *status_bar = example_card_create(parent, STATUS_W, STATUS_H,
                                                 UI_COLOR_CARD_BG);
     lv_obj_align(status_bar, LV_ALIGN_BOTTOM_MID, 0, -8);
+    lv_obj_set_style_pad_all(status_bar, 0, 0);   /* 20px children need full 36px height (pad=12 clipped them) */
     lv_obj_set_flex_flow(status_bar, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_pad_column(status_bar, 12, 0);
     lv_obj_set_flex_align(status_bar, LV_FLEX_ALIGN_SPACE_EVENLY,

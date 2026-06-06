@@ -261,6 +261,7 @@ void example_main(lv_obj_t *parent)
     lv_obj_t *hor_card = lv_obj_create(parent);
     lv_obj_set_size(hor_card, HORIZON_W + 20, HORIZON_H + 50);
     lv_obj_set_pos(hor_card, 200, 40);
+    lv_obj_set_style_pad_all(hor_card, 0, 0);   /* hor_hdr below uses set_pos from true origin */
     lv_obj_set_style_bg_color(hor_card, UI_COLOR_CARD_BG, 0);
     lv_obj_set_style_bg_opa(hor_card, LV_OPA_COVER, 0);
     lv_obj_set_style_radius(hor_card, 12, 0);
@@ -282,6 +283,7 @@ void example_main(lv_obj_t *parent)
     lv_obj_set_style_radius(hor_area, 8, 0);
     lv_obj_set_style_border_width(hor_area, 0, 0);
     lv_obj_set_style_clip_corner(hor_area, true, 0);
+    lv_obj_set_style_pad_all(hor_area, 0, 0);   /* horizon_line uses set_pos/set_y from true origin */
     lv_obj_clear_flag(hor_area, LV_OBJ_FLAG_SCROLLABLE);
 
     /* Ground half */

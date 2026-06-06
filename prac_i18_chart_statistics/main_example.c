@@ -162,6 +162,7 @@ void example_main(lv_obj_t *parent)
     for (int i = 0; i < 4; i++) {
         lv_obj_t *sc = lv_obj_create(stats);
         lv_obj_set_size(sc, 170, 70);
+        lv_obj_set_style_pad_all(sc, 6, 0);   /* default 20px pad clipped the value label; 6px keeps content full-width */
         lv_obj_set_style_bg_color(sc, lv_color_hex(0x0A1628), 0);
         lv_obj_set_style_bg_opa(sc, LV_OPA_COVER, 0);
         lv_obj_set_style_radius(sc, 8, 0);
