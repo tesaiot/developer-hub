@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration app="BACKEND" formatVersion="15" lastSavedWith="Configurator Backend" lastSavedWithVersion="3.60.0" toolsPackage="ModusToolbox 3.6.0" xmlns="http://cypress.com/xsd/cydesignfile_v6">
+<Configuration app="BACKEND" formatVersion="15" lastSavedWith="Configurator Backend" lastSavedWithVersion="3.80.0" toolsPackage="ModusToolbox 3.8.0" xmlns="http://cypress.com/xsd/cydesignfile_v7">
     <Devices>
         <Device mpn="PSE846GPS2DBZC4A">
             <BlockConfig>
@@ -1152,6 +1152,74 @@
                         <Param id="vtrip" value="CY_GPIO_VTRIP_CMOS"/>
                     </Parameters>
                 </Personality>
+                <Personality template="pin" version="3.0" instance="8ow9SPA8du8">
+                    <Block location="ioss[0].port[15].pin[4]" locked="true"/>
+                    <Parameters>
+                        <Param id="DriveModes" value="CY_GPIO_DM_ANALOG"/>
+                        <Param id="driveStrength" value="CY_GPIO_DRIVE_1_2"/>
+                        <Param id="driveStrengthTrim" value="CY_GPIO_DRIVE_STRENGTH_DEFAULT"/>
+                        <Param id="extended_drive_sel" value="false"/>
+                        <Param id="inFlash" value="true"/>
+                        <Param id="initialState" value="1"/>
+                        <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
+                        <Param id="nonSec" value="1"/>
+                        <Param id="pullUpRes" value="CY_GPIO_PULLUP_RES_DISABLE"/>
+                        <Param id="sioOutputBuffer" value="true"/>
+                        <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
+                        <Param id="vtrip" value="CY_GPIO_VTRIP_CMOS"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="pin" version="3.0" instance="P_N_tzeS9CQ">
+                    <Block location="ioss[0].port[15].pin[5]" locked="true"/>
+                    <Parameters>
+                        <Param id="DriveModes" value="CY_GPIO_DM_ANALOG"/>
+                        <Param id="driveStrength" value="CY_GPIO_DRIVE_1_2"/>
+                        <Param id="driveStrengthTrim" value="CY_GPIO_DRIVE_STRENGTH_DEFAULT"/>
+                        <Param id="extended_drive_sel" value="false"/>
+                        <Param id="inFlash" value="true"/>
+                        <Param id="initialState" value="1"/>
+                        <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
+                        <Param id="nonSec" value="1"/>
+                        <Param id="pullUpRes" value="CY_GPIO_PULLUP_RES_DISABLE"/>
+                        <Param id="sioOutputBuffer" value="true"/>
+                        <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
+                        <Param id="vtrip" value="CY_GPIO_VTRIP_CMOS"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="pin" version="3.0" instance="UTDYKRvEM-Q">
+                    <Block location="ioss[0].port[15].pin[6]" locked="true"/>
+                    <Parameters>
+                        <Param id="DriveModes" value="CY_GPIO_DM_ANALOG"/>
+                        <Param id="driveStrength" value="CY_GPIO_DRIVE_1_2"/>
+                        <Param id="driveStrengthTrim" value="CY_GPIO_DRIVE_STRENGTH_DEFAULT"/>
+                        <Param id="extended_drive_sel" value="false"/>
+                        <Param id="inFlash" value="true"/>
+                        <Param id="initialState" value="1"/>
+                        <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
+                        <Param id="nonSec" value="1"/>
+                        <Param id="pullUpRes" value="CY_GPIO_PULLUP_RES_DISABLE"/>
+                        <Param id="sioOutputBuffer" value="true"/>
+                        <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
+                        <Param id="vtrip" value="CY_GPIO_VTRIP_CMOS"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="pin" version="3.0" instance="E5A4rcQHFPs">
+                    <Block location="ioss[0].port[15].pin[7]" locked="true"/>
+                    <Parameters>
+                        <Param id="DriveModes" value="CY_GPIO_DM_ANALOG"/>
+                        <Param id="driveStrength" value="CY_GPIO_DRIVE_1_2"/>
+                        <Param id="driveStrengthTrim" value="CY_GPIO_DRIVE_STRENGTH_DEFAULT"/>
+                        <Param id="extended_drive_sel" value="false"/>
+                        <Param id="inFlash" value="true"/>
+                        <Param id="initialState" value="1"/>
+                        <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
+                        <Param id="nonSec" value="1"/>
+                        <Param id="pullUpRes" value="CY_GPIO_PULLUP_RES_DISABLE"/>
+                        <Param id="sioOutputBuffer" value="true"/>
+                        <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
+                        <Param id="vtrip" value="CY_GPIO_VTRIP_CMOS"/>
+                    </Parameters>
+                </Personality>
                 <Personality template="pin" version="3.0" instance="2qlj6Vi119g">
                     <Block location="ioss[0].port[16].pin[0]" locked="true">
                         <Aliases>
@@ -1978,6 +2046,9 @@
                         <Param id="privileged1" value="false"/>
                         <Param id="privileged2" value="false"/>
                         <Param id="privileged3" value="false"/>
+                        <Param id="shareable1" value="false"/>
+                        <Param id="shareable2" value="false"/>
+                        <Param id="shareable3" value="false"/>
                         <Param id="size1" value="0x00003000"/>
                         <Param id="size2" value="0x00040000"/>
                         <Param id="size3" value="0x00300000"/>
@@ -2126,7 +2197,7 @@
                     </Parameters>
                 </Personality>
                 <Personality template="lppass_adc_gpio_channel" version="1.0" instance="Aq4nFAzUhJ0">
-                    <Block location="pass[0].sar[0].gpiochan[0]" locked="true">
+                    <Block location="pass[0].sar[0].gpiochan[0]" locked="false">
                         <Aliases>
                             <Alias value="CYBSP_SAR_ADC_GPIO_CH_0"/>
                         </Aliases>
@@ -2138,7 +2209,61 @@
                         <Param id="sar_gpio_invPin" value="CY_AUTANALOG_SAR_PIN_GPIO0"/>
                         <Param id="sar_gpio_invertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
                         <Param id="sar_gpio_limitDetectionSelect" value="CY_AUTANALOG_SAR_LIMIT_STATUS_DISABLED"/>
-                        <Param id="sar_gpio_nonInvPin" value="CY_AUTANALOG_SAR_PIN_GPIO1"/>
+                        <Param id="sar_gpio_nonInvPin" value="CY_AUTANALOG_SAR_PIN_GPIO4"/>
+                        <Param id="sar_gpio_nonInvertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_resultFormat" value="false"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_gpio_channel" version="1.0" instance="PotGpioChan1zzz">
+                    <Block location="pass[0].sar[0].gpiochan[1]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_GPIO_CH_1"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="debug" value="false"/>
+                        <Param id="pseudoDifferentialEnable" value="false"/>
+                        <Param id="sar_gpio_accumulationShift" value="false"/>
+                        <Param id="sar_gpio_invPin" value="CY_AUTANALOG_SAR_PIN_GPIO0"/>
+                        <Param id="sar_gpio_invertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_limitDetectionSelect" value="CY_AUTANALOG_SAR_LIMIT_STATUS_DISABLED"/>
+                        <Param id="sar_gpio_nonInvPin" value="CY_AUTANALOG_SAR_PIN_GPIO5"/>
+                        <Param id="sar_gpio_nonInvertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_resultFormat" value="false"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_gpio_channel" version="1.0" instance="PotGpioChan2zzz">
+                    <Block location="pass[0].sar[0].gpiochan[2]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_GPIO_CH_2"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="debug" value="false"/>
+                        <Param id="pseudoDifferentialEnable" value="false"/>
+                        <Param id="sar_gpio_accumulationShift" value="false"/>
+                        <Param id="sar_gpio_invPin" value="CY_AUTANALOG_SAR_PIN_GPIO0"/>
+                        <Param id="sar_gpio_invertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_limitDetectionSelect" value="CY_AUTANALOG_SAR_LIMIT_STATUS_DISABLED"/>
+                        <Param id="sar_gpio_nonInvPin" value="CY_AUTANALOG_SAR_PIN_GPIO6"/>
+                        <Param id="sar_gpio_nonInvertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_resultFormat" value="false"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_gpio_channel" version="1.0" instance="PotGpioChan3zzz">
+                    <Block location="pass[0].sar[0].gpiochan[3]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_GPIO_CH_3"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="debug" value="false"/>
+                        <Param id="pseudoDifferentialEnable" value="false"/>
+                        <Param id="sar_gpio_accumulationShift" value="false"/>
+                        <Param id="sar_gpio_invPin" value="CY_AUTANALOG_SAR_PIN_GPIO0"/>
+                        <Param id="sar_gpio_invertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
+                        <Param id="sar_gpio_limitDetectionSelect" value="CY_AUTANALOG_SAR_LIMIT_STATUS_DISABLED"/>
+                        <Param id="sar_gpio_nonInvPin" value="CY_AUTANALOG_SAR_PIN_GPIO7"/>
                         <Param id="sar_gpio_nonInvertingInputCoefficient" value="CY_AUTANALOG_SAR_CH_COEFF_DISABLED"/>
                         <Param id="sar_gpio_resultFormat" value="false"/>
                     </Parameters>
@@ -2156,7 +2281,7 @@
                     </Parameters>
                 </Personality>
                 <Personality template="lppass_adc_sequencer" version="1.0" instance="mDpIhtMjd9I">
-                    <Block location="pass[0].sar[0].group[0].scan[0]" locked="true">
+                    <Block location="pass[0].sar[0].group[0].scan[0]" locked="false">
                         <Aliases>
                             <Alias value="CYBSP_SAR_ADC_SCAN_GRP_0_SCAN_0"/>
                         </Aliases>
@@ -2166,6 +2291,93 @@
                         <Param id="accumulationEnable" value="true"/>
                         <Param id="calibrationInRuntime" value="CY_AUTANALOG_SAR_CAL_DISABLED"/>
                         <Param id="channelGpio" value="CY_AUTANALOG_SAR_CHAN_MASK_GPIO0"/>
+                        <Param id="channelGpio0" value="false"/>
+                        <Param id="channelGpio1" value="false"/>
+                        <Param id="channelGpio2" value="false"/>
+                        <Param id="channelGpio3" value="false"/>
+                        <Param id="channelGpio4" value="false"/>
+                        <Param id="channelGpio5" value="false"/>
+                        <Param id="channelGpio6" value="false"/>
+                        <Param id="channelGpio7" value="false"/>
+                        <Param id="channelMux" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="channelMux0" value="false"/>
+                        <Param id="channelMux1" value="false"/>
+                        <Param id="debug" value="false"/>
+                        <Param id="sampleTimeEnable" value="true"/>
+                        <Param id="sampleTimeSelect" value="CY_AUTANALOG_SAR_SAMPLE_TIME0"/>
+                        <Param id="sar_mux_0Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="sar_mux_1Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_sequencer" version="1.0" instance="PotScan1zzzzzzz">
+                    <Block location="pass[0].sar[0].group[0].scan[1]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_SCAN_GRP_0_SCAN_1"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="accCount" value="CY_AUTANALOG_SAR_ACC_CNT2"/>
+                        <Param id="accumulationEnable" value="true"/>
+                        <Param id="calibrationInRuntime" value="CY_AUTANALOG_SAR_CAL_DISABLED"/>
+                        <Param id="channelGpio" value="CY_AUTANALOG_SAR_CHAN_MASK_GPIO1"/>
+                        <Param id="channelGpio0" value="false"/>
+                        <Param id="channelGpio1" value="false"/>
+                        <Param id="channelGpio2" value="false"/>
+                        <Param id="channelGpio3" value="false"/>
+                        <Param id="channelGpio4" value="false"/>
+                        <Param id="channelGpio5" value="false"/>
+                        <Param id="channelGpio6" value="false"/>
+                        <Param id="channelGpio7" value="false"/>
+                        <Param id="channelMux" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="channelMux0" value="false"/>
+                        <Param id="channelMux1" value="false"/>
+                        <Param id="debug" value="false"/>
+                        <Param id="sampleTimeEnable" value="true"/>
+                        <Param id="sampleTimeSelect" value="CY_AUTANALOG_SAR_SAMPLE_TIME0"/>
+                        <Param id="sar_mux_0Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="sar_mux_1Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_sequencer" version="1.0" instance="PotScan2zzzzzzz">
+                    <Block location="pass[0].sar[0].group[0].scan[2]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_SCAN_GRP_0_SCAN_2"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="accCount" value="CY_AUTANALOG_SAR_ACC_CNT2"/>
+                        <Param id="accumulationEnable" value="true"/>
+                        <Param id="calibrationInRuntime" value="CY_AUTANALOG_SAR_CAL_DISABLED"/>
+                        <Param id="channelGpio" value="CY_AUTANALOG_SAR_CHAN_MASK_GPIO2"/>
+                        <Param id="channelGpio0" value="false"/>
+                        <Param id="channelGpio1" value="false"/>
+                        <Param id="channelGpio2" value="false"/>
+                        <Param id="channelGpio3" value="false"/>
+                        <Param id="channelGpio4" value="false"/>
+                        <Param id="channelGpio5" value="false"/>
+                        <Param id="channelGpio6" value="false"/>
+                        <Param id="channelGpio7" value="false"/>
+                        <Param id="channelMux" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="channelMux0" value="false"/>
+                        <Param id="channelMux1" value="false"/>
+                        <Param id="debug" value="false"/>
+                        <Param id="sampleTimeEnable" value="true"/>
+                        <Param id="sampleTimeSelect" value="CY_AUTANALOG_SAR_SAMPLE_TIME0"/>
+                        <Param id="sar_mux_0Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                        <Param id="sar_mux_1Choice" value="CY_AUTANALOG_SAR_CHAN_CFG_MUX0"/>
+                    </Parameters>
+                </Personality>
+                <Personality template="lppass_adc_sequencer" version="1.0" instance="PotScan3zzzzzzz">
+                    <Block location="pass[0].sar[0].group[0].scan[3]" locked="false">
+                        <Aliases>
+                            <Alias value="CYBSP_SAR_ADC_SCAN_GRP_0_SCAN_3"/>
+                        </Aliases>
+                    </Block>
+                    <Parameters>
+                        <Param id="accCount" value="CY_AUTANALOG_SAR_ACC_CNT2"/>
+                        <Param id="accumulationEnable" value="true"/>
+                        <Param id="calibrationInRuntime" value="CY_AUTANALOG_SAR_CAL_DISABLED"/>
+                        <Param id="channelGpio" value="CY_AUTANALOG_SAR_CHAN_MASK_GPIO3"/>
                         <Param id="channelGpio0" value="false"/>
                         <Param id="channelGpio1" value="false"/>
                         <Param id="channelGpio2" value="false"/>
@@ -2310,7 +2522,12 @@
                         <Param id="is_receiver_3_used" value="true"/>
                         <Param id="is_receiver_4_used" value="false"/>
                         <Param id="is_receiver_5_used" value="false"/>
-                        <Param id="routeCtl" value="4"/>
+                        <Param id="routeCtl_0_1_int1" value="0"/>
+                        <Param id="routeCtl_0_1_int2" value="1"/>
+                        <Param id="routeCtl_2_3_int1" value="0"/>
+                        <Param id="routeCtl_2_3_int2" value="4"/>
+                        <Param id="routeCtl_4_5_int1" value="0"/>
+                        <Param id="routeCtl_4_5_int2" value="16"/>
                         <Param id="rxDmaTrigger" value="false"/>
                         <Param id="rxFifoTriggerLevel_0" value="10"/>
                         <Param id="rxFifoTriggerLevel_1" value="10"/>
@@ -3903,6 +4120,22 @@
                 <Net>
                     <Port name="ioss[0].port[12].pin[5].digital_inout[0]"/>
                     <Port name="sdhc[0].card_dat_3to0[3]"/>
+                </Net>
+                <Net>
+                    <Port name="ioss[0].port[15].pin[4].analog[0]"/>
+                    <Port name="pass[0].ptc_pads[4]"/>
+                </Net>
+                <Net>
+                    <Port name="ioss[0].port[15].pin[5].analog[0]"/>
+                    <Port name="pass[0].ptc_pads[5]"/>
+                </Net>
+                <Net>
+                    <Port name="ioss[0].port[15].pin[6].analog[0]"/>
+                    <Port name="pass[0].ptc_pads[6]"/>
+                </Net>
+                <Net>
+                    <Port name="ioss[0].port[15].pin[7].analog[0]"/>
+                    <Port name="pass[0].ptc_pads[7]"/>
                 </Net>
                 <Net>
                     <Port name="ioss[0].port[17].pin[0].digital_inout[0]"/>

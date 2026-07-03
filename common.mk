@@ -31,6 +31,16 @@ MTB_TYPE=PROJECT
 # Eclipse IDE launch configurations.
 TARGET=APP_KIT_PSE84_AI
 
+# ---------------------------------------------------------------------------
+# Board profile — steers peripheral wiring only. Both boards share the same
+# TARGET (APP_KIT_PSE84_AI), BSP, 4.3" display and 3-core boot flow.
+#   PSOC_EDGE_AI_KIT  (default, legacy)
+#   TESAIOT_DEV_KIT   (QWA309 training board)
+# Emits -DBOARD_<name>, consumed by proj_cm55/platform/board_profile.h.
+# ---------------------------------------------------------------------------
+BOARD ?= PSOC_EDGE_AI_KIT
+DEFINES += BOARD_$(BOARD)
+
 # Name of toolchain to use. Options include:
 #
 # GCC_ARM 	-- GCC is available as part of ModusToolbox Setup program

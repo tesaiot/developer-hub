@@ -70,6 +70,7 @@
  * apps/_default/example_main_default.c is used instead.
  */
 #include "app_interface.h"
+#include "board_profile.h"
 
 /*******************************************************************************
 * Macros
@@ -460,6 +461,14 @@ static void disp_touch_i2c_controller_interrupt(void)
 *******************************************************************************/
 static cy_rslt_t sensor_i2c_controller_init(void)
 {
+#if BOARD_SENSOR_I2C_SHARED_DISP
+    /* QWA309 / TESAIoT Dev Kit: sensors share the 3.3V Arduino header I2C,
+     * which is the display/touch controller the framework already brought up
+     * (disp_touch_i2c_controller_hal_obj, set up before this call). Alias the
+     * sensor handle onto it — no separate SCB0 / P8 / 1.8V bring-up. */
+    sensor_i2c_controller_hal_obj = disp_touch_i2c_controller_hal_obj;
+    return CY_RSLT_SUCCESS;
+#else
     cy_stc_gpio_pin_config_t scl_cfg =
     {
         .outVal = 1,
@@ -514,6 +523,7 @@ static cy_rslt_t sensor_i2c_controller_init(void)
 #else
     return CY_RSLT_SUCCESS;
 #endif
+#endif /* BOARD_SENSOR_I2C_SHARED_DISP */
 }
 /*******************************************************************************
 * Function Name: i3c_controller_interrupt
