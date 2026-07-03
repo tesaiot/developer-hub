@@ -1,29 +1,31 @@
 # QWA309 — Hardware Button Menu
 
-นำทางเมนู LVGL ด้วยปุ่มกายภาพ SW6=Move SW5=Select (ไม่ใช้ touch) — headless/kiosk UX pattern
+## เกี่ยวกับตัวอย่างนี้
+ตัวอย่างนี้สาธิตการนำทางเมนู LVGL ด้วยปุ่มกดกายภาพบนบอร์ด QWA309 โดยไม่ใช้ระบบสัมผัส (touch) เลย ปุ่ม SW6 ใช้เลื่อน highlight ระหว่างรายการเมนู และปุ่ม SW5 ใช้เลือกรายการที่ highlight อยู่ เป็นรูปแบบ UX แบบ headless/kiosk ที่เหมาะกับอุปกรณ์ที่ควบคุมด้วยปุ่มล้วน เมนูมี 4 รายการ (Dashboard, Sensors, Network, Settings) และมีแถบสถานะแสดงผลการกดปุ่มล่าสุด
 
-| Field | Value |
-| --- | --- |
-| Board | TESAIoT_DEV_KIT |
-| Board profile | `TESAIOT_DEV_KIT` |
-| Domain | Digital I/O + UI |
-| Difficulty | beginner |
+## ฮาร์ดแวร์ที่ใช้
+- **ปุ่ม SW6 (P17.5)** — ปุ่ม MOVE เลื่อน highlight ไปรายการถัดไป (วนกลับเมื่อถึงรายการสุดท้าย) ต่อแบบ active-low ด้วย internal pull-up
+- **ปุ่ม SW5 (P17.7)** — ปุ่ม SELECT เลือกรายการที่ highlight อยู่ ต่อแบบ active-low ด้วย internal pull-up
+- ตั้งค่าปุ่มด้วย `Cy_GPIO_Pin_FastInit(...)` โหมด `CY_GPIO_DM_PULLUP` และอ่านค่าด้วย `Cy_GPIO_Read()`
 
-**Tags:** `tesaiot`, `qwa309`, `lvgl`, `gpio`, `button`, `menu`, `navigation`
+## สิ่งที่จะได้เรียนรู้
+- การอ่านปุ่มกดกายภาพผ่าน GPIO ด้วย `Cy_GPIO_Read()` แบบ active-low (กด = อ่านได้ 0)
+- การตั้งค่า pin เป็น input พร้อม pull-up ด้วย `Cy_GPIO_Pin_FastInit()`
+- การทำ software debounce ด้วยตัวนับ (`MENU_DEBOUNCE`) เพื่อกันสัญญาณเด้ง
+- การตรวจจับ "ขอบขาลง" ของการกด (press edge) แทนการอ่านสถานะค้าง
+- การใช้ `lv_timer_create()` โพลปุ่มเป็นระยะทุก `MENU_POLL_MS` (30 ms)
+- การเปลี่ยนสี highlight ของ LVGL object ด้วย `lv_obj_set_style_bg_color()` และ index `s_sel`
 
-## Files
+## วิธีติดตั้ง
+1. คัดลอกไฟล์ทั้งหมดในโฟลเดอร์นี้ไปที่ `proj_cm55/apps/`
+2. Build และ flash ด้วย `BOARD=TESAIOT_DEV_KIT` (ตัวอย่าง QWA309 ใช้ base board — ลงได้เฉพาะ TESAIoT Dev Kit และต้องมีปุ่มภายนอกต่ออยู่)
 
-- `main_example.c`
-- `hw_button_menu_ui.c`
-- `hw_button_menu_ui.h`
+## สิ่งที่จะเห็นบนหน้าจอ
+พื้นหลังจอเป็นสีเข้ม (0x0B0F14) ด้านบนมีหัวข้อ "Hardware Button Menu" ตามด้วยคำใบ้ "SW6 = Move    SW5 = Select" สีเขียวมิ้นต์ ถัดลงมาเป็นรายการเมนู 4 แถวเต็มความกว้างจอ รายการที่ถูก highlight จะเปลี่ยนพื้นหลังเป็นสีน้ำเงิน (0x2563EB) พร้อมขอบสีฟ้า ส่วนรายการอื่นเป็นสีเข้ม เมื่อกด SW6 highlight จะเลื่อนลงและสถานะล่างเปลี่ยนเป็น "MOVE -> <ชื่อรายการ>" เมื่อกด SW5 สถานะจะเปลี่ยนเป็น "SELECT: <ชื่อรายการ>"
 
-## Build & run
-
-```sh
-# from tesaiot_dev_kit_master (ModusToolbox 3.8):
-tools/install_episode.sh <this-folder>
-make build   BOARD=TESAIOT_DEV_KIT TOOLCHAIN=GCC_ARM CONFIG=Debug
-make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
-```
-
-_Composed from qwa309 button_monitor + hmi menu pattern_
+## ลองปรับแต่ง
+- เพิ่ม/ลดรายการเมนูโดยแก้ `MENU_ITEMS` และอาร์เรย์ `s_items[]`
+- ปรับความไวปุ่มด้วย `MENU_DEBOUNCE` (ค่ามาก = กันเด้งดีขึ้นแต่ตอบสนองช้าลง)
+- ปรับรอบการโพลด้วย `MENU_POLL_MS` (ค่าน้อย = ตอบสนองไวขึ้น)
+- เปลี่ยนสี highlight ที่ `lv_color_hex(0x2563EB)` ในฟังก์ชัน `highlight()`
+- ต่อยอดให้ SELECT เปิดหน้าจอย่อยของแต่ละเมนู แทนการแค่แสดงข้อความสถานะ

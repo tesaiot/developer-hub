@@ -1,29 +1,30 @@
 # QWA309 — 4-Channel ADC Scope
 
-plot ค่า pot 4 ตัว (P15.4-7, SAR 12-bit) เป็นเส้น scrolling บน LVGL chart 0-100% — analog oscilloscope
+## เกี่ยวกับตัวอย่างนี้
+ตัวอย่างนี้เปลี่ยนบอร์ด QWA309 ให้เป็นออสซิลโลสโคปแบบ 4 ช่องอย่างง่าย โดยอ่านค่าจากโพเทนชิโอมิเตอร์ทั้ง 4 ตัว (VR1–VR4) ผ่าน SAR ADC แบบ AUTANALOG (12-bit) แล้วแปลงเป็นเปอร์เซ็นต์ 0–100% จากนั้น plot เป็นเส้นกราฟที่เลื่อนไหลต่อเนื่องบน LVGL chart ทำให้เห็นการเปลี่ยนแปลงของแรงดันอนาล็อกแบบเรียลไทม์เหมือนดูสัญญาณบนสโคปจริง เป็นตัวอย่างสอนการอ่าน analog input ล้วนๆ ที่อ่านค่า conversion 12-bit จริงจากฮาร์ดแวร์
 
-| Field | Value |
-| --- | --- |
-| Board | TESAIoT_DEV_KIT |
-| Board profile | `TESAIOT_DEV_KIT` |
-| Domain | Analog / Chart |
-| Difficulty | intermediate |
+## ฮาร์ดแวร์ที่ใช้
+- **SAR ADC (AUTANALOG)** — โพเทนชิโอมิเตอร์ 4 ตัวต่อที่ขา `P15.4`, `P15.5`, `P15.6`, `P15.7` ตั้งค่าขาเป็นโหมดอนาล็อก (`CY_GPIO_DM_ANALOG`) แล้วอ่านผลลัพธ์ผ่าน SAR ADC index 0 (`CY_AUTANALOG_SAR_INPUT_GPIO`, result index 0–3)
+- **จอ LVGL** — แสดง chart และ label ค่าของแต่ละช่อง
 
-**Tags:** `tesaiot`, `qwa309`, `lvgl`, `adc`, `pot`, `chart`, `scope`
+## สิ่งที่จะได้เรียนรู้
+- การตั้งค่าและเริ่มทำงาน SAR ADC ผ่าน `Cy_AutAnalog_Init()`, `Cy_AutAnalog_Enable()` และ `Cy_AutAnalog_StartAutonomousControl()`
+- การตั้งค่าขา GPIO เป็นโหมดอนาล็อกด้วย `Cy_GPIO_Pin_FastInit()` ก่อนอ่าน ADC
+- การอ่านผล conversion 12-bit ด้วย `Cy_AutAnalog_SAR_ReadResult()` และมาสก์ค่าด้วย `0x0FFF`
+- การแปลงค่า raw (0–4095) เป็นเปอร์เซ็นต์ 0–100%
+- การสร้างกราฟเส้นแบบ scrolling ด้วย `lv_chart_create()`, หลาย series และ `LV_CHART_UPDATE_MODE_SHIFT`
+- การใช้ `lv_timer_create()` อ่าน ADC และอัปเดตกราฟเป็นรอบทุก 60ms
 
-## Files
+## วิธีติดตั้ง
+1. คัดลอกไฟล์ทั้งหมดในโฟลเดอร์นี้ไปที่ `proj_cm55/apps/`
+2. Build และ flash ด้วย `BOARD=TESAIOT_DEV_KIT` (ตัวอย่าง QWA309 ใช้ base board — ลงได้เฉพาะ TESAIoT Dev Kit)
 
-- `main_example.c`
-- `adc_scope_ui.c`
-- `adc_scope_ui.h`
+## สิ่งที่จะเห็นบนหน้าจอ
+พื้นหลังจอสีเข้ม (0x0B0F14) ด้านบนมีหัวข้อ "4-Channel ADC Scope" (ถ้า ADC เริ่มไม่สำเร็จจะขึ้น "ADC init failed" เป็นสีแดงแทน) ถัดลงมาเป็นแถวแสดงค่าของทั้ง 4 ช่อง VR1–VR4 แต่ละตัวมีสีประจำช่อง (เขียวมิ้นต์, เขียว, ส้ม, ชมพูแดง) พร้อมเปอร์เซ็นต์ปัจจุบัน ส่วนกลางจอเป็น chart เส้นกราฟ 4 เส้นตามสีของแต่ละช่อง เลื่อนไหลจากขวาไปซ้าย 100 จุด เมื่อหมุนโพเทนชิโอมิเตอร์แต่ละตัว เส้นและตัวเลขของช่องนั้นจะขยับตามทันที
 
-## Build & run
-
-```sh
-# from tesaiot_dev_kit_master (ModusToolbox 3.8):
-tools/install_episode.sh <this-folder>
-make build   BOARD=TESAIOT_DEV_KIT TOOLCHAIN=GCC_ARM CONFIG=Debug
-make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
-```
-
-_Composed on qwa309 pot SAR setup_
+## ลองปรับแต่ง
+- ปรับ `SCOPE_PERIOD_MS` (ค่าปัจจุบัน 60) ให้เร็วขึ้นหรือช้าลงเพื่อเปลี่ยนอัตราสุ่มสัญญาณ
+- ปรับ `SCOPE_POINTS` (ค่าปัจจุบัน 100) เพื่อเปลี่ยนความยาวหน้าต่างเวลาที่แสดงบนกราฟ
+- เปลี่ยนสีประจำช่องในอาร์เรย์ `s_accent[]` หรือชื่อช่องใน `s_name[]`
+- เปลี่ยนช่วงแกน Y ด้วย `lv_chart_set_range()` หรือ plot เป็นค่า raw 0–4095 แทนเปอร์เซ็นต์
+- ลองเพิ่ม filter เฉลี่ยค่าหลายรอบเพื่อลด noise ของสัญญาณ

@@ -1,31 +1,30 @@
 # QWA309 — RGB Matrix FX
 
-เอฟเฟกต์แอนิเมชันบน DFR0522 8x16 (color cycle / pixel sweep / row wipe) auto-cycle + สถานะบน LCD
+## เกี่ยวกับตัวอย่างนี้
+ตัวอย่างนี้สร้างเอฟเฟกต์แอนิเมชันบนแผง LED matrix DFRobot DFR0522 ขนาด 8x16 ผ่านบัส I2C ที่แชร์ร่วมกับจอสัมผัส (ที่อยู่ 0x10) โปรแกรมจะวนสลับเอฟเฟกต์ 3 แบบอัตโนมัติ ได้แก่ Colour Cycle, Pixel Sweep และ Row Wipe โดยขับแผงด้วยไดรเวอร์ `rgb_panel` ที่ผ่านการทดสอบจริง (fill / clear / pixel) ส่วนหน้าจอ LVGL จะแสดงชื่อเอฟเฟกต์ปัจจุบันและหมายเลขเฟรมที่กำลังเล่นอยู่
 
-| Field | Value |
-| --- | --- |
-| Board | TESAIoT_DEV_KIT |
-| Board profile | `TESAIOT_DEV_KIT` |
-| Domain | I2C Actuator |
-| Difficulty | intermediate |
+## ฮาร์ดแวร์ที่ใช้
+- **DFRobot DFR0522 RGB LED Matrix (8x16)** — สื่อสารผ่าน I2C ที่อยู่ `0x10` (`RGB_PANEL_I2C_ADDRESS`) บนบัส `DISPLAY_I2C_CONTROLLER_HW` ที่แชร์ร่วมกับจอสัมผัส
+- **จอแสดงผล LVGL** — แสดงสถานะเอฟเฟกต์และเฟรม (ไม่ต้องต่อสายเพิ่ม ใช้จอของ Dev Kit)
 
-**Tags:** `tesaiot`, `qwa309`, `lvgl`, `i2c`, `rgb`, `dfr0522`, `animation`
+## สิ่งที่จะได้เรียนรู้
+- การเขียนไดรเวอร์ I2C แบบ low-level ด้วย `Cy_SCB_I2C_MasterSendStart` / `MasterWriteByte` / `MasterSendStop`
+- โครงสร้างคำสั่งของ DFR0522: register `0x02` + function byte (`fill 0x09`, `clear 0x01`, `pixel 0x08`) + สี + พิกัด x/y
+- การใช้ enum สี 7 ค่า (`RGB_PANEL_COLOR_RED` … `RGB_PANEL_COLOR_WHITE`) และการ validate ขอบเขต
+- การใช้ `lv_timer_create()` สร้างจังหวะเฟรมทุก 140 ms (`FX_PERIOD_MS`)
+- การออกแบบ state machine สำหรับวนสลับเอฟเฟกต์และนับเฟรม
+- การอัปเดต label แบบ real-time ด้วย `lv_label_set_text_fmt()`
 
-## Files
+## วิธีติดตั้ง
+1. คัดลอกไฟล์ทั้งหมดในโฟลเดอร์นี้ไปที่ `proj_cm55/apps/`
+2. Build และ flash ด้วย `BOARD=TESAIOT_DEV_KIT` (ตัวอย่าง QWA309 ใช้ base board — ลงได้เฉพาะ TESAIoT Dev Kit และต้องต่อแผง DFR0522)
 
-- `main_example.c`
-- `rgb_fx_ui.c`
-- `rgb_fx_ui.h`
-- `rgb_panel.c`
-- `rgb_panel.h`
+## สิ่งที่จะเห็นบนหน้าจอ
+พื้นหลังสีเข้ม (`0x0B0F14`) จัดวางแบบคอลัมน์ ด้านบนเป็นหัวข้อ "RGB Matrix FX" ตามด้วยคำบรรยาย "DFR0522 8x16 (I2C 0x10) — auto-cycling effects" สีเขียวมิ้นต์ ถัดลงมาคือบรรทัด "Effect:" สีเหลืองที่บอกชื่อเอฟเฟกต์ปัจจุบัน และบรรทัด "frame N" สีเทาที่นับเฟรม ส่วนบนแผง DFR0522 จริงจะเห็นแอนิเมชัน 3 แบบสลับกันไป: ทั้งแผงเปลี่ยนสีวนทีละสี, จุด LED เดียววิ่งกวาดทั่วแผง แล้วทั้งแผงเปลี่ยนสีช้าๆ ครบ 24 เฟรม (`FX_FRAMES_PER_EFFECT`) ต่อหนึ่งเอฟเฟกต์แล้วสลับไปตัวถัดไปอัตโนมัติ
 
-## Build & run
-
-```sh
-# from tesaiot_dev_kit_master (ModusToolbox 3.8):
-tools/install_episode.sh <this-folder>
-make build   BOARD=TESAIOT_DEV_KIT TOOLCHAIN=GCC_ARM CONFIG=Debug
-make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
-```
-
-_Composed on qwa309 dfr0522_rgb_matrix driver_
+## ลองปรับแต่ง
+- ปรับ `FX_PERIOD_MS` (ค่าเริ่มต้น 140) ให้แอนิเมชันเร็วขึ้นหรือช้าลง
+- ปรับ `FX_FRAMES_PER_EFFECT` (ค่าเริ่มต้น 24) เพื่อกำหนดว่าแต่ละเอฟเฟกต์เล่นกี่เฟรมก่อนสลับ
+- แก้ลำดับหรือชุดสีใน `s_cycle[7]` เพื่อเปลี่ยนโทนสีของเอฟเฟกต์
+- แก้สมการ `x = (s_frame * 2) % FX_COLS` และ `y = (s_frame / 2) % FX_ROWS` ใน Pixel Sweep เพื่อสร้างลวดลายการกวาดแบบใหม่
+- เพิ่มเอฟเฟกต์ใหม่เข้าไปใน `fx_step()` แล้วเพิ่มค่า `FX_EFFECTS` และชื่อใน `s_fx_name[]`

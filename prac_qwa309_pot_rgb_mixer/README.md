@@ -1,31 +1,30 @@
 # QWA309 — Pot → RGB Mixer
 
-3 potentiometers เป็น R/G/B channel (>50% = เปิดสีนั้น) ผสมเป็น 1 ใน 8 สีของ DFR0522 matrix + แสดงบน LCD — รวม SAR pots + RGB I2C
+## เกี่ยวกับตัวอย่างนี้
+ตัวอย่างนี้รวมสัญญาณ analog เข้ากับ actuator เข้าด้วยกัน โดยใช้โพเทนชิโอมิเตอร์ 3 ตัวทำหน้าที่เป็นช่องสี R/G/B แต่ละตัวเมื่อหมุนเกิน 50% จะเปิดบิตสีของตัวเอง บิตทั้งสาม (b0=R, b1=G, b2=B) รวมกันเป็น 1 ใน 8 สีของแผง DFR0522 RGB matrix ที่สั่งผ่านบัส I2C ที่อยู่ 0x10 พร้อมกันนั้นหน้าจอ LVGL จะสะท้อนค่าการผสมสีแบบเรียลไทม์ด้วยแถบระดับและชื่อสีที่ได้ ตัวอย่างนี้ประกอบขึ้นจากเพอริเฟอรัล QWA309 ที่ทดสอบแล้วสองส่วน คือ SAR pots และ DFR0522 RGB matrix
 
-| Field | Value |
-| --- | --- |
-| Board | TESAIoT_DEV_KIT |
-| Board profile | `TESAIOT_DEV_KIT` |
-| Domain | Analog+Actuator |
-| Difficulty | intermediate |
+## ฮาร์ดแวร์ที่ใช้
+- **SAR ADC (AUTANALOG)** — โพเทนชิโอมิเตอร์อ่านผ่านพิน `P15_4`–`P15_7` ตั้งเป็นโหมด analog (`CY_GPIO_DM_ANALOG`) โดย result index 0/1/2 คือช่อง R/G/B ส่วนช่อง 3 (P15.7) เตรียมไว้แต่ยังไม่ใช้ในการผสมสี
+- **DFR0522 RGB Matrix (16×8)** — แผง LED สั่งงานผ่าน I2C ที่อยู่ `0x10` ใช้บัสเดียวกับจอ/ทัช (`DISPLAY_I2C_CONTROLLER_HW`) เขียนคำสั่ง fill สีทั้งแผงผ่าน command register `0x02`
 
-**Tags:** `tesaiot`, `qwa309`, `lvgl`, `adc`, `pot`, `rgb`, `i2c`, `mixer`
+## สิ่งที่จะได้เรียนรู้
+- การตั้งค่าและอ่าน SAR ADC แบบ AUTANALOG ด้วย `Cy_AutAnalog_Init()`, `Cy_AutAnalog_StartAutonomousControl()` และ `Cy_AutAnalog_SAR_ReadResult()`
+- การตั้งพิน GPIO ให้เป็นขา analog ด้วย `Cy_GPIO_Pin_FastInit()` ก่อนใช้งาน ADC
+- การแปลงค่าดิบ ADC (0–4095) เป็นเปอร์เซ็นต์และใช้ threshold ที่ 2048 (~50%) ตัดสินบิตสี
+- การแพ็คบิต R/G/B เป็น enum สี 8 ค่าแล้วสั่งเขียนแผง RGB ผ่าน `rgb_panel_fill()` บน I2C
+- การเขียนไดรเวอร์ I2C ระดับไบต์ด้วย `Cy_SCB_I2C_MasterSendStart/WriteByte/SendStop`
+- การใช้ `lv_timer_create()` วนอ่านค่าและอัปเดต bar/label ทุก 120 ms และเขียนแผงเฉพาะเมื่อสีเปลี่ยน
 
-## Files
+## วิธีติดตั้ง
+1. คัดลอกไฟล์ทั้งหมดในโฟลเดอร์นี้ไปที่ `proj_cm55/apps/`
+2. Build และ flash ด้วย `BOARD=TESAIOT_DEV_KIT` (ตัวอย่าง QWA309 ใช้ base board — ลงได้เฉพาะ TESAIoT Dev Kit) และต้องต่อโพเทนชิโอมิเตอร์ 3 ตัวกับแผง DFR0522
 
-- `main_example.c`
-- `pot_rgb_mixer_ui.c`
-- `pot_rgb_mixer_ui.h`
-- `rgb_panel.c`
-- `rgb_panel.h`
+## สิ่งที่จะเห็นบนหน้าจอ
+พื้นหลังจอสีเข้ม (0x0B0F14) ด้านบนเป็นหัวข้อ "Pot -> RGB Matrix Mixer" และบรรทัดรองบอกสถานะ (เขียวเมื่อ ADC พร้อม, แดงเมื่อ init ล้มเหลว) ถัดลงมาเป็นแถบระดับ 3 แถบ สีแดง/เขียว/น้ำเงินตามช่อง แต่ละแถบมี label บอกเปอร์เซ็นต์ของ pot นั้น ด้านล่างมีช่องสี่เหลี่ยม (swatch) แสดงสีที่ผสมได้พร้อม label ชื่อสี (OFF/RED/GREEN/YELLOW/BLUE/PURPLE/CYAN/WHITE) เมื่อหมุน pot เกินครึ่ง แถบจะเต็มขึ้น สีบน swatch และบนแผง DFR0522 จริงจะเปลี่ยนตามการผสมบิตทันที
 
-## Build & run
-
-```sh
-# from tesaiot_dev_kit_master (ModusToolbox 3.8):
-tools/install_episode.sh <this-folder>
-make build   BOARD=TESAIOT_DEV_KIT TOOLCHAIN=GCC_ARM CONFIG=Debug
-make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
-```
-
-_Composed from qwa309 pot_monitor + dfr0522_rgb_matrix_
+## ลองปรับแต่ง
+- ปรับ `MIX_THRESHOLD` (ปัจจุบัน 2048) เพื่อเปลี่ยนจุดตัดว่าหมุนเท่าไรถึงเปิดบิตสี
+- ปรับ `MIX_REFRESH_MS` (ปัจจุบัน 120 ms) ให้อ่านถี่ขึ้นหรือช้าลง
+- เปลี่ยนสี accent ของแต่ละช่องในอาเรย์ `s_ch[]` หรือ mapping สีใน `color_hex[]`
+- นำ pot ช่องที่ 4 (index 3, P15.7) มาใช้ควบคุมความสว่างหรือเลือกเอฟเฟกต์
+- ลองใช้ `rgb_panel_pixel()` แทน `rgb_panel_fill()` เพื่อวาดทีละพิกเซลบนแผง 16×8 แทนการเติมสีทั้งแผง
