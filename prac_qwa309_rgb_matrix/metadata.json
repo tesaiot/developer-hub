@@ -1,0 +1,13 @@
+{
+  "title": "QWA309 — DFR0522 RGB Dot Matrix",
+  "description": "ควบคุม DFRobot DFR0522 RGB matrix 8x16 (I2C 0x10) บน bus 3.3V ร่วมกับ display แสดง clear/fill/pixel/pattern ผ่าน LVGL UI",
+  "series": "qwa309_native",
+  "difficulty": "intermediate",
+  "domain": "I2C Actuator",
+  "tags": ["tesaiot","qwa309","lvgl","i2c","rgb","dfr0522","matrix"],
+  "boards": ["TESAIoT_DEV_KIT"],
+  "board_profile": "TESAIOT_DEV_KIT",
+  "files": ["main_example.c","rgb_matrix_ui.c","rgb_matrix_ui.h","rgb_panel.c","rgb_panel.h"],
+  "requires_rgb_matrix": true,
+  "source": "Adopted from qwa309-training-base fw/examples/dfr0522_rgb_matrix"
+}

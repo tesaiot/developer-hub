@@ -1,0 +1,32 @@
+{
+  "title": "QWA309 — Potentiometer Monitor",
+  "description": "อ่าน 4 potentiometers (P15.4–P15.7) ผ่าน AUTANALOG SAR ADC 12-bit (Vref 1.8V) แสดงเป็น bar + แรงดัน + เปอร์เซ็นต์ real-time — practise แรกที่ใช้ ADC จริงบน TESAIoT Dev Kit",
+  "series": "qwa309_native",
+  "episode_order": 1,
+  "difficulty": "intermediate",
+  "domain": "Analog / ADC",
+  "tags": [
+    "tesaiot",
+    "qwa309",
+    "lvgl",
+    "potentiometer",
+    "adc",
+    "autanalog",
+    "sar"
+  ],
+  "boards": [
+    "TESAIoT_DEV_KIT"
+  ],
+  "board_profile": "TESAIOT_DEV_KIT",
+  "files": [
+    "main_example.c",
+    "pot_monitor_ui.c",
+    "pot_monitor_ui.h"
+  ],
+  "requires_sensors": false,
+  "requires_wifi": false,
+  "requires_audio": false,
+  "requires_pots": true,
+  "hardware_notes": "Uses BSP-provided autonomous_analog_init / CYBSP_SAR_ADC_gpio_ch_cfg. Confirm SAR channel GPIO4-7 map to P15.4-P15.7 on QWA309 design.modus before promoting to PASS.",
+  "source": "Ported from qwa309-training-base fw/examples/pot_monitor (HW-validated on QWA309)."
+}

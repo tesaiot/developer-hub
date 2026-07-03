@@ -1,0 +1,9 @@
+{
+  "title": "QWA309 — 4-Channel ADC Scope",
+  "description": "plot ค่า pot 4 ตัว (P15.4-7, SAR 12-bit) เป็นเส้น scrolling บน LVGL chart 0-100% — analog oscilloscope",
+  "series": "qwa309_native", "difficulty": "intermediate", "domain": "Analog / Chart",
+  "tags": ["tesaiot","qwa309","lvgl","adc","pot","chart","scope"],
+  "boards": ["TESAIoT_DEV_KIT"], "board_profile": "TESAIOT_DEV_KIT",
+  "files": ["main_example.c","adc_scope_ui.c","adc_scope_ui.h"],
+  "requires_pots": true, "source": "Composed on qwa309 pot SAR setup"
+}

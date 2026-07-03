@@ -1,0 +1,9 @@
+{
+  "title": "QWA309 — RGB Matrix FX",
+  "description": "เอฟเฟกต์แอนิเมชันบน DFR0522 8x16 (color cycle / pixel sweep / row wipe) auto-cycle + สถานะบน LCD",
+  "series": "qwa309_native", "difficulty": "intermediate", "domain": "I2C Actuator",
+  "tags": ["tesaiot","qwa309","lvgl","i2c","rgb","dfr0522","animation"],
+  "boards": ["TESAIoT_DEV_KIT"], "board_profile": "TESAIOT_DEV_KIT",
+  "files": ["main_example.c","rgb_fx_ui.c","rgb_fx_ui.h","rgb_panel.c","rgb_panel.h"],
+  "requires_rgb_matrix": true, "source": "Composed on qwa309 dfr0522_rgb_matrix driver"
+}

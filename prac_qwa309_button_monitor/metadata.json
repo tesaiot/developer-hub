@@ -1,0 +1,13 @@
+{
+  "title": "QWA309 — Push Button Monitor",
+  "description": "อ่านปุ่มกด SW9 (P17.5) และ SW10 (P17.7) แบบ active-low pull-up แสดงสถานะกด/ปล่อย + นับจำนวนครั้งบน LVGL",
+  "series": "qwa309_native",
+  "difficulty": "beginner",
+  "domain": "Digital I/O",
+  "tags": ["tesaiot","qwa309","lvgl","gpio","button","switch"],
+  "boards": ["TESAIoT_DEV_KIT"],
+  "board_profile": "TESAIOT_DEV_KIT",
+  "files": ["main_example.c","button_monitor_ui.c","button_monitor_ui.h"],
+  "requires_ext_buttons": true,
+  "source": "Adopted from qwa309-training-base fw/examples/button_monitor"
+}

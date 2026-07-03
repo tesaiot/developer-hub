@@ -1,0 +1,10 @@
+{
+  "title": "QWA309 — Pot → RGB Mixer",
+  "description": "3 potentiometers เป็น R/G/B channel (>50% = เปิดสีนั้น) ผสมเป็น 1 ใน 8 สีของ DFR0522 matrix + แสดงบน LCD — รวม SAR pots + RGB I2C",
+  "series": "qwa309_native", "difficulty": "intermediate", "domain": "Analog+Actuator",
+  "tags": ["tesaiot","qwa309","lvgl","adc","pot","rgb","i2c","mixer"],
+  "boards": ["TESAIoT_DEV_KIT"], "board_profile": "TESAIOT_DEV_KIT",
+  "files": ["main_example.c","pot_rgb_mixer_ui.c","pot_rgb_mixer_ui.h","rgb_panel.c","rgb_panel.h"],
+  "requires_pots": true, "requires_rgb_matrix": true,
+  "source": "Composed from qwa309 pot_monitor + dfr0522_rgb_matrix"
+}
