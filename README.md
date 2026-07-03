@@ -9,6 +9,22 @@
 
 ---
 
+## 🧩 Build for the TESAIoT Dev Kit
+
+Episodes ทั้ง 14 ตัวรันบน **TESAIoT Dev Kit** ได้ (PSoC Edge AI Kit SoM เสียบบน QWA309 base board) — บอร์ดนี้เป็น superset ของ AI Kit จึงมี sensor ครบ (DPS368, SHT4x, BMI270, PDM mic — ตรวจสอบบนฮาร์ดแวร์แล้ว) พร้อม peripheral ของ base board.
+
+Build ด้วย **ModusToolbox 3.8** และเลือกโปรไฟล์บอร์ด:
+
+```sh
+tools/install_episode.sh <episode-folder>   # จาก tesaiot_dev_kit_master
+make build   BOARD=TESAIOT_DEV_KIT TOOLCHAIN=GCC_ARM CONFIG=Debug
+make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
+```
+
+> ค่าเริ่มต้น `BOARD=PSOC_EDGE_AI_KIT` (บอร์ด AI Kit เดิม) ยังใช้ได้เหมือนเดิม.
+
+---
+
 ## 📖 เกี่ยวกับชุดตัวอย่างนี้
 
 Episodes Catalogue เป็นคอลเลกชันของ **ตัวอย่างโค้ดพร้อมใช้งานจริง** จำนวน 14 ตัวอย่าง
