@@ -24,7 +24,8 @@
 #define TESAIOT_THAI_H
 
 #include "lvgl.h"
-#include "lv_fonts_thai.h"   /* extern const lv_font_t lv_font_noto_thai_{14,16,20,28} */
+#include "lv_fonts_thai.h"        /* extern const lv_font_t lv_font_noto_thai_{14,16,20,24,28} */
+#include "thai_lvgl_adapter.h"    /* thai_label_set_text() — PUA cluster shaping (2-tier stacking) */
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,9 +37,13 @@ extern "C" {
  *
  * @param parent  LVGL parent object
  * @param text    UTF-8 encoded string (may contain Thai characters)
- * @param size    Font size: 14, 16, 20, or 28 px (others fall back to 14)
+ * @param size    Font size: 14, 16, 20, 24 or 28 px (others fall back to 14)
  * @param color   Text color
  * @return        Pointer to the created label object
+ *
+ * Thai clusters (above-vowel + tone mark, e.g. "ที่", "ขึ้น", "ก๋วยเตี๋ยว")
+ * are shaped through thai_label_set_text() so the stacked marks render as a
+ * single pre-composed glyph instead of overlapping — correct 2-tier stacking.
  */
 static inline lv_obj_t *tesaiot_thai_label(lv_obj_t *parent, const char *text,
                                            int size, lv_color_t color)
@@ -46,14 +51,15 @@ static inline lv_obj_t *tesaiot_thai_label(lv_obj_t *parent, const char *text,
     const lv_font_t *font;
     switch (size) {
         case 28: font = &lv_font_noto_thai_28; break;
+        case 24: font = &lv_font_noto_thai_24; break;
         case 20: font = &lv_font_noto_thai_20; break;
         case 16: font = &lv_font_noto_thai_16; break;
         default: font = &lv_font_noto_thai_14; break;
     }
     lv_obj_t *lbl = lv_label_create(parent);
-    lv_label_set_text(lbl, text);
     lv_obj_set_style_text_font(lbl, font, 0);
     lv_obj_set_style_text_color(lbl, color, 0);
+    thai_label_set_text(lbl, text);   /* PUA cluster shaping before render */
     return lbl;
 }
 
@@ -71,8 +77,8 @@ static inline lv_obj_t *tesaiot_thai_label(lv_obj_t *parent, const char *text,
 static inline void tesaiot_add_thai_support_badge(void)
 {
     lv_obj_t *badge = lv_label_create(lv_layer_top());
-    lv_label_set_text(badge, "รองรับภาษาไทย");
     lv_obj_set_style_text_font(badge, &lv_font_noto_thai_14, 0);
+    thai_label_set_text(badge, "รองรับภาษาไทย");
     lv_obj_set_style_text_color(badge, lv_color_hex(0xE0F7FA), 0);
     lv_obj_set_style_bg_color(badge, lv_color_hex(0x142240), 0);
     lv_obj_set_style_bg_opa(badge, LV_OPA_80, 0);
