@@ -153,7 +153,7 @@ FreeRTOS kernel ถูกเตรียมให้พร้อมใช้: ta
 ### 1. Clone และเตรียม dependencies
 
 ```sh
-git clone https://github.com/TESA-AIoT-Platform/tesaiot_dev_kit_master.git
+git clone -b tesaiot_dev_kit_master https://github.com/tesaiot/developer-hub.git tesaiot_dev_kit_master
 cd tesaiot_dev_kit_master
 
 # ดึง libraries (ประมาณ 1 นาที, ขนาด ~469 MB — ทำครั้งเดียว)
