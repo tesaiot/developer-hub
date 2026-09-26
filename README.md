@@ -23,6 +23,11 @@ make program BOARD=TESAIOT_DEV_KIT MTB_PROBE_SERIAL=<kitprog3-serial>
 
 > ค่าเริ่มต้น `BOARD=PSOC_EDGE_AI_KIT` (บอร์ด AI Kit เดิม) ยังใช้ได้เหมือนเดิม.
 
+> **ใช้กับ master template สาธารณะ** (branch [`tesaiot_dev_kit_master`](https://github.com/tesaiot/developer-hub/tree/tesaiot_dev_kit_master) ของ repo นี้):
+> master ฉบับสาธารณะยังไม่มี `tools/install_episode.sh` และโปรไฟล์ `BOARD=TESAIOT_DEV_KIT`
+> ให้ทำตาม README ของ master คือวางไฟล์ของ episode ลงใน `proj_cm55/apps/` (เก็บ `app_interface.h` และ `_default/` ไว้)
+> แล้ว `make build` และ `make program` ด้วยค่าเริ่มต้น (AI Kit) ซึ่งรันบน TESAIoT Dev Kit ได้ เพราะใช้ SoM ตัวเดียวกัน
+
 ---
 
 ## 📖 เกี่ยวกับชุดตัวอย่างนี้
