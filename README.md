@@ -177,6 +177,10 @@ tools/install_episode.sh /tmp/hmi_ep01_basic_label
 
 สิ่งที่ script ทำให้อัตโนมัติ:
 1. ลบไฟล์ episode เก่าใน `proj_cm55/apps/` (เก็บ `app_interface.h` + `_default/` ไว้)
+
+   > ใน branch สาธารณะนี้ (`tesaiot/developer-hub` @ `tesaiot_dev_kit_master`) `app_interface.h` อยู่ที่ `proj_cm55/app_core/`
+   > และยังไม่มีโฟลเดอร์ `_default/` ใน `apps/` ขั้นตอนนี้จึงเหลือแค่ลบไฟล์ของ episode เก่าออกจาก `proj_cm55/apps/`
+
 2. rsync ไฟล์ของ episode ใหม่เข้าไป
 3. ล้าง build cache ของ `apps/` เพื่อ rebuild สะอาด
 
