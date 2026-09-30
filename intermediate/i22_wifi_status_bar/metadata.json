@@ -1,0 +1,27 @@
+{
+  "title": "WiFi Status Bar",
+  "description": "Top status bar showing WiFi connection, NTP time, and sensor activity indicators with content area below",
+  "difficulty": "intermediate",
+  "domain": "Integrations",
+  "tags": [
+    "wifi",
+    "timer",
+    "embedded",
+    "integrations"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40",
+    "BMM350"
+  ],
+  "id": "i22_wifi_status_bar"
+}

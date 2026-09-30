@@ -1,0 +1,26 @@
+{
+  "title": "Automation Rules",
+  "description": "Rule engine UI with 4 configurable IF-THEN rules that evaluate sensor data and change indicator colors",
+  "difficulty": "intermediate",
+  "domain": "Automation",
+  "tags": [
+    "sensor",
+    "analytics",
+    "event",
+    "automation"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40"
+  ],
+  "id": "i23_automation_rules"
+}

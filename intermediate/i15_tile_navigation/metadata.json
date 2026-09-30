@@ -1,0 +1,26 @@
+{
+  "title": "Tile Navigation",
+  "description": "Multi-page tile view with horizontal swipe navigation between sensors, chart, status, and about pages",
+  "difficulty": "intermediate",
+  "domain": "UI Widgets",
+  "tags": [
+    "lvgl",
+    "embedded",
+    "navigation",
+    "tileview"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40"
+  ],
+  "id": "i15_tile_navigation"
+}

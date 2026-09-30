@@ -1,0 +1,25 @@
+{
+  "title": "Hardware Button Read",
+  "description": "Timer polls cyhal_gpio_read for SW1/SW2 buttons with status display",
+  "difficulty": "beginner",
+  "domain": "gpio",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "gpio",
+    "button",
+    "input",
+    "polling",
+    "timer"
+  ],
+  "apis_used": [
+    "cyhal_gpio_init",
+    "cyhal_gpio_read",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 50,
+  "source_reference": "BiiL Part4 Ex4",
+  "id": "b06_button_read"
+}

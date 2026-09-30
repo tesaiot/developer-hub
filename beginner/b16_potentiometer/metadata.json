@@ -1,0 +1,24 @@
+{
+  "title": "Potentiometer Gauge",
+  "description": "Potentiometer value displayed in an arc gauge (Eva Kit only)",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "eva_kit"
+  ],
+  "tags": [
+    "sensor",
+    "potentiometer",
+    "analog",
+    "arc",
+    "eva_kit"
+  ],
+  "apis_used": [
+    "potentiometer_init",
+    "potentiometer_read",
+    "lv_arc_set_value"
+  ],
+  "estimated_loc": 45,
+  "source_reference": "BiiL Part5 Ex7",
+  "id": "b16_potentiometer"
+}

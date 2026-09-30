@@ -1,0 +1,30 @@
+{
+  "title": "HSM PIN Entry Overlay",
+  "description": "Production-quality PIN overlay with numpad, shake animation, green flash, 3-attempt lockout, and OPTIGA Trust M IPC reference",
+  "difficulty": "advanced",
+  "domain": "security",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "hsm",
+    "pin",
+    "overlay",
+    "numpad",
+    "optiga",
+    "security",
+    "shake-animation",
+    "lockout"
+  ],
+  "apis_used": [
+    "lv_btnmatrix_create",
+    "lv_anim_start",
+    "lv_timer_create",
+    "Cy_IPC_Pipe_SendMessage",
+    "CY_SECTION_SHAREDMEM"
+  ],
+  "estimated_loc": 220,
+  "source_reference": "page_hsm.c PIN section + OPTIGA IPC",
+  "id": "a08_hsm_pin_entry"
+}

@@ -1,0 +1,23 @@
+{
+  "title": "HSM Crypto Benchmark",
+  "description": "Production-derived OPTIGA Trust M crypto benchmark display showing SHA-256, ECDSA Sign/Verify, ECC KeyGen, and TRNG operations with typical vs actual timing, progress bars, and IPC command reference.",
+  "difficulty": "advanced",
+  "domain": "security",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "tags": [
+    "hsm",
+    "optiga",
+    "crypto",
+    "benchmark",
+    "sha256",
+    "ecdsa"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "production_source": "page_hsm.c Tab 4 (Crypto Benchmark)",
+  "id": "a17_hsm_crypto"
+}

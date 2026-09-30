@@ -1,0 +1,26 @@
+{
+  "title": "Game Common Framework Demo",
+  "description": "Standalone demonstration of the game_common infrastructure: Game Boy 4-tone palette, CRT scanline overlay, touch overlay controls (D-pad + Action + Restart), and live input state display.",
+  "difficulty": "advanced",
+  "domain": "game",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2",
+    "KIT_PSE84_AI_GAME"
+  ],
+  "tags": [
+    "game",
+    "framework",
+    "palette",
+    "scanline",
+    "touch",
+    "input"
+  ],
+  "files": [
+    "main_example.c",
+    "game_common.c",
+    "game_common.h"
+  ],
+  "production_source": "game_common.c/h (TESAIoT Game Console)",
+  "id": "a15_game_framework"
+}

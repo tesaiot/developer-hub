@@ -1,0 +1,26 @@
+{
+  "title": "Radar Presence Detection",
+  "description": "BGT60TR13C radar presence detection with animated sweep, range estimate, and detection state display",
+  "difficulty": "advanced",
+  "domain": "sensor",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "radar",
+    "bgt60",
+    "presence",
+    "sensor",
+    "animation",
+    "sweep"
+  ],
+  "apis_used": [
+    "radar_get_presence",
+    "radar_get_range",
+    "lv_arc_create",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 130,
+  "source_reference": "radar_task.h + BGT60TR13C",
+  "id": "a18_radar_presence"
+}

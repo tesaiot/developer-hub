@@ -1,0 +1,29 @@
+{
+  "title": "WiFi Settings (iOS-style Scan + Connect)",
+  "description": "iOS-style WiFi settings page: non-blocking scan via wifi_manager, signal-bar list, on-screen keyboard for the password, and a blocking connect deferred to a one-shot LVGL timer with one auto-retry",
+  "difficulty": "advanced",
+  "domain": "wifi",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "wifi",
+    "wifi_manager",
+    "scan",
+    "connect",
+    "keyboard",
+    "deferred-timer",
+    "state-machine"
+  ],
+  "apis_used": [
+    "wifi_manager_scan_start",
+    "wifi_manager_connect",
+    "lv_keyboard_create",
+    "lv_textarea_create",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 486,
+  "source_reference": "wifi_manager.h (non-blocking scan, blocking connect run from a deferred timer)",
+  "id": "a24_wifi_settings"
+}

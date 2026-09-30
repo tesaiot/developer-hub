@@ -1,0 +1,27 @@
+{
+  "title": "[UI Reference] Crypto Algorithm Visualization",
+  "description": "UI Reference — Animated crypto algorithm visualization. Real benchmarks in a17_hsm_crypto via IPC_CMD_HSM_BENCHMARK (0xB6)",
+  "difficulty": "advanced",
+  "domain": "security",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "crypto",
+    "sha256",
+    "ecdsa",
+    "aes",
+    "rng",
+    "visualization",
+    "animation"
+  ],
+  "apis_used": [
+    "lv_bar_create",
+    "lv_timer_create",
+    "lv_bar_set_value"
+  ],
+  "estimated_loc": 200,
+  "source_reference": "pse84_common.h",
+  "id": "a07_optiga_crypto"
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Sensor Dashboard",
+  "description": "Multi-sensor dashboard with autoscale charts, change-gated rendering, and BSP conditional compilation. Production-derived from page_dashboard.c.",
+  "difficulty": "intermediate",
+  "domain": "dashboard",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "tags": [
+    "sensor",
+    "chart",
+    "autoscale",
+    "dashboard",
+    "BSP",
+    "ipc",
+    "production-derived"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "production_source": "page_dashboard.c",
+  "id": "i01_sensor_dashboard"
+}

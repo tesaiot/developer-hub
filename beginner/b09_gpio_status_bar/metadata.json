@@ -1,0 +1,26 @@
+{
+  "title": "GPIO Status Bar",
+  "description": "Status bar showing LED and button states with periodic polling",
+  "difficulty": "beginner",
+  "domain": "gpio",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "gpio",
+    "status",
+    "bar",
+    "monitoring",
+    "timer"
+  ],
+  "apis_used": [
+    "cyhal_gpio_init",
+    "cyhal_gpio_read",
+    "cyhal_gpio_write",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 55,
+  "source_reference": "BiiL Part4 Ex7",
+  "id": "b09_gpio_status_bar"
+}

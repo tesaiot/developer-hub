@@ -1,0 +1,26 @@
+{
+  "title": "Page Navigation",
+  "description": "Forward and back navigation between two pages using pm_navigate and pm_back",
+  "difficulty": "intermediate",
+  "domain": "page-manager",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "page-manager",
+    "navigation",
+    "pm_navigate",
+    "pm_back",
+    "forward",
+    "back"
+  ],
+  "apis_used": [
+    "pm_navigate",
+    "pm_back",
+    "pm_register"
+  ],
+  "estimated_loc": 100,
+  "source_reference": "BiiL Part4 Ex2",
+  "id": "i27_page_navigation"
+}

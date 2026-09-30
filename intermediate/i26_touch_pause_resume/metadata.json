@@ -1,0 +1,28 @@
+{
+  "title": "Touch Pause/Resume IPC",
+  "description": "IPC_CMD_TOUCH_PAUSE/RESUME pattern for shared I2C bus access (OPTIGA pattern)",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "touch",
+    "pause",
+    "resume",
+    "i2c",
+    "shared-bus",
+    "optiga",
+    "scb0"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "IPC_CMD_TOUCH_PAUSE",
+    "IPC_CMD_TOUCH_RESUME"
+  ],
+  "estimated_loc": 95,
+  "source_reference": "OPTIGA Integration Phase 3",
+  "id": "i26_touch_pause_resume"
+}

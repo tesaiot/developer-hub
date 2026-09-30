@@ -1,0 +1,28 @@
+{
+  "title": "Rich Text LCD Console",
+  "description": "Terminal-style console on display with color-coded log levels, timestamps, auto-scroll, and 50-line ring buffer",
+  "difficulty": "intermediate",
+  "domain": "utility",
+  "boards": [
+    "ai_kit",
+    "eva_kit",
+    "game_console"
+  ],
+  "tags": [
+    "console",
+    "terminal",
+    "logging",
+    "text",
+    "scroll",
+    "ring-buffer"
+  ],
+  "apis_used": [
+    "lv_textarea_create",
+    "lv_timer_create",
+    "xTaskGetTickCount",
+    "vsnprintf"
+  ],
+  "estimated_loc": 180,
+  "source_reference": "pse84_common.h + FreeRTOS tick",
+  "id": "i33_lcd_console"
+}

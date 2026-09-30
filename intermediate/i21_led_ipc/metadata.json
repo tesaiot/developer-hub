@@ -1,0 +1,26 @@
+{
+  "title": "LED Control via IPC",
+  "description": "CM55 sends IPC_CMD_GPIO_LED to CM33 to toggle an LED via button press",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "gpio",
+    "led",
+    "button",
+    "cm55-to-cm33",
+    "command"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "lv_button_create",
+    "lv_led_create"
+  ],
+  "estimated_loc": 80,
+  "source_reference": "BiiL Part3 Ex3",
+  "id": "i21_led_ipc"
+}

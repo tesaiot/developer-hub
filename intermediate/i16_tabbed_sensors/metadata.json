@@ -1,0 +1,27 @@
+{
+  "title": "Tabbed Sensors",
+  "description": "Tab view with each tab showing one sensor's detailed readings including derived values like altitude and dew point",
+  "difficulty": "intermediate",
+  "domain": "Dashboard",
+  "tags": [
+    "sensor",
+    "ipc",
+    "tabview",
+    "dashboard"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40",
+    "BMM350"
+  ],
+  "id": "i16_tabbed_sensors"
+}

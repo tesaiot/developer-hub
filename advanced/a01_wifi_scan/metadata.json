@@ -1,0 +1,25 @@
+{
+  "title": "WiFi Scan + Table Display",
+  "description": "Scan WiFi APs and display results in a sorted LVGL table",
+  "difficulty": "advanced",
+  "domain": "wifi",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "wifi",
+    "scan",
+    "table",
+    "wcm",
+    "network"
+  ],
+  "apis_used": [
+    "cy_wcm_start_scan",
+    "lv_table_create",
+    "lv_table_set_cell_value"
+  ],
+  "estimated_loc": 180,
+  "source_reference": "modwifi.c + LVGL table",
+  "id": "a01_wifi_scan"
+}

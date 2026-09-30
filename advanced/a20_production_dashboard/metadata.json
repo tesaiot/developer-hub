@@ -1,0 +1,31 @@
+{
+  "title": "Production Dashboard",
+  "description": "Industrial dashboard with 4 sensor cards, live chart, and status indicators using all BSP sensors with compile-time guards",
+  "difficulty": "advanced",
+  "domain": "ui-integration",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "dashboard",
+    "industrial",
+    "sensor",
+    "chart",
+    "bmi270",
+    "dps368",
+    "sht40",
+    "bmm350",
+    "production"
+  ],
+  "apis_used": [
+    "lv_chart_create",
+    "lv_chart_set_next_value",
+    "lv_bar_create",
+    "lv_timer_create",
+    "sensor_i2c_read"
+  ],
+  "estimated_loc": 180,
+  "source_reference": "sensorhub_ui dashboard tab",
+  "id": "a20_production_dashboard"
+}

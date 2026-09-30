@@ -1,0 +1,25 @@
+{
+  "title": "Multi LED Control Panel",
+  "description": "Grid control panel for all board LEDs with BSP-guarded pin definitions",
+  "difficulty": "beginner",
+  "domain": "gpio",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "gpio",
+    "led",
+    "panel",
+    "grid",
+    "bsp"
+  ],
+  "apis_used": [
+    "cyhal_gpio_init",
+    "cyhal_gpio_write",
+    "lv_obj_set_layout"
+  ],
+  "estimated_loc": 70,
+  "source_reference": "BiiL Part4 Ex6",
+  "id": "b08_multi_led_panel"
+}

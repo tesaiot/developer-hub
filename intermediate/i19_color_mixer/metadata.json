@@ -1,0 +1,22 @@
+{
+  "title": "RGB Color Mixer",
+  "description": "Three RGB sliders that mix a color displayed in a large preview box with hex code readout",
+  "difficulty": "intermediate",
+  "domain": "UI Widgets",
+  "tags": [
+    "visualization",
+    "slider",
+    "lvgl",
+    "interactive"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": false,
+  "sensors_used": [],
+  "id": "i19_color_mixer"
+}

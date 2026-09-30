@@ -1,0 +1,26 @@
+{
+  "title": "Deferred Flag Pattern",
+  "description": "Critical pattern: set flag in ISR handler, call SendMessage from task loop to avoid deadlock",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "deferred",
+    "flag",
+    "deadlock",
+    "critical",
+    "isr",
+    "task-context"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "Cy_IPC_Pipe_RegisterCallback"
+  ],
+  "estimated_loc": 95,
+  "source_reference": "BiiL Part3 Ex5",
+  "id": "i25_deferred_flag"
+}

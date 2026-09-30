@@ -1,0 +1,26 @@
+{
+  "title": "Space Shooter (Touch Control)",
+  "description": "Production-derived Space Shooter game with entity pool pattern, AABB collision detection, 3 lives, progressive difficulty, and Game Boy 4-tone palette. Ship with wings + cabin, enemies with dual eyes.",
+  "difficulty": "advanced",
+  "domain": "game",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2",
+    "KIT_PSE84_AI_GAME"
+  ],
+  "tags": [
+    "game",
+    "shooter",
+    "entity-pool",
+    "collision",
+    "touch",
+    "production-derived"
+  ],
+  "files": [
+    "main_example.c",
+    "game_common.c",
+    "game_common.h"
+  ],
+  "production_source": "page_game_shooter.c + game_common.c/h",
+  "id": "a14_game_shooter"
+}

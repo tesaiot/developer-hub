@@ -1,0 +1,27 @@
+{
+  "title": "Security Info Display",
+  "description": "OPTIGA Trust M chip overview: UID, lifecycle state, certificate slots, supported algorithms",
+  "difficulty": "advanced",
+  "domain": "security",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "optiga",
+    "trust-m",
+    "uid",
+    "security",
+    "hsm",
+    "info",
+    "certificates"
+  ],
+  "apis_used": [
+    "lv_label_create",
+    "lv_obj_create",
+    "lv_obj_set_flex_flow"
+  ],
+  "estimated_loc": 150,
+  "source_reference": "pse84_common.h",
+  "id": "a05_optiga_uid"
+}

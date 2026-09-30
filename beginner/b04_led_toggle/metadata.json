@@ -1,0 +1,21 @@
+{
+  "title": "LED Toggle",
+  "description": "Three buttons to toggle Red, Green, and Blue LEDs via IPC",
+  "difficulty": "beginner",
+  "domain": "GPIO",
+  "tags": [
+    "led",
+    "ipc",
+    "button",
+    "gpio"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": false,
+  "id": "b04_led_toggle"
+}

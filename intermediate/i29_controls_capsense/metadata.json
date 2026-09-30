@@ -1,0 +1,24 @@
+{
+  "title": "CapSense Controls",
+  "description": "CapSense button state indicators and slider position bar, adapted from production page_controls.c",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "capsense",
+    "touch",
+    "slider",
+    "BSP",
+    "Eva-Kit"
+  ],
+  "boards": [
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "CapSense"
+  ],
+  "id": "i29_controls_capsense"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "b18_thai_text",
+  "title": "Thai Text Display",
+  "description": "Demonstrates Thai script rendering using Noto Sans Thai fonts at multiple sizes. Covers complex cases: stacked vowels, tone marks, Sara Am, leading vowels, consonant clusters, and Thai-English mixed text.",
+  "difficulty": "beginner",
+  "domain": "display",
+  "boards": ["KIT_PSE84_AI", "KIT_PSE84_EVAL_EPC2"],
+  "tags": ["thai", "font", "text", "i18n", "lvgl", "noto-sans-thai", "unicode"]
+}

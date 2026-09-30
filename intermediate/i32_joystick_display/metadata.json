@@ -1,0 +1,27 @@
+{
+  "title": "Joystick Visualization",
+  "description": "Dual-stick gamepad display with crosshair tracking, dead zone ring, A/B/X/Y face buttons, D-pad, and shoulder indicators",
+  "difficulty": "intermediate",
+  "domain": "input",
+  "boards": [
+    "ai_kit",
+    "eva_kit",
+    "game_console"
+  ],
+  "tags": [
+    "joystick",
+    "usb-hid",
+    "gamepad",
+    "visualization",
+    "dual-stick"
+  ],
+  "apis_used": [
+    "lv_obj_create",
+    "lv_obj_align",
+    "lv_timer_create",
+    "lv_indev_get_point"
+  ],
+  "estimated_loc": 200,
+  "source_reference": "page_joystick.c + IPC_CMD_JOYSTICK_STATE",
+  "id": "i32_joystick_display"
+}

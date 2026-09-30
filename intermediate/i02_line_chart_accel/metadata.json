@@ -1,0 +1,24 @@
+{
+  "title": "Line Chart — Acceleration",
+  "description": "Real-time scrolling line chart of BMI270 X/Y/Z acceleration with 100-point history",
+  "difficulty": "intermediate",
+  "domain": "Visualization",
+  "tags": [
+    "bmi270",
+    "chart",
+    "timer",
+    "visualization"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270"
+  ],
+  "id": "i02_line_chart_accel"
+}

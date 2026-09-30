@@ -1,0 +1,22 @@
+{
+  "title": "Sensor Fusion",
+  "description": "9-DOF AHRS combining accelerometer, gyroscope, and magnetometer with complementary filter for orientation display",
+  "difficulty": "advanced",
+  "domain": "Analytics",
+  "tags": [
+    "analytics",
+    "sensor",
+    "bmi270",
+    "bmm350",
+    "visualization"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "id": "a06_sensor_fusion"
+}

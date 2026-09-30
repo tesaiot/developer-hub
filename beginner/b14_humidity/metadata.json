@@ -1,0 +1,24 @@
+{
+  "title": "Humidity Gauge",
+  "description": "SHT40 humidity displayed in an arc gauge (AI Kit only)",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "sensor",
+    "sht40",
+    "humidity",
+    "climate",
+    "arc"
+  ],
+  "apis_used": [
+    "sht40_init",
+    "sht40_read",
+    "lv_arc_set_value"
+  ],
+  "estimated_loc": 45,
+  "source_reference": "BiiL Part5 Ex5",
+  "id": "b14_humidity"
+}

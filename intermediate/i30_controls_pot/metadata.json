@@ -1,0 +1,24 @@
+{
+  "title": "Potentiometer Arc Gauge",
+  "description": "Large arc gauge showing potentiometer rotation with raw ADC, voltage, and percentage readouts",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "potentiometer",
+    "arc-gauge",
+    "ADC",
+    "BSP",
+    "Eva-Kit"
+  ],
+  "boards": [
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "Potentiometer"
+  ],
+  "id": "i30_controls_pot"
+}

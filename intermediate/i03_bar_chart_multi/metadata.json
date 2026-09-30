@@ -1,0 +1,27 @@
+{
+  "title": "Multi-Series Bar Chart",
+  "description": "Bar chart comparing normalized sensor values side by side with auto-scaling",
+  "difficulty": "intermediate",
+  "domain": "Visualization",
+  "tags": [
+    "chart",
+    "analytics",
+    "sensor",
+    "visualization"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40",
+    "BMM350"
+  ],
+  "id": "i03_bar_chart_multi"
+}

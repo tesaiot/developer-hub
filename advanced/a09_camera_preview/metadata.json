@@ -1,0 +1,27 @@
+{
+  "title": "[UI Concept] Camera Preview",
+  "description": "UI Concept — Camera preview layout with LVGL canvas. Requires camera hardware integration (not yet available via IPC)",
+  "difficulty": "advanced",
+  "domain": "camera",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "camera",
+    "uvc",
+    "usb",
+    "canvas",
+    "rgb565",
+    "preview",
+    "fps"
+  ],
+  "apis_used": [
+    "camera_manager_init",
+    "camera_manager_get_frame",
+    "lv_canvas_create",
+    "lv_canvas_set_buffer"
+  ],
+  "estimated_loc": 250,
+  "source_reference": "camera_manager.h + usb_uvc",
+  "id": "a09_camera_preview"
+}

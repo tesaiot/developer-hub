@@ -1,0 +1,26 @@
+{
+  "title": "Accelerometer XYZ",
+  "description": "BMI270 accelerometer X/Y/Z live display with 100ms timer",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "sensor",
+    "bmi270",
+    "accelerometer",
+    "imu",
+    "xyz"
+  ],
+  "apis_used": [
+    "bmi270_init",
+    "bmi270_read_accel",
+    "lv_timer_create",
+    "lv_label_set_text_fmt"
+  ],
+  "estimated_loc": 50,
+  "source_reference": "BiiL Part5 Ex1",
+  "id": "b10_accel_xyz"
+}

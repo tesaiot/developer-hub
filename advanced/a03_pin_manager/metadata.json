@@ -1,0 +1,20 @@
+{
+  "title": "PIN Manager",
+  "description": "PIN entry pad with hash verification, attempt counting, lockout timer, and strength analysis",
+  "difficulty": "advanced",
+  "domain": "Security",
+  "tags": [
+    "security",
+    "identity-sso",
+    "event"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": false,
+  "id": "a03_pin_manager"
+}

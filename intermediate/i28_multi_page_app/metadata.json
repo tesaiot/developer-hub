@@ -1,0 +1,30 @@
+{
+  "title": "Multi-Page Navigation App",
+  "description": "Production page navigation pattern with navigation stack, bottom tab bar, and three pages (Home, Sensors, Settings) demonstrating page lifecycle management",
+  "difficulty": "intermediate",
+  "domain": "navigation",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "navigation",
+    "multi-page",
+    "tab-bar",
+    "page-manager",
+    "stack",
+    "lifecycle"
+  ],
+  "apis_used": [
+    "lv_obj_clean",
+    "lv_obj_create",
+    "lv_button_create",
+    "lv_slider_create",
+    "lv_switch_create",
+    "lv_timer_create",
+    "ipc_sensorhub_snapshot"
+  ],
+  "estimated_loc": 200,
+  "source_reference": "Production page_manager.h navigation pattern",
+  "id": "i28_multi_page_app"
+}

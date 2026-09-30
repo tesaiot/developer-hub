@@ -1,0 +1,39 @@
+{
+  "title": "Multi-Screen Smart Watch",
+  "description": "Circular watch face with 4 swipeable screens (Clock, Sensors, Steps, Weather) using LVGL tileview, dot indicators, and live sensor data",
+  "difficulty": "advanced",
+  "domain": "smartwatch",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "smartwatch",
+    "swipe",
+    "multi-screen",
+    "sensor",
+    "tileview",
+    "clock",
+    "steps",
+    "weather"
+  ],
+  "apis_used": [
+    "lv_tileview_create",
+    "lv_arc_create",
+    "lv_timer_create",
+    "ipc_sensorhub_snapshot",
+    "xTaskGetTickCount"
+  ],
+  "estimated_loc": 500,
+  "multi_file": true,
+  "source_files": [
+    "main_example.c",
+    "watch_screens.h",
+    "watch_clock.c",
+    "watch_sensors.c",
+    "watch_steps.c",
+    "watch_weather.c"
+  ],
+  "source_reference": "smartwatch_round_embed.c production UI",
+  "id": "a19_smart_watch"
+}

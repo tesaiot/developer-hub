@@ -1,0 +1,28 @@
+{
+  "title": "[UI Concept] Face Detection with ML",
+  "description": "UI Concept — Face detection overlay layout. Requires camera + ML inference integration (not yet available via IPC)",
+  "difficulty": "advanced",
+  "domain": "camera",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "face",
+    "detection",
+    "ml",
+    "inference",
+    "ssd",
+    "camera",
+    "ai",
+    "neural-network"
+  ],
+  "apis_used": [
+    "face_detect",
+    "camera_manager_get_frame",
+    "lv_canvas_create",
+    "lv_draw_rect"
+  ],
+  "estimated_loc": 350,
+  "source_reference": "face_id_engine.h + camera_manager",
+  "id": "a11_face_detection"
+}

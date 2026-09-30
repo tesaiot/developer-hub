@@ -1,0 +1,20 @@
+{
+  "title": "[UI Reference] Certificate Viewer",
+  "description": "UI Reference — X.509 certificate viewer layout. Real cert parsing available via IPC_CMD_HSM_READ_CERT (0xB7)",
+  "difficulty": "advanced",
+  "domain": "Security",
+  "tags": [
+    "security",
+    "identity-sso",
+    "visualization"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": false,
+  "id": "a04_cert_viewer"
+}

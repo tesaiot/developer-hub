@@ -1,0 +1,27 @@
+{
+  "title": "Compass Rose",
+  "description": "Production-quality compass with rotating cardinal labels driven by BMM350 magnetometer heading via IPC sensor snapshot",
+  "difficulty": "intermediate",
+  "domain": "sensor",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "compass",
+    "magnetometer",
+    "bmm350",
+    "rotation",
+    "BSP",
+    "transform"
+  ],
+  "apis_used": [
+    "lv_obj_set_style_transform_angle",
+    "lv_timer_create",
+    "ipc_sensorhub_snapshot",
+    "lv_label_set_text_fmt"
+  ],
+  "estimated_loc": 180,
+  "source_reference": "Production compass UI with BMM350 heading",
+  "id": "i04_compass_rose"
+}

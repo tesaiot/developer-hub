@@ -1,0 +1,25 @@
+{
+  "title": "Hardware LED On/Off",
+  "description": "Two buttons control a hardware LED via cyhal_gpio_write",
+  "difficulty": "beginner",
+  "domain": "gpio",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "gpio",
+    "led",
+    "button",
+    "digital_output"
+  ],
+  "apis_used": [
+    "cyhal_gpio_init",
+    "cyhal_gpio_write",
+    "lv_btn_create",
+    "lv_obj_add_event_cb"
+  ],
+  "estimated_loc": 45,
+  "source_reference": "BiiL Part4 Ex1",
+  "id": "b05_led_on_off"
+}

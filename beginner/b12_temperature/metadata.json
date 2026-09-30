@@ -1,0 +1,24 @@
+{
+  "title": "Temperature Gauge",
+  "description": "DPS368 temperature displayed in an arc gauge (AI Kit only)",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "sensor",
+    "dps368",
+    "temperature",
+    "arc",
+    "gauge"
+  ],
+  "apis_used": [
+    "dps368_init",
+    "dps368_read_both",
+    "lv_arc_set_value"
+  ],
+  "estimated_loc": 45,
+  "source_reference": "BiiL Part5 Ex3",
+  "id": "b12_temperature"
+}

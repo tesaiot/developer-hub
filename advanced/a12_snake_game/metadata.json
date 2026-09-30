@@ -1,0 +1,26 @@
+{
+  "title": "Snake Game (Touch D-pad)",
+  "description": "Production-derived Snake game with 30x24 grid, pre-allocated 140-segment object pool, head with eyes and tongue, edge-triggered D-pad input, and Game Boy visual style.",
+  "difficulty": "advanced",
+  "domain": "game",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2",
+    "KIT_PSE84_AI_GAME"
+  ],
+  "tags": [
+    "game",
+    "lvgl",
+    "timer",
+    "touch",
+    "animation",
+    "production-derived"
+  ],
+  "files": [
+    "main_example.c",
+    "game_common.c",
+    "game_common.h"
+  ],
+  "production_source": "page_game_snake.c + game_common.c/h",
+  "id": "a12_snake_game"
+}

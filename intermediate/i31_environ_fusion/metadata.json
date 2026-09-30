@@ -1,0 +1,27 @@
+{
+  "title": "Environment Sensor Fusion",
+  "description": "Fused environmental data from DPS368 and SHT40 with altitude, dew point, heat index, and comfort level",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "environ",
+    "fusion",
+    "altitude",
+    "dew-point",
+    "heat-index",
+    "DPS368",
+    "SHT40"
+  ],
+  "boards": [
+    "KIT_PSE84_AI"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "DPS368",
+    "SHT40"
+  ],
+  "id": "i31_environ_fusion"
+}

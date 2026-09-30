@@ -1,0 +1,10 @@
+{
+  "id": "b03_layout_and_events",
+  "title": "Layout & Events — Grid Menu",
+  "description": "11 demos covering LVGL flex, grid, styling, and event handling patterns",
+  "difficulty": "beginner",
+  "domain": "lvgl-layout",
+  "boards": ["KIT_PSE84_AI", "KIT_PSE84_EVAL_EPC2"],
+  "tags": ["lvgl", "flex", "grid", "layout", "style", "events", "click", "long-press", "timer", "value-changed"],
+  "files": ["main_example.c", "pages.h", "page_flex_row.c", "page_flex_col.c", "page_grid.c", "page_card.c", "page_screen_bg.c", "page_custom_style.c", "page_click_event.c", "page_value_changed.c", "page_long_press.c", "page_multi_event.c", "page_timer.c"]
+}

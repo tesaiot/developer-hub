@@ -1,0 +1,23 @@
+{
+  "title": "Potentiometer Control",
+  "description": "Potentiometer controlling an arc gauge, bar indicator, and color preview simultaneously",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "potentiometer",
+    "visualization",
+    "sensor",
+    "arc"
+  ],
+  "boards": [
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "Potentiometer"
+  ],
+  "id": "i13_pot_control"
+}

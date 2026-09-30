@@ -1,0 +1,28 @@
+{
+  "title": "[UI Concept] Face Database",
+  "description": "UI Concept — Face ID enrollment and recognition layout. Requires camera + ML face recognition (not yet available)",
+  "difficulty": "advanced",
+  "domain": "ai",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "face",
+    "recognition",
+    "enrollment",
+    "ai",
+    "gallery",
+    "confidence",
+    "biometric"
+  ],
+  "apis_used": [
+    "face_detect_init",
+    "face_detect_run",
+    "face_enroll",
+    "face_recognize",
+    "lv_image_create"
+  ],
+  "estimated_loc": 160,
+  "source_reference": "face_detection.h",
+  "id": "a22_face_database"
+}

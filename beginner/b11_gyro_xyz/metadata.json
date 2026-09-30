@@ -1,0 +1,25 @@
+{
+  "title": "Gyroscope XYZ",
+  "description": "BMI270 gyroscope X/Y/Z live display with rotation rate",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "sensor",
+    "bmi270",
+    "gyroscope",
+    "imu",
+    "rotation"
+  ],
+  "apis_used": [
+    "bmi270_init",
+    "bmi270_read_gyro",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 50,
+  "source_reference": "BiiL Part5 Ex2",
+  "id": "b11_gyro_xyz"
+}

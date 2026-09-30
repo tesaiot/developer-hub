@@ -1,0 +1,27 @@
+{
+  "title": "Button-LED Link",
+  "description": "Hardware button press turns on hardware LED and updates UI",
+  "difficulty": "beginner",
+  "domain": "gpio",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "gpio",
+    "button",
+    "led",
+    "input",
+    "output",
+    "link"
+  ],
+  "apis_used": [
+    "cyhal_gpio_init",
+    "cyhal_gpio_read",
+    "cyhal_gpio_write",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 45,
+  "source_reference": "BiiL Part4 Ex5",
+  "id": "b07_button_led_link"
+}

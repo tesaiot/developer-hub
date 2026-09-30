@@ -1,0 +1,27 @@
+{
+  "title": "IPC Request-Response",
+  "description": "Synchronous IPC request with volatile flag and timeout pattern",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "request",
+    "response",
+    "synchronous",
+    "timeout",
+    "volatile",
+    "flag"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "Cy_IPC_Pipe_RegisterCallback",
+    "xTaskGetTickCount"
+  ],
+  "estimated_loc": 100,
+  "source_reference": "BiiL Part3 Ex4",
+  "id": "i24_request_response"
+}

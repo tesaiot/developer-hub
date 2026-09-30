@@ -1,0 +1,26 @@
+{
+  "title": "Basic IPC",
+  "description": "CM33 to CM55 message passing with SendMessage and RegisterCallback ping-pong",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "pipe",
+    "sendmessage",
+    "callback",
+    "multi-core",
+    "cm33",
+    "cm55"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "Cy_IPC_Pipe_RegisterCallback"
+  ],
+  "estimated_loc": 90,
+  "source_reference": "BiiL Part3 Ex1",
+  "id": "i17_basic_ipc"
+}

@@ -1,0 +1,29 @@
+{
+  "title": "System Status Panel",
+  "description": "Production-quality status dashboard with color-coded cards showing CPU usage, FreeRTOS heap, uptime, sensor availability, and WiFi state",
+  "difficulty": "intermediate",
+  "domain": "system",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "status",
+    "system",
+    "memory",
+    "uptime",
+    "FreeRTOS",
+    "heap",
+    "dashboard"
+  ],
+  "apis_used": [
+    "xPortGetFreeHeapSize",
+    "xTaskGetTickCount",
+    "ipc_sensorhub_snapshot",
+    "ipc_sensorhub_wifi_connected",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 160,
+  "source_reference": "Production system status panel",
+  "id": "i11_status_panel"
+}

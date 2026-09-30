@@ -1,0 +1,10 @@
+{
+  "id": "b01_widget_basics",
+  "title": "Widget Basics — Interactive Grid Menu",
+  "description": "Explore 11 fundamental LVGL widgets through a navigable grid menu with Home navigation",
+  "difficulty": "beginner",
+  "domain": "lvgl-widgets",
+  "boards": ["KIT_PSE84_AI", "KIT_PSE84_EVAL_EPC2"],
+  "tags": ["lvgl", "widgets", "label", "button", "arc", "checkbox", "switch", "progress", "spinner", "dropdown", "textarea", "slider", "table", "grid-menu", "navigation"],
+  "files": ["main_example.c", "pages.h", "page_hello.c", "page_button.c", "page_arc.c", "page_checkbox.c", "page_switch.c", "page_progress.c", "page_spinner.c", "page_dropdown.c", "page_textarea.c", "page_slider.c", "page_table.c"]
+}

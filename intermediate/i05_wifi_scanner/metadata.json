@@ -1,0 +1,22 @@
+{
+  "title": "WiFi Scanner",
+  "description": "Scan nearby WiFi networks and display SSID, RSSI signal bars, channel, and security type",
+  "difficulty": "intermediate",
+  "domain": "Integrations",
+  "tags": [
+    "wifi",
+    "ipc",
+    "scanner",
+    "integrations"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": false,
+  "sensors_used": [],
+  "id": "i05_wifi_scanner"
+}

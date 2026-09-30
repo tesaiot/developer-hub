@@ -1,0 +1,26 @@
+{
+  "title": "Pong Game (Player vs AI)",
+  "description": "Production-derived Pong game with 60fps physics, AI opponent at 3.2px/frame, progressive ball speed-up on paddle hits, deflection angle normalization, and score-to-10 win condition.",
+  "difficulty": "advanced",
+  "domain": "game",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2",
+    "KIT_PSE84_AI_GAME"
+  ],
+  "tags": [
+    "game",
+    "lvgl",
+    "timer",
+    "touch",
+    "animation",
+    "production-derived"
+  ],
+  "files": [
+    "main_example.c",
+    "game_common.c",
+    "game_common.h"
+  ],
+  "production_source": "page_game_pong.c + game_common.c/h",
+  "id": "a13_pong_game"
+}

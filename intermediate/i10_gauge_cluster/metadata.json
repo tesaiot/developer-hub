@@ -1,0 +1,25 @@
+{
+  "title": "Gauge Cluster",
+  "description": "Three analog-style arc gauges displaying temperature, humidity, and pressure in real time",
+  "difficulty": "intermediate",
+  "domain": "Dashboard",
+  "tags": [
+    "visualization",
+    "sensor",
+    "dashboard",
+    "arc"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "DPS368",
+    "SHT40"
+  ],
+  "id": "i10_gauge_cluster"
+}

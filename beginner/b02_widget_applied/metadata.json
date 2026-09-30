@@ -1,0 +1,10 @@
+{
+  "id": "b02_widget_applied",
+  "title": "Widget Applied — Sensors & Interactive Demos",
+  "description": "10 practical widget demos connecting LVGL to sensors, GPIO, timers, and games",
+  "difficulty": "beginner",
+  "domain": "lvgl-applied",
+  "boards": ["KIT_PSE84_AI", "KIT_PSE84_EVAL_EPC2"],
+  "tags": ["lvgl", "sensors", "bmi270", "dps368", "sht40", "bmm350", "led", "chart", "stopwatch", "game", "system-info"],
+  "files": ["main_example.c", "pages.h", "page_led_brightness.c", "page_switch_led.c", "page_stopwatch.c", "page_reaction_game.c", "page_bar_chart.c", "page_imu_display.c", "page_temperature.c", "page_humidity.c", "page_compass.c", "page_system_info.c"]
+}

@@ -1,0 +1,28 @@
+{
+  "title": "WiFi Connect Flow",
+  "description": "Full WiFi STA flow: scan, select AP, enter password, connect, show IP",
+  "difficulty": "advanced",
+  "domain": "wifi",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "wifi",
+    "connect",
+    "sta",
+    "wcm",
+    "keyboard",
+    "dropdown"
+  ],
+  "apis_used": [
+    "cy_wcm_start_scan",
+    "cy_wcm_connect_ap",
+    "cy_wcm_get_ip_addr",
+    "lv_dropdown_create",
+    "lv_keyboard_create"
+  ],
+  "estimated_loc": 220,
+  "source_reference": "modwifi.c + qspi_wifi_creds",
+  "id": "a02_wifi_connect"
+}

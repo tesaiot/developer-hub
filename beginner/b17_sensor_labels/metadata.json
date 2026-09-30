@@ -1,0 +1,30 @@
+{
+  "title": "All Sensors Dashboard",
+  "description": "Display all available sensor readings with BSP guards for board compatibility",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "sensor",
+    "bmi270",
+    "dps368",
+    "sht40",
+    "capsense",
+    "potentiometer",
+    "dashboard"
+  ],
+  "apis_used": [
+    "bmi270_init",
+    "bmi270_read_accel",
+    "dps368_read_both",
+    "sht40_read",
+    "capsense_read_buttons",
+    "potentiometer_read"
+  ],
+  "estimated_loc": 80,
+  "source_reference": "BiiL Part5 Ex8",
+  "id": "b17_sensor_labels"
+}

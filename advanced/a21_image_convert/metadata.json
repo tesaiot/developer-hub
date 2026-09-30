@@ -1,0 +1,27 @@
+{
+  "title": "[UI Concept] Camera Frame Capture",
+  "description": "UI Concept — Camera capture with JPEG encoding layout. Requires IPC frame share integration (not yet available)",
+  "difficulty": "advanced",
+  "domain": "camera",
+  "boards": [
+    "ai_kit"
+  ],
+  "tags": [
+    "camera",
+    "jpeg",
+    "image",
+    "capture",
+    "preview",
+    "ipc",
+    "frame"
+  ],
+  "apis_used": [
+    "ipc_frame_request",
+    "jpegenc_encode",
+    "lv_image_create",
+    "lv_image_set_src"
+  ],
+  "estimated_loc": 120,
+  "source_reference": "ipc_frame_share.h + jpegenc_wrapper.h",
+  "id": "a21_image_convert"
+}

@@ -1,0 +1,22 @@
+{
+  "title": "HSM Health Status Dashboard",
+  "description": "Production-derived OPTIGA Trust M health status dashboard showing chip UID, lifecycle state, 8-point health check results, certificate slot presence, and key store status with Astro UX status colors.",
+  "difficulty": "advanced",
+  "domain": "security",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "tags": [
+    "hsm",
+    "optiga",
+    "security",
+    "ipc",
+    "health"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "production_source": "page_hsm.c Tab 1 (Health/Status)",
+  "id": "a16_hsm_health"
+}

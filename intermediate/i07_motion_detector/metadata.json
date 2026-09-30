@@ -1,0 +1,24 @@
+{
+  "title": "Motion Detector",
+  "description": "Detect motion from IMU acceleration magnitude changes with alert status and scrollable event history",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "bmi270",
+    "analytics",
+    "event",
+    "sensor"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270"
+  ],
+  "id": "i07_motion_detector"
+}

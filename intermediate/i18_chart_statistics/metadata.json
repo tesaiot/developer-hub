@@ -1,0 +1,24 @@
+{
+  "title": "Chart Statistics",
+  "description": "Min/max/average statistics for BMI270 acceleration data with rolling line chart and reset control",
+  "difficulty": "intermediate",
+  "domain": "Analytics",
+  "tags": [
+    "bmi270",
+    "chart",
+    "visualization",
+    "analytics"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270"
+  ],
+  "id": "i18_chart_statistics"
+}

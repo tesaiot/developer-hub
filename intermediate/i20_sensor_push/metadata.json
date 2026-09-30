@@ -1,0 +1,26 @@
+{
+  "title": "Sensor Push via IPC",
+  "description": "CM33 reads sensors, packs data into IPC message, CM55 displays on screen",
+  "difficulty": "intermediate",
+  "domain": "ipc",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "ipc",
+    "sensor",
+    "push",
+    "bmi270",
+    "multi-core",
+    "data-transfer"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "Cy_IPC_Pipe_RegisterCallback",
+    "sensor_bmi270_read"
+  ],
+  "estimated_loc": 95,
+  "source_reference": "BiiL Part3 Ex2",
+  "id": "i20_sensor_push"
+}

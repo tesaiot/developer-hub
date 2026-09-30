@@ -1,0 +1,25 @@
+{
+  "title": "CapSense Buttons",
+  "description": "CapSense touch buttons and slider display (Eva Kit only)",
+  "difficulty": "beginner",
+  "domain": "sensors",
+  "boards": [
+    "eva_kit"
+  ],
+  "tags": [
+    "sensor",
+    "capsense",
+    "touch",
+    "slider",
+    "eva_kit"
+  ],
+  "apis_used": [
+    "capsense_init",
+    "capsense_read_buttons",
+    "capsense_read_slider",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 55,
+  "source_reference": "BiiL Part5 Ex6",
+  "id": "b15_capsense_buttons"
+}

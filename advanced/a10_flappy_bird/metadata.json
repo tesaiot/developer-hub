@@ -1,0 +1,26 @@
+{
+  "title": "Flappy Bird (Touch Control)",
+  "description": "Production-derived Flappy Bird game with Game Boy 4-tone palette, CRT scanline overlay, timer-driven physics at 50fps, and touch-based Action button for flap control.",
+  "difficulty": "advanced",
+  "domain": "game",
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2",
+    "KIT_PSE84_AI_GAME"
+  ],
+  "tags": [
+    "game",
+    "lvgl",
+    "timer",
+    "touch",
+    "animation",
+    "production-derived"
+  ],
+  "files": [
+    "main_example.c",
+    "game_common.c",
+    "game_common.h"
+  ],
+  "production_source": "page_game_flappy.c + game_common.c/h",
+  "id": "a10_flappy_bird"
+}

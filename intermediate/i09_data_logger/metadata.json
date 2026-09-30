@@ -1,0 +1,27 @@
+{
+  "title": "Data Logger",
+  "description": "Log sensor readings with timestamps into a scrollable list with start/stop and clear controls",
+  "difficulty": "intermediate",
+  "domain": "Analytics",
+  "tags": [
+    "sensor",
+    "timer",
+    "ipc",
+    "analytics"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270",
+    "DPS368",
+    "SHT40",
+    "BMM350"
+  ],
+  "id": "i09_data_logger"
+}

@@ -1,0 +1,23 @@
+{
+  "title": "CapSense Visualization",
+  "description": "CapSense button press and slider position visualization with animated feedback and event counters",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "capsense",
+    "event",
+    "visualization",
+    "sensor"
+  ],
+  "boards": [
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "CapSense"
+  ],
+  "id": "i12_capsense_viz"
+}

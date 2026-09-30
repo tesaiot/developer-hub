@@ -1,0 +1,27 @@
+{
+  "title": "WiFi Connect via IPC",
+  "description": "Cross-core WiFi connection: CM55 sends IPC commands to CM33_NS for scan/connect/disconnect, receives async state via deferred-flag pattern",
+  "difficulty": "advanced",
+  "domain": "wifi",
+  "boards": [
+    "ai_kit",
+    "eva_kit"
+  ],
+  "tags": [
+    "wifi",
+    "ipc",
+    "connect",
+    "deferred-flag",
+    "CY_SECTION_SHAREDMEM"
+  ],
+  "apis_used": [
+    "Cy_IPC_Pipe_SendMessage",
+    "Cy_IPC_Pipe_RegisterCallback",
+    "lv_textarea_create",
+    "lv_keyboard_create",
+    "lv_timer_create"
+  ],
+  "estimated_loc": 220,
+  "source_reference": "the firmware's Wi-Fi page + ipc_communication.h",
+  "id": "a23_wifi_connect_ipc"
+}

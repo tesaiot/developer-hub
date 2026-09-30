@@ -1,0 +1,25 @@
+{
+  "title": "Motion Tilt Angles",
+  "description": "Roll and pitch computation from BMI270 accelerometer with bubble-level tilt indicator and numeric readouts",
+  "difficulty": "intermediate",
+  "domain": "Sensors",
+  "tags": [
+    "tilt",
+    "accelerometer",
+    "bmi270",
+    "atan2",
+    "phi-layout"
+  ],
+  "boards": [
+    "KIT_PSE84_AI",
+    "KIT_PSE84_EVAL_EPC2"
+  ],
+  "files": [
+    "main_example.c"
+  ],
+  "requires_sensors": true,
+  "sensors_used": [
+    "BMI270"
+  ],
+  "id": "i34_motion_tilt"
+}
