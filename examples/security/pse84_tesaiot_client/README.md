@@ -281,8 +281,8 @@ This patches:
 Edit `proj_cm33_ns/wifi_config.h`:
 
 ```c
-#define WIFI_SSID       "YourSSID"
-#define WIFI_PASSWORD   "YourPassword"
+#define WIFI_SSID       "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD   "YOUR_WIFI_PASSWORD"
 #define WIFI_SECURITY   CY_WCM_SECURITY_WPA2_AES_PSK
 ```
 
