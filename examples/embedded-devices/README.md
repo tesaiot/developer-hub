@@ -70,7 +70,7 @@ Level 3: Advanced
 |---------|----------|-------------|--------|
 | [optiga-trustm](./advanced/optiga-trustm/) | C | Linux + OPTIGA Trust M | Future |
 | [rpi-mtls-trustm](./advanced/rpi-mtls-trustm/) | Python/C | RPI + Trust M HSM | Future |
-| [psoc-edge-reference](./advanced/psoc-edge-reference/) | C | PSoC Edge E84 | Separate Repo |
+| [psoc-edge-reference](https://github.com/tesaiot/developer-hub/tree/psoc-edge-reference) | C | PSoC Edge E84: 76 LVGL examples for AI Kit and Eva Kit | Separate Branch |
 
 ---
 
