@@ -523,7 +523,7 @@ Layer 3: Verification Logic (IP-Protected)
 
 - Thai Embedded Systems Association (TESA)
 - TESAIoT Platform Creator
-- Email: sriborrirux@gmail.com / wiroon@tesa.or.th
+- Email: wiroon@tesa.or.th
 
 **TESAIoT Platform Developer Team**
 
