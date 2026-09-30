@@ -5,5 +5,6 @@
 (`trustm_lib` and `trustm_provider`), distributed under the MIT License.
 The licence text is in [`LICENSE.linux-optiga-trust-m`](LICENSE.linux-optiga-trust-m).
 
-`libtrustm.so` also contains Mbed TLS, which is distributed under the Apache
-License 2.0 (https://github.com/Mbed-TLS/mbedtls).
+`libtrustm.so` also contains [Mbed TLS](https://github.com/Mbed-TLS/mbedtls),
+which is distributed under Apache-2.0 OR GPL-2.0-or-later. Its licence text is
+in [`LICENSE.mbedtls`](LICENSE.mbedtls).
