@@ -59,7 +59,6 @@
 * This file is part of the TESAIoT AIoT Foundation Platform, developed in
 * collaboration with Infineon Technologies AG for PSoC Edge E84 + OPTIGA Trust M.
 *
-* Contact: Wiroon Sriborrirux <sriborrirux@gmail.com>
 *******************************************************************************/
 
 #ifndef OPTIGA_TRUST_HELPERS_H_

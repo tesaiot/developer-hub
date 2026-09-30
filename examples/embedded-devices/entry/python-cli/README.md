@@ -242,7 +242,6 @@ TESAIOT_API_KEY=... python3 app.py stats summary
 
 - Incident reporting: Same channel as TESAIoT Platform (Ops/Support channel)
 - Infineon contact: eric.seow@infineon.com
-- Platform owner: sriborrirux@gmail.com
 
 > When opening a ticket, attach results from `stats summary` + `devices telemetry` for permission and data verification
 
