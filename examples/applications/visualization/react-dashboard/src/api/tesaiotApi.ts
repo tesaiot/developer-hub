@@ -15,7 +15,7 @@ const API_CONFIG = {
 
   // API Key from TESAIoT Platform > API Keys menu
   // Get your own API Key at: https://admin.tesaiot.com/api-keys
-  apiKey: 'tesa_ak_AR4oJyORvH38xAW7jfC9x53ezAPw4kPN',
+  apiKey: 'YOUR_TESAIOT_API_KEY',
 };
 
 // Types for telemetry data
