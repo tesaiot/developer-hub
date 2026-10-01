@@ -166,9 +166,9 @@
 
 /* Active device configuration */
 /* TODO: Get these values from TESAIoT Platform after device registration */
-#define DEVICE_ID                         "aebe9cc6-b087-4297-ba0d-2f87ac6b82e8"          /* Example: "1167fe60-6108-40dc-aefc-67a942d333ac" */
-#define FACTORY_UID                       "CD16339301001C000500000A01BB820003004C005B801010712440"       /* Read from Menu Option 1 */
-#define API_KEY                           "tesa_dak_aebe9cc6_deabb934b406a5321045a20257e30312"           /* Get from Device's credential Tab at TESAIoT Platform */
+#define DEVICE_ID                         "YOUR_DEVICE_ID"          /* Example: "00000000-0000-0000-0000-000000000000" */
+#define FACTORY_UID                       "YOUR_DEVICE_UID"       /* Read from Menu Option 1 */
+#define API_KEY                           "YOUR_API_KEY"           /* Get from Device's credential Tab at TESAIoT Platform */
                                             
 /***************** MQTT CLIENT CONNECTION CONFIGURATION MACROS *****************/
 /* MQTT Broker/Server address and port used for the MQTT connection. */
