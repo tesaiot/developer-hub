@@ -130,7 +130,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 function App() {
   // State
-  const [apiKey, setApiKey] = useState('tesa_ak_AR4oJyORvH38xAW7jfC9x53ezAPw4kPN');
+  const [apiKey, setApiKey] = useState('YOUR_TESAIOT_API_KEY');
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [startDate, setStartDate] = useState(() => {
