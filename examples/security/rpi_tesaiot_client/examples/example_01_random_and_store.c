@@ -40,8 +40,8 @@ static int demo_wifi_credential_storage(void)
     printf("\n=== A1: WiFi Credential Storage (Slot 0 = OID 0xF1D0) ===\n");
 
     /* Pack WiFi credentials: [1 byte ssid_len][ssid][password] */
-    const char *ssid = "TESAIoT-Lab-5G";
-    const char *password = "SecureP@ss2026!";
+    const char *ssid = "YOUR_WIFI_SSID";
+    const char *password = "YOUR_WIFI_PASSWORD";
 
     uint8_t cred_buf[140]; /* Max 140 bytes for slot 0-7 */
     uint8_t ssid_len = (uint8_t)strlen(ssid);
